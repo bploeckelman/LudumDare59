@@ -10,7 +10,6 @@
 
   <!-- "Inherits" lines are how GWT knows where to look for code and configuration in other projects or libraries. -->
   <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
-  <inherits name="com.badlogic.gdx.scenes.scene2d.ui" />
   <inherits name="com.badlogic.gdx.graphics.g2d.freetype.freetype-gwt" />
   <inherits name="aurelienribon.tweenengine" />
   <inherits name="PieMenu" />
@@ -57,16 +56,15 @@
   <collapse-property name="user.agent" values="*" />
   <!-- Remove the "user.agent" lines above if you encounter issues with Safari or other Gecko browsers. -->
 
-    <set-configuration-property name="gdx.reflect.include" value="false" />
 
     <extend-configuration-property name="gdx.reflect.exclude" value="com.github.tommyettinger" />
-    <extend-configuration-property name="gdx.reflect.exclude" value="com.kotcrab" />
     <extend-configuration-property name="gdx.reflect.exclude" value="regexodus" />
     <extend-configuration-property name="gdx.reflect.exclude" value="com.badlogic.ashley" />
     <extend-configuration-property name="gdx.reflect.exclude" value="space.earlygrey" />
     <extend-configuration-property name="gdx.reflect.include"
                                    value="com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable" />
 
+    <extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui" />
     <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld59.game.components" />
     <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld59.game.systems" />
     <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld59.screens" />
