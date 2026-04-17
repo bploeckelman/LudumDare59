@@ -46,11 +46,11 @@ pipeline {
                         archiveArtifacts artifacts: 'lwjgl3/build/libs/*.jar', allowEmptyArchive: true
                     }
                 }
-                stage("HTML - GWT") {
-                    steps {
-                        sh './gradlew html:dist'
-                    }
-                }
+//                stage("HTML - GWT") {
+//                    steps {
+//                        sh './gradlew html:dist'
+//                    }
+//                }
                 stage("HTML - TeaVM") {
                     steps {
                         sh './gradlew teavm:build'
