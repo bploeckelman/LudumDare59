@@ -6,19 +6,28 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.github.tommyettinger.digital.Stringf;
+import com.kotcrab.vis.ui.widget.VisLabel;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.game.signals.SignalEvent;
-import lando.systems.ld59.utils.FramePool;
+import lando.systems.ld59.utils.Calc;
 
 public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
 
     private static final Color BACKGROUND_COLOR = new Color(.1f, .5f, 1f, 1f);
 
+    // TEMPORARY -----------------------------------------
+    private float countdownDurationSecs = 3f;
+    private float countdownTimer = countdownDurationSecs;
+    private VisLabel countdownLabel;
+    // TEMPORARY -----------------------------------------
+
     private float accum;
 
     public IntroScreen() {
+        this.countdownLabel = new VisLabel(Stringf.format("%.1f", countdownTimer));
+
         initializeUI();
 
         // Tick the engine for one frame first to get everything initialized
@@ -30,7 +39,10 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
         super.update(delta);
         accum += delta;
 
-        if (!transitioning) {
+        countdownLabel.setText(Stringf.format("%.1f", countdownTimer));
+        countdownTimer = Calc.clampf(countdownTimer - delta, 0, countdownDurationSecs);
+
+        if (!transitioning && countdownTimer <= 0) {
             transitioning = true;
 
             // TODO: maybe move the cleanup code to a BaseScreen method, or make abstract method in BaseScreen to keep cleanup code together
@@ -55,7 +67,6 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
         }
 
         engine.update(delta);
-        uiStage.act(delta);
     }
 
     @Override
@@ -69,30 +80,22 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
         batch.end();
         batch.setShader(null);
 
-        // Draw ui / dialog / story stuff
         uiStage.draw();
-
-        // Screen name overlay
-        if (Flag.DEBUG_RENDER.isEnabled()) {
-            batch.setProjectionMatrix(windowCamera.combined);
-            batch.begin();
-            var pos = FramePool.vec2(
-                (windowCamera.viewportWidth - layout.getWidth()) / 2f,
-                windowCamera.viewportHeight - layout.getHeight());
-            font.drawGlyphs(batch, layout, pos.x, pos.y);
-            batch.end();
-        }
-    }
-
-    @Override
-    public void initializeUI() {
-        var root = new VisTable();
-        root.setFillParent(true);
-        uiStage.addActor(root);
     }
 
     @Override
     public void receive(Signal<SignalEvent> signal, SignalEvent object) {
 
+    }
+
+    @Override
+    protected void initializeUI() {
+        if (Flag.DEBUG_RENDER.isEnabled()) {
+            var screenName = IntroScreen.class.getSimpleName();
+            uiRoot.add(new VisLabel(screenName)).pad(10).top().left().row();
+        }
+
+        // TEMP: remove when we have story stuff in this screen
+        uiRoot.add(countdownLabel).expand().center();
     }
 }

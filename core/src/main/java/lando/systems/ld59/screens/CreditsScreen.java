@@ -9,7 +9,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.tommyettinger.textra.TypingLabel;
+import com.kotcrab.vis.ui.widget.VisLabel;
 import lando.systems.ld59.Config;
+import lando.systems.ld59.Flag;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.FontType;
 import lando.systems.ld59.ui.Button;
@@ -28,17 +30,16 @@ public class CreditsScreen extends BaseScreen {
 //    private final Animation<TextureRegion> kittenAnimation;
     private final Texture background;
 
-    private final String title = "{GRADIENT=red;yellow}Goomba Simulator 2025{ENDGRADIENT}";
-    private final String theme = "{GRADIENT=red;yellow}Made for Ludum Dare 58: Collector{ENDGRADIENT}";
+    private final String title;
+    private final String theme;
 
-    private final String thanks = "{GRADIENT=red;gray}Thank you for playing our game!{ENDGRADIENT}";
-    private final String developers = "{COLOR=gray}Developed by:{COLOR=white}\n {GRADIENT=white;gray}Brian Ploeckelman {ENDGRADIENT}\n {GRADIENT=white;gray}Doug Graham {ENDGRADIENT}";
-    private final String artists = "{COLOR=gray}Art by:{COLOR=white}\n {GRADIENT=white;gray}Matt Neumann {ENDGRADIENT}\n";
-    private final String emotionalSupport = "{COLOR=cyan}Emotional Support:{COLOR=white}\n Asuka, Osha";
-    private final String music = "{COLOR=gray}Music, Design and Narration:{COLOR=white}\n " +
-        "{GRADIENT=white;gray}Pete V (41){ENDGRADIENT}\n";
-    private final String libgdx = "Made with {COLOR=red}<3{COLOR=white}\nand {RAINBOW}LibGDX{ENDRAINBOW}";
-    private final String disclaimer = "{GRADIENT=black;gray}Disclaimer:{ENDGRADIENT}  {GRADIENT=gold;yellow}{JUMP=.27} No goombas were harmed in the making of this game{ENDJUMP}{ENDGRADIENT}";
+    private final String thanks;
+    private final String code;
+    private final String art;
+    private final String pets;
+    private final String audio;
+    private final String libgdx;
+    private final String disclaimer;
 
     private float accum = 0f;
     private boolean showPets = false;
@@ -46,7 +47,21 @@ public class CreditsScreen extends BaseScreen {
     private Button afterCreditsButton;
 
     public CreditsScreen() {
-        super();
+        initializeUI();
+
+        var strings = assets.strings;
+        // TODO: figure out how to mix formatting placeholders like {0}, {1}, ... usage: assets.strings.format("property.name", placeholderValue)
+        //  with typing label placeholders like {GRADIENT}, they don't play nice because they use the same delimiter `{}`
+        this.title = strings.get("credits.title");
+        this.theme = strings.get("credits.theme");
+        this.thanks = strings.get("credits.thanks");
+        this.code = strings.get("credits.code");
+        this.art = strings.get("credits.art");
+        this.pets = strings.get("credits.pets");
+        this.audio = strings.get("credits.audio");
+        this.libgdx = strings.get("credits.libgdx");
+        this.disclaimer = strings.get("credits.disclaimer");
+
 
         // TODO: add variants to FontType2
         var extraLargeTypingFont = FontType.ROUNDABOUT.get();//.font("large");
@@ -67,13 +82,13 @@ public class CreditsScreen extends BaseScreen {
         themeLabel.setPosition(0f, Config.window_height - 180f);
         themeLabel.setAlignment(Align.center);
 
-        leftCreditLabel = new TypingLabel(developers.toLowerCase() + "\n\n" + emotionalSupport.toLowerCase() + "\n\n", typingFont);
+        leftCreditLabel = new TypingLabel(code.toLowerCase() + "\n\n" + pets.toLowerCase() + "\n\n", typingFont);
         leftCreditLabel.setWidth(Config.window_width / 2f - 150f);
         leftCreditLabel.setPosition(75f, Config.window_height / 2f - 70f);
 
         background = Main.game.assets.pixel;
 
-        rightCreditLabel = new TypingLabel(artists.toLowerCase() + "\n" + music.toLowerCase() + "\n" + libgdx.toLowerCase(), typingFont);
+        rightCreditLabel = new TypingLabel(art.toLowerCase() + "\n" + audio.toLowerCase() + "\n" + libgdx.toLowerCase(), typingFont);
         rightCreditLabel.setPosition(Config.window_width / 2 + 75f, Config.window_height / 2f);
         rightCreditLabel.setWidth(Config.window_width / 2f - 150f);
 
@@ -88,7 +103,7 @@ public class CreditsScreen extends BaseScreen {
         disclaimerLabel.setAlignment(Align.center);
 
         var bounds = new Rectangle((windowCamera.viewportWidth /3), 10, (windowCamera.viewportWidth /3), 50);
-        afterCreditsButton = new Button(bounds, "Title Screen", game.assets.plainNine, game.assets.dimNine, font);
+        afterCreditsButton = new Button(bounds, "Return to Title", game.assets.plainNine, game.assets.dimNine, font);
         afterCreditsButton.setOnClickAction(() -> {
             if (transitioning) return;
             game.setScreen(new TitleScreen());
@@ -169,5 +184,18 @@ public class CreditsScreen extends BaseScreen {
             afterCreditsButton.draw(batch);
         }
         batch.end();
+
+        uiStage.draw();
+    }
+
+    @Override
+    protected void initializeUI() {
+        if (Flag.DEBUG_RENDER.isEnabled()) {
+            var screenName = CreditsScreen.class.getSimpleName();
+            uiRoot.add(new VisLabel(screenName)).pad(10).top().left().row();
+            uiRoot.add(new VisLabel()).grow();
+        }
+
+
     }
 }

@@ -3,6 +3,7 @@ package lando.systems.ld59.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import lando.systems.ld59.game.Components;
@@ -52,6 +53,12 @@ public class RenderSystem extends SortedIteratingSystem {
         for (var entity : getEntities()) {
             renderTileLayer(batch, entity);
         }
+    }
+
+    /**
+     * For drawing stuff in 'window' space rather than 'world' space, typically for shader effects
+     */
+    public void drawInWindowSpace(SpriteBatch batch, OrthographicCamera camera) {
     }
 
     private void renderTileLayer(SpriteBatch batch, Entity entity) {

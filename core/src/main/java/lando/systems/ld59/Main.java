@@ -3,10 +3,7 @@ package lando.systems.ld59;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -35,6 +32,7 @@ public class Main extends Game {
     public FrameBuffer frameBuffer;
     public TextureRegion frameBufferRegion;
     public OrthographicCamera windowCamera;
+    public InputMultiplexer inputMux;
     public Engine engine;
 
     public BaseScreen currentScreen;
@@ -78,6 +76,8 @@ public class Main extends Game {
 
         VisUI.setSkipGdxVersionCheck(true);
         VisUI.load(SkinType.ZENDO.get());
+
+        inputMux = new InputMultiplexer();
 
         engine = new Engine();
         Systems.init(engine);

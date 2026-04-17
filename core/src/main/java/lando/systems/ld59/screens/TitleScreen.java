@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.kotcrab.vis.ui.widget.VisLabel;
 import lando.systems.ld59.Config;
+import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
 
 public class TitleScreen extends BaseScreen {
@@ -16,16 +18,8 @@ public class TitleScreen extends BaseScreen {
     private boolean drawUI = true;
 
     public TitleScreen() {
-        var atlas = assets.atlas;
-
         this.pixel = assets.pixelRegion;
-
         initializeUI();
-    }
-
-    @Override
-    public void initializeUI() {
-        Gdx.input.setInputProcessor(uiStage);
     }
 
     @Override
@@ -36,6 +30,8 @@ public class TitleScreen extends BaseScreen {
 //            AudioEvent.stopAllMusic();
             game.setScreen(new IntroScreen(), EffectType.DREAMY);
         }
+
+        uiRoot.setVisible(drawUI);
 
         animTime += delta;
     }
@@ -51,14 +47,18 @@ public class TitleScreen extends BaseScreen {
 //            batch.setColor(0, 0, 0, pixelOverlayAlpha.floatValue());
 //            batch.draw(pixel, 0, 0, winWidth, winHeight);
 //            batch.setColor(Color.WHITE);
-            batch.setColor(Color.RED);
-            batch.draw(pixel, Config.window_width / 2f - 100f, Config.window_height / 2f - 100f, 200f, 200f);
-            batch.setColor(Color.WHITE);
         }
         batch.end();
 
-        if (drawUI) {
-            uiStage.draw();
+        uiStage.draw();
+    }
+
+    @Override
+    protected void initializeUI() {
+        if (Flag.DEBUG_RENDER.isEnabled()) {
+            var screenName = TitleScreen.class.getSimpleName();
+            uiRoot.add(new VisLabel(screenName)).pad(10).top().left().row();
+            uiRoot.add(new VisLabel()).grow();
         }
     }
 }

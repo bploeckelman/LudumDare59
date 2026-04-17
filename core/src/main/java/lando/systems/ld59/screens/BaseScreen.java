@@ -4,6 +4,7 @@ import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,7 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Layout;
+import com.kotcrab.vis.ui.widget.VisTable;
 import lando.systems.ld59.Config;
+import lando.systems.ld59.Flag;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.Assets;
 import lando.systems.ld59.assets.FontType;
@@ -30,6 +33,7 @@ public abstract class BaseScreen implements Screen {
     public final Stage uiStage;
 
     public OrthographicCamera worldCamera;
+    public VisTable uiRoot;
     public Layout layout;
     public Font font;
     public boolean transitioning = false;
@@ -43,8 +47,11 @@ public abstract class BaseScreen implements Screen {
         this.windowCamera = game.windowCamera;
         this.engine = game.engine;
 
+        this.uiRoot = new VisTable();
+        this.uiRoot.setFillParent(true);
         var viewport = new ScreenViewport(windowCamera);
         this.uiStage = new Stage(viewport);
+        uiStage.addActor(uiRoot);
 
         this.worldCamera = new OrthographicCamera();
         worldCamera.setToOrtho(false, Config.framebuffer_width, Config.framebuffer_height);
@@ -55,6 +62,10 @@ public abstract class BaseScreen implements Screen {
         layout.setTargetWidth(windowCamera.viewportWidth);
         font.markup(getClass().getSimpleName(), layout);
         font.regenerateLayout(layout);
+
+        // NOTE: if a screen needs to adjust input processors (rearrange, add more, etc...) use this pattern:
+        game.inputMux.setProcessors(uiStage);
+        Gdx.input.setInputProcessor(game.inputMux);
     }
 
     public Scene<? extends BaseScreen> scene() {
@@ -107,10 +118,12 @@ public abstract class BaseScreen implements Screen {
         if (worldCamera != null) {
             worldCamera.update();
         }
+        // TODO: add a global input processor to toggle flags at runtime
+        uiRoot.setDebug(Flag.DEBUG_UI.isEnabled());
         uiStage.act(Math.min(delta, 1 / 30f));
     }
 
     public void renderOffscreenBuffers(SpriteBatch batch) {}
 
-    public void initializeUI() {}
+    protected void initializeUI() {}
 }
