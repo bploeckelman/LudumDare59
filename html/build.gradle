@@ -62,6 +62,8 @@ dependencies {
   implementation "com.github.kotcrab.vis-ui:vis-ui:$visUiVersion:sources"
   implementation "com.github.payne911:PieMenu:$pieMenuVersion:sources"
   implementation "com.github.raeleus.TenPatch:tenpatch:$tenPatchVersion:sources"
+  implementation "com.github.tommyettinger:cringe:$cringeVersion:sources"
+  implementation "com.github.tommyettinger:crux:$cruxVersion:sources"
   implementation "com.github.tommyettinger:digital:$digitalVersion:sources"
   implementation "com.github.tommyettinger:funderby:$funderbyVersion:sources"
   implementation "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion:sources"
