@@ -3,6 +3,8 @@ package lando.systems.ld59.gwt;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
+import com.badlogic.gdx.graphics.g2d.freetype.gwt.FreetypeInjector;
+import com.badlogic.gdx.graphics.g2d.freetype.gwt.inject.OnCompletion;
 import lando.systems.ld59.Main;
 
 /** Launches the GWT application. */
@@ -22,4 +24,15 @@ public class GwtLauncher extends GwtApplication {
         public ApplicationListener createApplicationListener () {
             return new Main();
         }
+
+    @Override
+    public void onModuleLoad () {
+        FreetypeInjector.inject(new OnCompletion() {
+            public void run () {
+                // Replace HtmlLauncher with the class name
+                // If your class is called FooBar.java than the line should be FooBar.super.onModuleLoad();
+                GwtLauncher.super.onModuleLoad();
+            }
+        });
+    }
 }

@@ -38,25 +38,24 @@ pipeline {
                 }
             }
         }
-        stage("Build All") {
-            parallel {
-                stage("Desktop") {
-                    steps {
-                        sh './gradlew lwjgl3:jar'
-                        archiveArtifacts artifacts: 'lwjgl3/build/libs/*.jar', allowEmptyArchive: true
-                    }
-                }
-                stage("HTML - GWT") {
-                    steps {
-                        sh './gradlew html:dist'
-                    }
-                }
+
+        stage("Desktop") {
+            steps {
+                sh './gradlew lwjgl3:jar'
+                archiveArtifacts artifacts: 'lwjgl3/build/libs/*.jar', allowEmptyArchive: true
+            }
+        }
+        stage("HTML - GWT") {
+            steps {
+                sh './gradlew html:dist'
+            }
+        }
 //                stage("HTML - TeaVM") {
 //                    steps {
 //                        sh './gradlew teavm:build'
 //                    }
 //                }
-            }
+
         }
         stage("Upload to Host") {
             when { // Only upload if builds succeeded
