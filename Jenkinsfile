@@ -39,7 +39,7 @@ pipeline {
             }
         }
         stage("Build All") {
-            parallel { // Ludum Dare = speed. Build these at the same time
+            parallel {
                 stage("Desktop") {
                     steps {
                         sh './gradlew lwjgl3:jar'

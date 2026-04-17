@@ -515,7 +515,7 @@ public class Aseprite {
                 //@formatter:off
                 switch (chunkType) {
                     case Layer     : parse_layer(stream, i);         break;
-                    case Cel       : parse_cel(stream, i, chunkEnd); break;
+//                    case Cel       : parse_cel(stream, i, chunkEnd); break;
                     case Palette   : parse_palette(stream, i);       break;
                     case UserData  : parse_user_data(stream, i);     break;
                     case FrameTags : parse_tag(stream, i);           break;
@@ -560,118 +560,118 @@ public class Aseprite {
         layers.add(layer);
     }
 
-    private void parse_cel(ByteBuffer stream, int frameIndex, int maxPosition) {
-        var frame = frames.get(frameIndex);
-        if (frame.cels == null) {
-            frame.cels = new ArrayList<>();
-        }
-
-        var cel = new Cel();
-        cel.layer_index = stream.getShort();
-        cel.x = stream.getShort();
-        cel.y = stream.getShort();
-        cel.alpha = stream.get();
-        cel.linked_frame_index = -1;
-
-        var cel_type = stream.getShort();
-        stream.position(stream.position() + 7); // skip reserved bytes
-
-        // RAW or DEFLATE
-        if (cel_type == 0 || cel_type == 2) {
-            var width = stream.getShort();
-            var height = stream.getShort();
-            int num_image_bytes = width * height * mode.value;
-
-            // create the backing pixmap
-            cel.image = new Pixmap(width, height, Pixmap.Format.RGBA8888);
-            var imageBytes = ByteBuffer.allocate(num_image_bytes);
-
-            // load pixels in rgba format
-            // RAW
-            if (cel_type == 0) {
-                stream.get(imageBytes.array(), 0, num_image_bytes);
-            }
-            // DEFLATE
-            else {
-                // try to decode the pixel bytes
-                try {
-                    // note - in noel's parser he clamps this value at INT32_MAX
-                    //        not sure how the value could get bigger since its the diff of 2 ints
-                    int size = maxPosition - stream.position();
-                    var buffer = new byte[size];
-                    stream.get(buffer, 0, size);
-
-                    // sizeof Color in bytes = 4
-                    int output_length = width * height * 4;
-
-                    var inflater = new Inflater();
-                    inflater.setInput(buffer, 0, size);
-                    inflater.inflate(imageBytes.array(), 0, output_length);
-                } catch(DataFormatException e) {
-                    throw new GdxRuntimeException("File is not a valid Aseprite file (unable to inflate cel pixel data for frame): " + frameIndex);
-                }
-            }
-
-            // todo - review these conversions, they're probably not right
-
-            // convert rgba loaded pixels to another format if mode is not rgba
-            // note - we work in-place to save having to store stuff in a buffer
-            if (mode == Modes.grayscale) {
-                Gdx.app.log(TAG, " converting cel pixels to grayscale not yet implemented");
-//                var src = cel.image.getPixels().array();
-//                var dst = cel.image.getPixels().array();
+//    private void parse_cel(ByteBuffer stream, int frameIndex, int maxPosition) {
+//        var frame = frames.get(frameIndex);
+//        if (frame.cels == null) {
+//            frame.cels = new ArrayList<>();
+//        }
 //
-//                for (int d = width * height - 1, s = (width * height - 1) * 2; d >= 0; d--, s -= 2) {
-//                    dst[d] = new Color(src[s], src[s], src[s], src[s + 1]);
+//        var cel = new Cel();
+//        cel.layer_index = stream.getShort();
+//        cel.x = stream.getShort();
+//        cel.y = stream.getShort();
+//        cel.alpha = stream.get();
+//        cel.linked_frame_index = -1;
+//
+//        var cel_type = stream.getShort();
+//        stream.position(stream.position() + 7); // skip reserved bytes
+//
+//        // RAW or DEFLATE
+//        if (cel_type == 0 || cel_type == 2) {
+//            var width = stream.getShort();
+//            var height = stream.getShort();
+//            int num_image_bytes = width * height * mode.value;
+//
+//            // create the backing pixmap
+//            cel.image = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+//            var imageBytes = ByteBuffer.allocate(num_image_bytes);
+//
+//            // load pixels in rgba format
+//            // RAW
+//            if (cel_type == 0) {
+//                stream.get(imageBytes.array(), 0, num_image_bytes);
+//            }
+//            // DEFLATE
+//            else {
+//                // try to decode the pixel bytes
+//                try {
+//                    // note - in noel's parser he clamps this value at INT32_MAX
+//                    //        not sure how the value could get bigger since its the diff of 2 ints
+//                    int size = maxPosition - stream.position();
+//                    var buffer = new byte[size];
+//                    stream.get(buffer, 0, size);
+//
+//                    // sizeof Color in bytes = 4
+//                    int output_length = width * height * 4;
+//
+//                    var inflater = new Inflater();
+//                    inflater.setInput(buffer, 0, size);
+//                    inflater.inflate(imageBytes.array(), 0, output_length);
+//                } catch(DataFormatException e) {
+//                    throw new GdxRuntimeException("File is not a valid Aseprite file (unable to inflate cel pixel data for frame): " + frameIndex);
 //                }
-            } else if (mode == Modes.indexed) {
-                Gdx.app.log(TAG, " possibly broken: converting cel pixels to indexed colors....");
-                var src = imageBytes;
-                var dst = imageBytes;
-                for (int i = src.array().length - 1; i >= 0; i -= 4) {
-                    // TODO: double check byte ordering, this is a bit oof
-                    // convert source bytes into integer palette index
-                    var srcBytes = new byte[]{src.get(i), src.get(i - 1), src.get(i - 2), src.get(i - 3)};
-                    int palette_index = ByteBuffer.wrap(srcBytes).getInt();
-
-                    // retrieve the indexed color from the previously loaded palette
-                    var indexed_color = palette.get(palette_index);
-
-                    // convert indexed color to int bytes and write back to dst
-                    var result = ByteBuffer.allocate(4).putInt(indexed_color.toIntBits()).array();
-                    dst.put(i - 0, result[0]);
-                    dst.put(i - 1, result[1]);
-                    dst.put(i - 2, result[2]);
-                    dst.put(i - 3, result[3]);
-                }
-            }
-
-            // update the pixels in the cel's pixmap
-            cel.image.getPixels().put(imageBytes);
-        }
-        // REFERENCE (this cel directly references a previous cel)
-        else if (cel_type == 1) {
-            cel.linked_frame_index = stream.getShort();
-        }
-
-        // draw to frame if visible
-        // note:
-        //  render_cel doesn't properly composite multiple cels per frame (yet)
-        //  also, hitbox layers should not get rendered into the frame
-        var isVisible = 0 != (layers.get(cel.layer_index).flags & layer_flag_visible);
-        var isHitbox = layers.get(cel.layer_index).name.equals("hitbox");
-        if (isVisible && !isHitbox) {
-            render_cel(cel, frame);
-        }
-
-        // update userdata
-        cel.userdata = new UserData();
-        cel.userdata.color = Color.WHITE.cpy();
-        cel.userdata.text = "";
-        lastUserdata = cel.userdata;
-
-        frame.cels.add(cel);
-    }
+//            }
+//
+//            // todo - review these conversions, they're probably not right
+//
+//            // convert rgba loaded pixels to another format if mode is not rgba
+//            // note - we work in-place to save having to store stuff in a buffer
+//            if (mode == Modes.grayscale) {
+//                Gdx.app.log(TAG, " converting cel pixels to grayscale not yet implemented");
+////                var src = cel.image.getPixels().array();
+////                var dst = cel.image.getPixels().array();
+////
+////                for (int d = width * height - 1, s = (width * height - 1) * 2; d >= 0; d--, s -= 2) {
+////                    dst[d] = new Color(src[s], src[s], src[s], src[s + 1]);
+////                }
+//            } else if (mode == Modes.indexed) {
+//                Gdx.app.log(TAG, " possibly broken: converting cel pixels to indexed colors....");
+//                var src = imageBytes;
+//                var dst = imageBytes;
+//                for (int i = src.array().length - 1; i >= 0; i -= 4) {
+//                    // TODO: double check byte ordering, this is a bit oof
+//                    // convert source bytes into integer palette index
+//                    var srcBytes = new byte[]{src.get(i), src.get(i - 1), src.get(i - 2), src.get(i - 3)};
+//                    int palette_index = ByteBuffer.wrap(srcBytes).getInt();
+//
+//                    // retrieve the indexed color from the previously loaded palette
+//                    var indexed_color = palette.get(palette_index);
+//
+//                    // convert indexed color to int bytes and write back to dst
+//                    var result = ByteBuffer.allocate(4).putInt(indexed_color.toIntBits()).array();
+//                    dst.put(i - 0, result[0]);
+//                    dst.put(i - 1, result[1]);
+//                    dst.put(i - 2, result[2]);
+//                    dst.put(i - 3, result[3]);
+//                }
+//            }
+//
+//            // update the pixels in the cel's pixmap
+//            cel.image.getPixels().put(imageBytes);
+//        }
+//        // REFERENCE (this cel directly references a previous cel)
+//        else if (cel_type == 1) {
+//            cel.linked_frame_index = stream.getShort();
+//        }
+//
+//        // draw to frame if visible
+//        // note:
+//        //  render_cel doesn't properly composite multiple cels per frame (yet)
+//        //  also, hitbox layers should not get rendered into the frame
+//        var isVisible = 0 != (layers.get(cel.layer_index).flags & layer_flag_visible);
+//        var isHitbox = layers.get(cel.layer_index).name.equals("hitbox");
+//        if (isVisible && !isHitbox) {
+//            render_cel(cel, frame);
+//        }
+//
+//        // update userdata
+//        cel.userdata = new UserData();
+//        cel.userdata.color = Color.WHITE.cpy();
+//        cel.userdata.text = "";
+//        lastUserdata = cel.userdata;
+//
+//        frame.cels.add(cel);
+//    }
 
     private void parse_palette(ByteBuffer stream, int frame) {
         stream.getInt(); // size
