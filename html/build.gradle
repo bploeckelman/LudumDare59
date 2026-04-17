@@ -6,7 +6,6 @@ buildscript {
   }
   dependencies {
     classpath "org.docstr.gwt:org.docstr.gwt.gradle.plugin:$gwtPluginVersion"
-
   }
 }
 apply plugin: "org.docstr.gwt"
@@ -28,7 +27,6 @@ gwt {
     files(project(':core').sourceSets.main.allJava.srcDirs),
     files("../core/build/generated/sources/annotationProcessor/java/main"),
     files(sourceSets.main.output.resourcesDir),
-
   )
   modules = ["lando.systems.ld59.GdxDefinition"]
 
@@ -57,10 +55,13 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
   implementation "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
   implementation "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+  // NOTE: bug with gdx 1.14.0 where gdx-freetype-gwt doesn't play nice...
+  // https://github.com/intrigus/gdx-freetype-gwt/issues/14
+  // https://github.com/0lehandro/gdx-freetype-gwt
 //  implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:$gdxFreetypeGwtVersion"
 //  implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:$gdxFreetypeGwtVersion:sources"
-  implementation "com.github.0lehandro:gdx-freetype-gwt:1.14.15"
-  implementation "com.github.0lehandro:gdx-freetype-gwt:1.14.15:sources"
+  implementation "com.github.0lehandro:gdx-freetype-gwt:$gdxFreetypeGwtVersion_FORK"
+  implementation "com.github.0lehandro:gdx-freetype-gwt:$gdxFreetypeGwtVersion_FORK:sources"
   implementation "com.github.kotcrab.vis-ui:vis-ui:$visUiVersion:sources"
   implementation "com.github.payne911:PieMenu:$pieMenuVersion:sources"
   implementation "com.github.raeleus.TenPatch:tenpatch:$tenPatchVersion:sources"
@@ -73,6 +74,7 @@ dependencies {
   implementation "com.github.tommyettinger:gdcrux:$gdcruxVersion:sources"
   implementation "com.github.tommyettinger:juniper:$juniperVersion:sources"
   implementation "com.github.tommyettinger:regexodus:$regExodusVersion:sources"
+  // NOTE: technically this should come through freetypist, but it doesn't seem like it is?
   implementation "com.github.tommyettinger:textratypist:$textratypistVersion:sources"
   implementation "com.github.tommyettinger:freetypist:$freetypistVersion:sources"
   implementation "com.google.jsinterop:jsinterop-annotations:2.1.0:sources"

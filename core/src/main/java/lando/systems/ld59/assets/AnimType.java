@@ -2,7 +2,6 @@ package lando.systems.ld59.assets;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import lombok.AllArgsConstructor;
 
 import java.io.Serializable;
 import java.util.EnumMap;
