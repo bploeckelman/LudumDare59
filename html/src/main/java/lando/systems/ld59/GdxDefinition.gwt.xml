@@ -67,5 +67,6 @@
     <extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui" />
     <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld59.game.components" />
     <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld59.game.systems" />
+    <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld59.particles" />
     <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld59.screens" />
 </module>
