@@ -56,7 +56,7 @@ pipeline {
 //                    }
 //                }
 
-        }
+
         stage("Upload to Host") {
             when { // Only upload if builds succeeded
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
