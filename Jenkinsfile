@@ -51,11 +51,11 @@ pipeline {
                         sh './gradlew html:dist'
                     }
                 }
-                stage("HTML - TeaVM") {
-                    steps {
-                        sh './gradlew teavm:build'
-                    }
-                }
+//                stage("HTML - TeaVM") {
+//                    steps {
+//                        sh './gradlew teavm:build'
+//                    }
+//                }
             }
         }
         stage("Upload to Host") {
