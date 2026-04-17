@@ -5,9 +5,9 @@ import hudson.Util;
 pipeline {
     agent any
 
-    tools {
-        jdk 'jdk-11' // Match what your libGDX project needs. Set this up in Manage Jenkins -> Tools
-    }
+//    tools {
+//        jdk 'jdk-11' // Match what your libGDX project needs. Set this up in Manage Jenkins -> Tools
+//    }
 
     options {
         timestamps()
