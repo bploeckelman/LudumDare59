@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
+import lando.systems.ld59.Config;
 import lando.systems.ld59.assets.EffectType;
 
 public class TitleScreen extends BaseScreen {
@@ -50,6 +51,9 @@ public class TitleScreen extends BaseScreen {
 //            batch.setColor(0, 0, 0, pixelOverlayAlpha.floatValue());
 //            batch.draw(pixel, 0, 0, winWidth, winHeight);
 //            batch.setColor(Color.WHITE);
+            batch.setColor(Color.RED);
+            batch.draw(pixel, Config.window_width / 2f - 100f, Config.window_height / 2f - 100f, 200f, 200f);
+            batch.setColor(Color.WHITE);
         }
         batch.end();
 
