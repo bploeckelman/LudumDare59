@@ -28,7 +28,13 @@ public class ParticleSystem extends IteratingSystem implements Disposable {
 
     private static final int MAX_PARTICLES = 5000;
 
-    public Pool<ParticleData> pool = Pools.get(ParticleData.class, MAX_PARTICLES);
+    public Pool<ParticleData> pool = new Pool<ParticleData>(16, MAX_PARTICLES) {
+        @Override
+        protected ParticleData newObject() {
+            return new ParticleData();
+        }
+    };
+
     public List<ParticleData> activeData = new ArrayList<>();
     public List<Entity> activeParticles = new ArrayList<>();
 

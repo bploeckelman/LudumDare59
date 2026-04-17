@@ -30,11 +30,15 @@ public interface TilemapObject {
         return entity;
     }
 
-    @AllArgsConstructor
     class Simple implements TilemapObject, Component {
 
         public final Tilemap tilemap;
         public final MapObject mapObject;
+
+        public Simple(Tilemap tilemap, MapObject mapObject) {
+            this.tilemap = tilemap;
+            this.mapObject = mapObject;
+        }
 
         @Override
         public Tilemap tilemap() {
@@ -47,7 +51,6 @@ public interface TilemapObject {
         }
     }
 
-    @AllArgsConstructor
     class Spawner implements TilemapObject, Component {
 
         /**
@@ -70,6 +73,15 @@ public interface TilemapObject {
                 object.getProperties().get("id", -1, Integer.class),
                 object.getProperties().get("x", 0f, Float.class).intValue(),
                 object.getProperties().get("y", 0f, Float.class).intValue());
+        }
+
+        public Spawner(Tilemap tilemap, MapObject object, String type, int id, int x, int y) {
+            this.tilemap = tilemap;
+            this.mapObject = object;
+            this.type = type;
+            this.id = id;
+            this.x = x;
+            this.y = y;
         }
 
         public String type() { return type; }
@@ -97,7 +109,6 @@ public interface TilemapObject {
         }
     }
 
-    @AllArgsConstructor
     class Trigger implements TilemapObject, Component {
 
         public final Tilemap tilemap;
@@ -114,6 +125,15 @@ public interface TilemapObject {
                 object.getProperties().get("id", -1, Integer.class),
                 ((RectangleMapObject) object).getRectangle(),
                 false);
+        }
+
+        public Trigger(Tilemap tilemap, MapObject object, String type, int id, Rectangle bounds, boolean activated) {
+            this.tilemap = tilemap;
+            this.mapObject = object;
+            this.type = type;
+            this.id = id;
+            this.bounds = bounds;
+            this.activated = activated;
         }
 
         public String type() { return type; }

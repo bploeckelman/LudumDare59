@@ -6,10 +6,14 @@ import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.utils.FramePool;
 import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public abstract class AnimationEvent implements SignalEvent {
 
     public Animator animator;
+
+    public AnimationEvent(Animator animator) {
+        this.animator = animator;
+    }
+
     public Animator animator() { return animator; }
 
     public static void facing(Animator animator, int newFacing)         { signal.dispatch(new Facing(animator, newFacing)); }

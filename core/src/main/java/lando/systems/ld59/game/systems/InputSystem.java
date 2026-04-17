@@ -29,7 +29,7 @@ public class InputSystem extends IteratingSystem {
 
     @Override
     public void update(float delta) {
-        keepControllerCurrent();
+//        keepControllerCurrent();
         super.update(delta);
     }
 

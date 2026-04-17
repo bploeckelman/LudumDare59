@@ -9,10 +9,13 @@ import lombok.RequiredArgsConstructor;
 /**
  * Access to {@link Scene} object via {@link com.badlogic.ashley.core.Engine}
  */
-@RequiredArgsConstructor
 public class SceneContainer implements Component {
 
     public final Scene scene;
+
+    public SceneContainer(Scene scene) {
+        this.scene = scene;
+    }
 
     public Scene scene() { return scene; }
 

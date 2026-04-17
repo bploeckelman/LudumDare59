@@ -14,23 +14,29 @@ public abstract class AudioEvent implements SignalEvent {
     public static void stopMusic(MusicType music)               { signal.dispatch(new StopMusic(music)); }
     public static void stopAllMusic()                           { signal.dispatch(new StopMusic()); }
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class PlaySound extends AudioEvent {
         public final SoundType soundType;
         public final float volume;
         private PlaySound(SoundType soundType) { this(soundType, 1f); }
+        private PlaySound(SoundType soundType, float volume) {
+            this.soundType = soundType;
+            this.volume = volume;
+        }
     }
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class PlayMusic extends AudioEvent {
         public final MusicType musicType;
         public final float volume;
         private PlayMusic(MusicType musicType) { this(musicType, 1f); }
+        private PlayMusic(MusicType musicType, float volume) {
+            this.musicType = musicType;
+            this.volume = volume;
+        }
     }
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class StopMusic extends AudioEvent {
         public final MusicType musicType;
         private StopMusic() { this(null); }
+        private StopMusic(MusicType musicType) { this.musicType = musicType; }
     }
 }

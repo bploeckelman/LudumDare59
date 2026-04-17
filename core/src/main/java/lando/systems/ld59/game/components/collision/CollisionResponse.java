@@ -2,11 +2,16 @@ package lando.systems.ld59.game.components.collision;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class CollisionResponse {
 
     public final boolean stopMovement;
     public final boolean stopVelocity;
+
+    // Explicit constructor so GWT can see it
+    public CollisionResponse(boolean stopMovement, boolean stopVelocity) {
+        this.stopMovement = stopMovement;
+        this.stopVelocity = stopVelocity;
+    }
 
     public boolean stopMovement() { return stopMovement; }
     public boolean stopVelocity() { return stopVelocity; }

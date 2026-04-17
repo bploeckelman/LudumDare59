@@ -131,11 +131,15 @@ public class ViewSystem extends IteratingSystem {
         float x();
         float y();
 
-        @RequiredArgsConstructor
         class EntityPos implements Target {
 
             public final Entity entity;
             public final Position position;
+
+            public EntityPos(Entity entity, Position position) {
+                this.entity = entity;
+                this.position = position;
+            }
 
             public Entity entity() { return entity; }
             public Position position() { return position; }
@@ -148,20 +152,28 @@ public class ViewSystem extends IteratingSystem {
             public float y() { return position.y; }
         }
 
-        @RequiredArgsConstructor
         class Vec2 implements Target {
 
             public final Vector2 vec2;
+
+            public Vec2(Vector2 vec2) {
+                this.vec2 = vec2;
+            }
 
             public float x() { return vec2.x; }
             public float y() { return vec2.y; }
         }
 
-        @RequiredArgsConstructor
         class Scroll implements Target {
             public final Viewer viewer;
             public final Interp interp;
             public final Bounds bounds;
+
+            public Scroll(Viewer viewer, Interp interp, Bounds bounds) {
+                this.viewer = viewer;
+                this.interp = interp;
+                this.bounds = bounds;
+            }
 
             public Viewer viewer() { return viewer; }
             public Interp interp() { return interp; }

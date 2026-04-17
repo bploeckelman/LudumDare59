@@ -4,7 +4,6 @@ import com.badlogic.gdx.Input;
 import lando.systems.ld59.game.components.Player;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class InputControls {
 
     public final int left;
@@ -23,5 +22,14 @@ public class InputControls {
 
     public static InputControls forPlayer(Player player) {
         return new InputControls(Input.Keys.A, Input.Keys.D, Input.Keys.S, Input.Keys.SPACE, Input.Keys.ENTER, Input.Keys.E);
+    }
+
+    private InputControls(int left, int right, int down, int jump, int enter, int debug) {
+        this.left = left;
+        this.right = right;
+        this.down = down;
+        this.jump = jump;
+        this.enter = enter;
+        this.debug = debug;
     }
 }

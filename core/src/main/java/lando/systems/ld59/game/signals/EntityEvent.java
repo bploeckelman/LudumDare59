@@ -12,9 +12,9 @@ public interface EntityEvent extends SignalEvent {
 
     static void remove(Entity entity) { signal.dispatch(new Remove(entity)); }
 
-    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     class Remove implements EntityEvent {
         public final Entity entity;
         public Entity entity() { return entity; }
+        public Remove(Entity entity) { this.entity = entity; }
     }
 }

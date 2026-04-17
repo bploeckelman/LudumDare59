@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.Arrays;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class Collider implements Component {
 
     public final CollisionShape shape;
@@ -23,6 +22,12 @@ public class Collider implements Component {
 
     public Collider(CollisionShape shape, CollisionMask mask, CollisionMask... collidesWith) {
         this(shape, mask, Arrays.asList(collidesWith));
+    }
+
+    public Collider(CollisionShape shape, CollisionMask mask, List<CollisionMask> collidesWith) {
+        this.shape = shape;
+        this.mask = mask;
+        this.collidesWith = collidesWith;
     }
 
     public Shape2D shape2d() {

@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 /**
  * {@link Rectangle} {@code CollisionShape}
  */
-@AllArgsConstructor
 public class CollisionRect implements CollisionShape {
 
     private static final String TAG = CollisionRect.class.getSimpleName();
@@ -22,6 +21,10 @@ public class CollisionRect implements CollisionShape {
 
     public CollisionRect(float x, float y, float w, float h) {
         this(new Rectangle(x, y, w, h));
+    }
+
+    public CollisionRect(Rectangle rect) {
+        this.rectangle = rect;
     }
 
     @Override

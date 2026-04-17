@@ -4,10 +4,13 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class Viewer implements Component {
 
     public final OrthographicCamera camera;
+
+    public Viewer(OrthographicCamera camera) {
+        this.camera = camera;
+    }
 
     public OrthographicCamera camera() { return camera; }
 

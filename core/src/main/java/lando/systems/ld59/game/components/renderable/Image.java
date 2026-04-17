@@ -60,16 +60,16 @@ public class Image extends Renderable implements Component {
         int height();
     }
 
-    @AllArgsConstructor
     private static class TextureImage implements ImageValue {
         public final Texture texture;
+        private TextureImage(Texture texture) { this.texture = texture; }
         public int width() { return texture.getWidth(); }
         public int height() { return texture.getHeight(); }
     }
 
-    @AllArgsConstructor
     private static class RegionImage implements ImageValue {
         public final TextureRegion region;
+        private RegionImage(TextureRegion region) { this.region = region; }
         public int width() { return region.getRegionWidth(); }
         public int height() { return region.getRegionHeight(); }
     }

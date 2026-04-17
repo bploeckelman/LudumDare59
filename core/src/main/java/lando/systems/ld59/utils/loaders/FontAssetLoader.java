@@ -51,12 +51,17 @@ public class FontAssetLoader extends AsynchronousAssetLoader<Font, FontAssetLoad
         return font;
     }
 
-    @AllArgsConstructor
+
     public static class Param extends AssetLoaderParameters<Font> {
         public final String fontFilePath;
         public final FreeTypeFontParameter ttfParams;
         public Param(String fontFilePath) {
             this(fontFilePath, new FreeTypeFontParameter() {{ size = FontType.DEFAULT_SIZE; }});
+        }
+
+        public Param(String fontFilePath, FreeTypeFontParameter ttfParams) {
+            this.fontFilePath = fontFilePath;
+            this.ttfParams = ttfParams;
         }
     }
 }

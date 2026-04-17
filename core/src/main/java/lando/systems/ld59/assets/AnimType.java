@@ -20,11 +20,17 @@ public interface AnimType extends AssetType<Animation<TextureRegion>> {
 
     static final Map<Class<?>, EnumMap<?, Animation<TextureRegion>>> CONTAINERS = new IdentityHashMap<>();
 
-    @AllArgsConstructor
+
     class AnimConfig {
         public final String basePath;
         public final String animName;
         public final Data data;
+
+        public AnimConfig(String basePath, String animName, Data data) {
+            this.basePath = basePath;
+            this.animName = animName;
+            this.data = data;
+        }
     }
 
     class Data implements Serializable {

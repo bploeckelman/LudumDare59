@@ -22,7 +22,6 @@ public interface TilemapObjectType {
         }
     }
 
-    @RequiredArgsConstructor
     enum Enemies implements TilemapObjectType {
           ANGRY_SUN("sun")
         , BULLET_BILL("bullet")
@@ -35,10 +34,14 @@ public interface TilemapObjectType {
         , MISTY("misty")
         ;
         public final String mapTypeName;
+
+        Enemies(String mapTypeName) {
+            this.mapTypeName = mapTypeName;
+        }
+
         public String mapTypeName() { return mapTypeName; }
     }
 
-    @RequiredArgsConstructor
     enum Blocks implements TilemapObjectType {
           BREAK("block")
         , COIN("coin-block")
@@ -46,10 +49,13 @@ public interface TilemapObjectType {
         , LAVA("lava")
         ;
         public final String mapTypeName;
+
+        Blocks(String mapTypeName) {
+            this.mapTypeName = mapTypeName;
+        }
         public String mapTypeName() { return mapTypeName; }
     }
 
-    @RequiredArgsConstructor
     enum Pickups implements TilemapObjectType {
           COIN("coin")
         , RELIC_PLUNGER("plunger")
@@ -58,14 +64,20 @@ public interface TilemapObjectType {
         , SHROOM("shroom")
         ;
         public final String mapTypeName;
+
+        Pickups(String mapTypeName) {
+            this.mapTypeName = mapTypeName;
+        }
         public String mapTypeName() { return mapTypeName; }
     }
 
-    @RequiredArgsConstructor
     enum Misc implements TilemapObjectType {
         TRIGGER("trigger")
         ;
         public final String mapTypeName;
+        Misc(String mapTypeName) {
+            this.mapTypeName = mapTypeName;
+        }
         public String mapTypeName() { return mapTypeName; }
     }
 }

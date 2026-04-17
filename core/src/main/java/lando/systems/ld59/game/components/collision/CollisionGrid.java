@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 /**
  * Grid of {@code solid or empty} {@link Cell}s {@code CollisionShape}
  */
-@AllArgsConstructor
 public class CollisionGrid implements CollisionShape, Shape2D {
 
     private static final String TAG = CollisionGrid.class.getSimpleName();
@@ -37,6 +36,13 @@ public class CollisionGrid implements CollisionShape, Shape2D {
         for (int i = 0; i < cols * rows; i++) {
             cells[i] = new Cell();
         }
+    }
+
+    public CollisionGrid(int cellSize, int rows, int cols, Cell[] cells) {
+        this.cellSize = cellSize;
+        this.rows = rows;
+        this.cols = cols;
+        this.cells = cells;
     }
 
     public int cellSize() { return cellSize; }

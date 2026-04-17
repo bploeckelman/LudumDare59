@@ -10,7 +10,6 @@ import lando.systems.ld59.utils.FramePool;
 import lando.systems.ld59.utils.Util;
 import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class CollisionCirc implements CollisionShape {
 
     private static final String TAG = CollisionCirc.class.getSimpleName();
@@ -19,6 +18,10 @@ public class CollisionCirc implements CollisionShape {
 
     public CollisionCirc(float x, float y, float radius) {
         this(new Circle(x, y, radius));
+    }
+
+    public CollisionCirc(Circle circle) {
+        this.circle = circle;
     }
 
     @Override

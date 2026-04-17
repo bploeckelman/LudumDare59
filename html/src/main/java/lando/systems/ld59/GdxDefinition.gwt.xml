@@ -22,7 +22,7 @@
   <inherits name="com.github.tommyettinger.funderby" />
   <inherits name="com.github.tommyettinger.gdcrux" />
   <inherits name="com.github.tommyettinger.jdkgdxds" />
-  <inherits name="com.github.tommyettinger.jdkgdxds_interop" />
+<!--  <inherits name="com.github.tommyettinger.jdkgdxds_interop" />-->
   <inherits name="com.github.tommyettinger.juniper" />
   <inherits name="com.github.tommyettinger.freetypist" />
   <inherits name="com.github.tommyettinger.textratypist" />
@@ -55,4 +55,16 @@
   <set-property name="user.agent" value="gecko1_8, safari"/>
   <collapse-property name="user.agent" values="*" />
   <!-- Remove the "user.agent" lines above if you encounter issues with Safari or other Gecko browsers. -->
+
+    <set-configuration-property name="gdx.reflect.include" value="false" />
+
+    <extend-configuration-property name="gdx.reflect.exclude" value="com.github.tommyettinger" />
+    <extend-configuration-property name="gdx.reflect.exclude" value="com.kotcrab" />
+    <extend-configuration-property name="gdx.reflect.exclude" value="regexodus" />
+    <extend-configuration-property name="gdx.reflect.exclude" value="com.badlogic.ashley" />
+    <extend-configuration-property name="gdx.reflect.exclude" value="space.earlygrey" />
+
+    <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld59.game.components" />
+    <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld59.game.systems" />
+    <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld59.screens" />
 </module>
