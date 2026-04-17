@@ -10,15 +10,21 @@
 
   <!-- "Inherits" lines are how GWT knows where to look for code and configuration in other projects or libraries. -->
   <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
+  <inherits name="com.badlogic.gdx.graphics.g2d.freetype.freetype-gwt" />
   <inherits name="aurelienribon.tweenengine" />
+  <inherits name="PieMenu" />
   <inherits name="com.badlogic.ashley_gwt" />
   <inherits name="com.badlogic.gdx.controllers" />
   <inherits name="com.badlogic.gdx.controllers.controllers-gwt" />
+  <inherits name="com.github.tommyettinger.cringe" />
+  <inherits name="com.github.tommyettinger.crux" />
   <inherits name="com.github.tommyettinger.digital" />
   <inherits name="com.github.tommyettinger.funderby" />
+  <inherits name="com.github.tommyettinger.gdcrux" />
   <inherits name="com.github.tommyettinger.jdkgdxds" />
   <inherits name="com.github.tommyettinger.jdkgdxds_interop" />
   <inherits name="com.github.tommyettinger.juniper" />
+  <inherits name="com.github.tommyettinger.freetypist" />
   <inherits name="com.github.tommyettinger.textratypist" />
   <inherits name="com.kotcrab.vis.vis-ui" />
   <inherits name="com.ray3k.tenpatch.tenpatch" />
