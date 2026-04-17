@@ -57,6 +57,8 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
   implementation "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
   implementation "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+  implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:$gdxFreetypeGwtVersion"
+  implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:$gdxFreetypeGwtVersion:sources"
   implementation "com.github.kotcrab.vis-ui:vis-ui:$visUiVersion:sources"
   implementation "com.github.raeleus.TenPatch:tenpatch:$tenPatchVersion:sources"
   implementation "com.github.tommyettinger:digital:$digitalVersion:sources"
