@@ -46,7 +46,6 @@ public class RenderSystem extends SortedIteratingSystem {
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {
-
     }
 
     public void draw(SpriteBatch batch) {
