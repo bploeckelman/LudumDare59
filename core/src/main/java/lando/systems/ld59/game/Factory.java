@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.ImageType;
-import lando.systems.ld59.assets.anims.AnimCockpit;
+import lando.systems.ld59.assets.anims.AnimBase;
 import lando.systems.ld59.assets.anims.AnimEnemy;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionMask;
@@ -32,6 +32,18 @@ public class Factory {
         return entity;
     }
 
+    public static Entity base(int x, int y) {
+        var entity = createEntity();
+
+        var position = new Position(x, y);
+        var base = new Base(Main.game.engine, position);
+
+        entity.add(position);
+        entity.add(base);
+
+        return entity;
+    }
+
     public static Entity turret(int x, int y) {
         var entity = createEntity();
 
@@ -41,19 +53,19 @@ public class Factory {
 
         var position = new Position(x, y);
         var turret = new Turret(Main.game.engine, position);
-        var animator = new Animator(AnimCockpit.TURRET_EMPLACEMENT_1, animOrigin);
+//        var animator = new Animator(AnimBase.TURRET_EMPLACEMENT_1, animOrigin);
         var collider = Collider.rect(CollisionMask.TURRET,
                 -width / 2f,
                 -height / 2f,
                 width, height,
                 CollisionMask.ENEMY_PROJECTILE);
 
-        animator.size.set(width, height);
-        animator.depth = Turret.ANIM_DEPTH;
+//        animator.size.set(width, height);
+//        animator.depth = Turret.ANIM_DEPTH;
 
         entity.add(position);
         entity.add(turret);
-        entity.add(animator);
+//        entity.add(animator);
         entity.add(collider);
 
         return entity;
@@ -67,11 +79,11 @@ public class Factory {
         var animOrigin = new Vector2(width / 2f, height / 2f);
 
         var position = new Position(x, y);
-        var animator = new Animator(AnimCockpit.CABLE_2, animOrigin);
+//        var animator = new Animator(AnimBase.CABLE_2, animOrigin);
         var collider = Collider.rect(CollisionMask.CABLE, 0, 0, width, height);
 
         entity.add(position);
-        entity.add(animator);
+//        entity.add(animator);
         entity.add(collider);
 
         return entity;
@@ -85,11 +97,11 @@ public class Factory {
         var animOrigin = new Vector2(width / 2f, height / 2f);
 
         var position = new Position(x, y);
-        var animator = new Animator(AnimCockpit.PORT_1, animOrigin);
+//        var animator = new Animator(AnimBase.PORT_1, animOrigin);
         var collider = Collider.rect(CollisionMask.PORT, 0, 0, width, height);
 
         entity.add(position);
-        entity.add(animator);
+//        entity.add(animator);
         entity.add(collider);
 
         return entity;

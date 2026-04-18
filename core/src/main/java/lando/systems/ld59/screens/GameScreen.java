@@ -8,7 +8,6 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
-import lando.systems.ld59.assets.anims.AnimCockpit;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.scenes.SceneGame;
 

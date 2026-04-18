@@ -16,12 +16,17 @@ public class SceneGame extends Scene<GameScreen> {
         createView(Config.framebuffer_width, Config.framebuffer_height);
 
         var centerX = (int) (screen.worldCamera.viewportWidth / 2);
-        var cable = Factory.cable(centerX, 0);
-        var port = Factory.port(centerX, 100);
-        var turret = Factory.turret(centerX, 200);
+
+        var base = Factory.base(centerX, 0);
+
+        engine().addEntity(base);
+
+//        var cable = Factory.cable(centerX, 0);
+//        var port = Factory.port(centerX, 100);
+//        var turret = Factory.turret(centerX, 200);
 
 //        engine().addEntity(cable);
 //        engine().addEntity(port);
-        engine().addEntity(turret);
+//        engine().addEntity(turret);
     }
 }
