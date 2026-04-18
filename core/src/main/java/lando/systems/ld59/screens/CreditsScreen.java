@@ -2,28 +2,31 @@ package lando.systems.ld59.screens;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.tommyettinger.textra.TypingLabel;
-import com.kotcrab.vis.ui.layout.FlowGroup;
+
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.FontType;
+import lando.systems.ld59.assets.anims.AnimPet;
 
 public class CreditsScreen extends BaseScreen {
 
     private static final Color BACKGROUND_COLOR = new Color(.0f, .0f, .2f, 1f);
+    private float accum = 0f;
+    private Image asukaImage;
+    private Image cherryImage;
+    private Image oshaImage;
 
     // TODO: in i18n strings...
     //  how to mix formatting placeholders: {0}, {1}, ..., with typing label placeholders like {GRADIENT},
     //  I think they don't play nice because they use the same delimiter `{}`
     //  usage: assets.strings.format("property.name", placeholderValue)
-
-    // TODO: add pet sprites to Body
-
-    // TODO: get the Header, Body, Footer row sections to fill the screen properly
 
     private class Header extends VisTable {
         private Header() {
@@ -46,31 +49,42 @@ public class CreditsScreen extends BaseScreen {
             padTop(10);
             padBottom(10);
 
-            var rowSpacing = 10f;
-            var vertical = true;
-            var panelLeft = new FlowGroup(vertical, rowSpacing);
-            var panelRight = new FlowGroup(vertical, rowSpacing);
+            var panelLeft = new VisTable();
+            var panelRight = new VisTable();
 
-            // TODO: set a background texture on the panels (might have to extend and customize)
+            // Set background texture on the panels
+            var panelBackground = new NinePatchDrawable(assets.plainNine);
+            panelLeft.setBackground(panelBackground);
+            panelRight.setBackground(panelBackground);
+            panelLeft.defaults().left().pad(10);
+            panelRight.defaults().right().pad(10);
 
-            // TODO: maybe don't use FlowGroups, harder to align the text than just straight table cells
+            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.code-heading"), FontType.ROUNDABOUT.get())).row();
+            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.code-names"), FontType.ROBOTO.get())).row();
+            panelLeft.row().height(20f);
+            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.pets-heading"), FontType.ROUNDABOUT.get())).row();
 
-            panelLeft.addActor(new TypingLabel(assets.strings.get("credits.body.left.code-heading"), FontType.ROUNDABOUT.get()));
-            panelLeft.addActor(new TypingLabel(assets.strings.get("credits.body.left.code-names"), FontType.ROBOTO.get()));
-            panelLeft.addActor(new VisLabel()); // spacer
-            panelLeft.addActor(new VisLabel()); // spacer
-            panelLeft.addActor(new TypingLabel(assets.strings.get("credits.body.left.pets-heading"), FontType.ROUNDABOUT.get()));
-            panelLeft.addActor(new TypingLabel(assets.strings.get("credits.body.left.pets-names"), FontType.COUSINE.get()));
+            var petsTable = new VisTable();
+            var petSprites = new VisTable();
+            petsTable.add(new TypingLabel(assets.strings.get("credits.body.left.pets-names"), FontType.COUSINE.get())).growY();
+            petsTable.add(new VisLabel()).width(10f);
+            asukaImage = new Image(AnimPet.ASUKA.get().getKeyFrame(accum));
+            cherryImage = new Image(AnimPet.CHERRY.get().getKeyFrame(accum));
+            oshaImage = new Image(AnimPet.OSHA.get().getKeyFrame(accum));
+            petSprites.add(asukaImage).size(32f, 32f).row();
+            petSprites.add(oshaImage).size(32f, 32f).row();
+            petSprites.add(cherryImage).size(32f, 32f);
+            petsTable.add(petSprites);
+            panelLeft.add(petsTable).row();
 
-            panelRight.addActor(new TypingLabel(assets.strings.get("credits.body.right.art-heading"), FontType.ROUNDABOUT.get()));
-            panelRight.addActor(new TypingLabel(assets.strings.get("credits.body.right.art-names"), FontType.ROBOTO.get()));
-            panelRight.addActor(new VisLabel()); // spacer
-            panelRight.addActor(new VisLabel()); // spacer
-            panelRight.addActor(new TypingLabel(assets.strings.get("credits.body.right.audio-heading"), FontType.ROUNDABOUT.get()));
-            panelRight.addActor(new TypingLabel(assets.strings.get("credits.body.right.audio-names"), FontType.COUSINE.get()));
+            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.art-heading"), FontType.ROUNDABOUT.get())).row();
+            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.art-names"), FontType.ROBOTO.get())).row();
+            panelRight.row().height(20f);
+            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.audio-heading"), FontType.ROUNDABOUT.get())).row();
+            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.audio-names"), FontType.COUSINE.get())).row();
 
-            add(panelLeft).grow().pad(40);
-            add(panelRight).grow().pad(40);
+            add(panelLeft).width(500f).growY().pad(40);
+            add(panelRight).width(500f).growY().pad(40);
         }
     }
 
@@ -104,15 +118,31 @@ public class CreditsScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(BACKGROUND_COLOR);
-
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
         {
             // nothing to draw, it's all in the ui
         }
         batch.end();
-
         uiStage.draw();
+    }
+
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+        accum += delta;
+
+        // Update animated pet sprites
+        if (asukaImage != null) {
+            asukaImage.setDrawable(new Image(AnimPet.ASUKA.get().getKeyFrame(accum)).getDrawable());
+        }
+        if (cherryImage != null) {
+            cherryImage.setDrawable(new Image(AnimPet.CHERRY.get().getKeyFrame(accum)).getDrawable());
+        }
+        if (oshaImage != null) {
+            oshaImage.setDrawable(new Image(AnimPet.OSHA.get().getKeyFrame(accum)).getDrawable());
+        }
+        uiStage.act(delta);
     }
 
     @Override
@@ -120,7 +150,7 @@ public class CreditsScreen extends BaseScreen {
         if (Flag.DEBUG_RENDER.isEnabled()) {
             var screenName = new VisLabel(getClass().getSimpleName());
             screenName.setPosition(10, windowCamera.viewportHeight - 10 - screenName.getHeight());
-            uiStage.addActor(screenName);
+            uiStage.setDebugInvisible(false);
         }
 
         uiRoot.setDebug(true);
