@@ -19,6 +19,9 @@ public abstract class Renderable {
     public final Vector2 origin = new Vector2();
     public final Vector2 size   = new Vector2();
 
+    public float rotation = 0;
+    public final Vector2 rotationOrigin = new Vector2();
+
     public final Vector2 defaultScale     = new Vector2(1, 1);
     public final Vector2 scale            = defaultScale.cpy();
     public final float   scaleReturnSpeed = 4f;

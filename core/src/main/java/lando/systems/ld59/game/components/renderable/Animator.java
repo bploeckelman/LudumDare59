@@ -36,12 +36,14 @@ public class Animator extends Renderable implements Component {
     public Animator(TextureRegion keyframe) {
         this.keyframe = keyframe;
         this.size.set(keyframe.getRegionWidth(), keyframe.getRegionHeight());
+        this.origin.set(keyframe.getRegionWidth() / 2f, keyframe.getRegionHeight() / 2f);
+        this.rotationOrigin.set(keyframe.getRegionWidth() / 2f, keyframe.getRegionHeight() / 2f);
     }
 
     @Override
     public void render(SpriteBatch batch, Position position) {
         if (keyframe == null) return;
-        Util.draw(batch, keyframe, rect(position), tint);
+        Util.draw(batch, keyframe, rect(position), tint, rotationOrigin.x, rotationOrigin.y, scale.x, scale.y, rotation );
     }
 
     public TextureRegion keyframe() {

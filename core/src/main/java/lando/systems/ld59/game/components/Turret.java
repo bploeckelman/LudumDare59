@@ -3,6 +3,7 @@ package lando.systems.ld59.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.assets.anims.AnimBase;
 import lando.systems.ld59.game.Factory;
@@ -42,8 +43,13 @@ public class Turret implements Component {
         cannon.add(new Position(pos.x, pos.y));
         cannon.add(cannonAnim);
         cannon.add(cannonCollider);
+        cannon.add(new Interp(2f, Interpolation.linear, Interp.Repeat.PINGPONG));
 
         engine.addEntity(base);
         engine.addEntity(cannon);
+    }
+
+    public void shoot() {
+
     }
 }

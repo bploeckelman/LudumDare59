@@ -11,9 +11,12 @@ import lando.systems.ld59.utils.Calc;
  */
 public class Interp implements Component {
 
+    public enum Repeat {NONE, PINGPONG, LOOP}
+
     private static final String TAG = Interp.class.getSimpleName();
 
     private final float duration;
+    private final Repeat repeatMode;
 
     private float elapsed;
     private float value;
@@ -32,12 +35,17 @@ public class Interp implements Component {
     }
 
     public Interp(float durationSecs, Interpolation interpolation) {
+        this(durationSecs, interpolation, Repeat.NONE);
+    }
+
+    public Interp(float durationSecs, Interpolation interpolation, Repeat repeatMode) {
         this.duration = durationSecs;
         this.elapsed = 0;
         this.value = 0;
         this.paused = false;
         this.interpolation = interpolation;
         this.speed = 1;
+        this.repeatMode = repeatMode;
     }
 
     /**
@@ -51,8 +59,33 @@ public class Interp implements Component {
     public void update(float delta) {
         elapsed += speed * delta;
 
-        // Constrain elapsed time to a percentage, ie. in [0..1]
-        var alpha = Calc.clampf(elapsed() / duration(), 0f, 1f);
+        float alpha = 0f;
+
+        switch (repeatMode) {
+            case PINGPONG:
+                // How many full durations have we passed
+                int cycle = (int)(elapsed / duration);
+                // Get position within current duration
+                float remainder = elapsed % duration;
+
+                // Even cycles go 0→1, odd cycles go 1→0
+                if (cycle % 2 == 0) {
+                    alpha = remainder / duration;
+                } else {
+                    alpha = 1f - (remainder / duration);
+                }
+                break;
+            case LOOP:
+                // Wrap elapsed, then normalize
+                elapsed %= duration;
+                if (elapsed < 0) elapsed += duration; // handle negative speed
+                alpha = elapsed / duration;
+                break;
+            case NONE:
+                // Constrain elapsed time to a percentage, ie. in [0..1]
+                alpha = Calc.clampf(elapsed() / duration(), 0f, 1f);
+                break;
+        }
 
         // Apply the interpolation function to the percentage completed to get an interpolated percent [0..1]
         value = interpolation.apply(alpha);

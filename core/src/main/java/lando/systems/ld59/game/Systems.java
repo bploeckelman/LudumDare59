@@ -19,6 +19,7 @@ public class Systems {
     public static RenderDebugSystem      renderDebug;
     public static RenderSystem           render;
     public static ViewSystem             view;
+    public static TurretSystem           turret;
 
     public static void init(Engine engine) {
         Systems.animation        = new AnimationSystem();
@@ -34,6 +35,7 @@ public class Systems {
         Systems.renderDebug      = new RenderDebugSystem();
         Systems.render           = new RenderSystem();
         Systems.view             = new ViewSystem();
+        Systems.turret           = new TurretSystem();
 
         engine.addSystem(animation);
         engine.addSystem(audio);
@@ -48,5 +50,6 @@ public class Systems {
         engine.addSystem(renderDebug);
         engine.addSystem(render);
         engine.addSystem(view);
+        engine.addSystem(turret);
     }
 }

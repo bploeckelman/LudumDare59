@@ -41,6 +41,8 @@ public class Components {
         entry(Image.class,                 ComponentMapper.getFor(Image.class)),
 
         // Enemies ------------------------------------------------------------
+        entry(Turret.class,         ComponentMapper.getFor(Turret.class)),
+
 
         // Map Objects --------------------------------------------------------
         entry(TilemapObject.Simple.class,  ComponentMapper.getFor(TilemapObject.Simple.class)),
