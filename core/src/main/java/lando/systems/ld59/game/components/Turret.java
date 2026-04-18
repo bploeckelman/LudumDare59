@@ -55,6 +55,11 @@ public class Turret implements Component {
         TurretPattern.Type[] values = TurretPattern.Type.values();
         connectPattern(new TurretPattern(values[MathUtils.random(values.length-1)]));
 
+        EnergyColor.Type[] colors = EnergyColor.Type.values();
+        connectEnergy(new EnergyColor(colors[MathUtils.random(colors.length-1)]));
+
+        // END DEBUG
+
         engine.addEntity(base);
         engine.addEntity(cannon);
     }
@@ -63,13 +68,35 @@ public class Turret implements Component {
 
     }
 
+    /**
+     * Connects a new pattern to the turret. Can be null to remove a pattern
+     * @param pattern
+     */
     public void connectPattern(TurretPattern pattern) {
         // remove old pattern, add new one
         cannon.remove(TurretPattern.class);
-        cannon.add(pattern);
+        if (pattern != null) {
+            cannon.add(pattern);
+        }
 
         // reset the interpolation
         cannon.remove(Interp.class);
-        cannon.add(pattern.getInterp());
+        if (pattern != null) {
+            cannon.add(pattern.getInterp());
+        }
+    }
+
+    /**
+     * Connects a new color to the turret. Can be null to remove a color
+     * @param color
+     */
+    public void connectEnergy(EnergyColor color) {
+        cannon.remove(EnergyColor.class);
+
+        if (color == null) {
+            return;
+        }
+
+        cannon.add(color);
     }
 }
