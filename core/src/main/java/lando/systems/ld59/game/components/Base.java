@@ -12,13 +12,12 @@ public class Base implements Component {
 
     public static final float ANIM_DEPTH = 100;
 
-    public final Position position;
+    public final Position pos;
     public final Entity ground;
     public final Entity city;
 
-    public Base(Engine engine, Position position) {
-        this.position = position;
-
+    public Base(Engine engine, Position pos) {
+        this.pos = pos;
         this.ground = Factory.createEntity();
         this.city = Factory.createEntity();
 
@@ -34,9 +33,9 @@ public class Base implements Component {
         cityAnim.depth = ANIM_DEPTH + 1;
         cityAnim.size.set(cityW, cityH);
 
-        ground.add(new Position(position.x, position.y));
+        ground.add(new Position(pos.x, pos.y));
         ground.add(groundAnim);
-        city.add(new Position(position.x, position.y + 25));
+        city.add(new Position(pos.x, pos.y + 25));
         city.add(cityAnim);
         // TODO: city collider so it can take damage
 

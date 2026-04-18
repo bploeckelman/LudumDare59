@@ -10,7 +10,7 @@ import lando.systems.ld59.game.components.renderable.Animator;
 
 public class Turret implements Component {
 
-    public static final float ANIM_DEPTH = 100;
+    public static final float ANIM_DEPTH = Base.ANIM_DEPTH + 10;
 
     public final Position pos;
 
@@ -22,21 +22,22 @@ public class Turret implements Component {
         this.base = Factory.createEntity();
         this.gun = Factory.createEntity();
 
-        var w = 16;
-        var h = 16;
-        var offset = 30;
-//        var baseAnimator = new Animator(AnimBase.TURRET_GUN_BASE_1, new Vector2(w / 2f, h / 2f));
-//        var gunAnimator = new Animator(AnimBase.TURRET_GUN_1, new Vector2(w / 2f, h / 2f));
+        var width = 200;
+        var height = 200;
+        var baseAnimator = new Animator(AnimBase.TURRET_BASE, new Vector2(width / 2f, 0));
+        var gunAnimator = new Animator(AnimBase.TURRET_CANNON, new Vector2(width / 2f, 0));
 
-//        baseAnimator.depth = ANIM_DEPTH + 1;
-//        gunAnimator.depth = ANIM_DEPTH + 2;
-//        baseAnimator.size.set(w, h);
-//        gunAnimator.size.set(w, h);
+        baseAnimator.depth = ANIM_DEPTH + 1;
+        gunAnimator.depth = ANIM_DEPTH + 2;
+        baseAnimator.size.set(width, height);
+        gunAnimator.size.set(width, height);
 
-        base.add(new Position(pos.x, pos.y + offset));
-//        base.add(baseAnimator);
-        gun.add(new Position(pos.x, pos.y + offset));
-//        gun.add(gunAnimator);
+        base.add(new Position(pos.x, pos.y));
+        base.add(baseAnimator);
+        gun.add(new Position(pos.x, pos.y));
+        gun.add(gunAnimator);
+
+        // TODO: colliders
 
         engine.addEntity(base);
         engine.addEntity(gun);

@@ -47,62 +47,11 @@ public class Factory {
     public static Entity turret(int x, int y) {
         var entity = createEntity();
 
-        var width = 64;
-        var height = 64;
-        var animOrigin = new Vector2(width / 2f, height / 2f);
-
         var position = new Position(x, y);
         var turret = new Turret(Main.game.engine, position);
-//        var animator = new Animator(AnimBase.TURRET_EMPLACEMENT_1, animOrigin);
-        var collider = Collider.rect(CollisionMask.TURRET,
-                -width / 2f,
-                -height / 2f,
-                width, height,
-                CollisionMask.ENEMY_PROJECTILE);
-
-//        animator.size.set(width, height);
-//        animator.depth = Turret.ANIM_DEPTH;
 
         entity.add(position);
         entity.add(turret);
-//        entity.add(animator);
-        entity.add(collider);
-
-        return entity;
-    }
-
-    public static Entity cable(int x, int y) {
-        var entity = createEntity();
-
-        var width = 32;
-        var height = 270;
-        var animOrigin = new Vector2(width / 2f, height / 2f);
-
-        var position = new Position(x, y);
-//        var animator = new Animator(AnimBase.CABLE_2, animOrigin);
-        var collider = Collider.rect(CollisionMask.CABLE, 0, 0, width, height);
-
-        entity.add(position);
-//        entity.add(animator);
-        entity.add(collider);
-
-        return entity;
-    }
-
-    public static Entity port(int x, int y) {
-        var entity = createEntity();
-
-        var width = 32;
-        var height = 32;
-        var animOrigin = new Vector2(width / 2f, height / 2f);
-
-        var position = new Position(x, y);
-//        var animator = new Animator(AnimBase.PORT_1, animOrigin);
-        var collider = Collider.rect(CollisionMask.PORT, 0, 0, width, height);
-
-        entity.add(position);
-//        entity.add(animator);
-        entity.add(collider);
 
         return entity;
     }
