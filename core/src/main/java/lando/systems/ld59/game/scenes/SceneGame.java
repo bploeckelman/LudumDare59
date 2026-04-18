@@ -4,8 +4,9 @@ import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.BaseButton;
+import lando.systems.ld59.game.components.EnemyTag;
+import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.game.components.SceneContainer;
-import lando.systems.ld59.game.components.enemies.Enemy;
 import lando.systems.ld59.screens.GameScreen;
 
 public class SceneGame extends Scene<GameScreen> {
@@ -23,8 +24,8 @@ public class SceneGame extends Scene<GameScreen> {
         var buttonY = 30f;
 
         var base = Factory.base(centerX, 0f);
-        var enemy1 = Factory.enemyShip(Enemy.Type.RED, centerX + 50, topY, 20f, -10f);
-        var enemy2 = Factory.enemyShip(Enemy.Type.BLACK, centerX - 50, topY, -20f, -10f);
+        var enemy1 = Factory.enemyShip(EnemyTag.EnemyType.FLYER, EnergyColor.Type.RED, centerX + 150, topY, 10f, -10f);
+        var enemy2 = Factory.enemyShip(EnemyTag.EnemyType.RUNNER, EnergyColor.Type.BLUE, centerX - 150, topY, -10f, -10f);
         var blueButton = Factory.baseButton(BaseButton.Type.BLUE, centerX - 125, buttonY);
         var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, centerX + 125, buttonY);
 

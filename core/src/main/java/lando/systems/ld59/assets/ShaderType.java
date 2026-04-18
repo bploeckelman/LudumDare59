@@ -49,7 +49,7 @@ public enum ShaderType implements AssetType<ShaderProgram> {
 
     // NOTE:
     //  Loading/getting from asset manager is a little goofy because 'load|get()'
-    //  both expect a single file name string and the default behavior of the loader
+    //  both expect a single file name string and the default state of the loader
     //  is to specify a file path without extension, which assumes both vert and frag
     //  files share the same prefix so it can manually append '.vert|.frag' extensions
     //  at load time.

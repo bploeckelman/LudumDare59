@@ -5,15 +5,16 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.ImageType;
+import lando.systems.ld59.assets.anims.AnimEnemy;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionMask;
-import lando.systems.ld59.game.components.enemies.Enemy;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.particles.ParticleEffectParams;
@@ -59,21 +60,39 @@ public class Factory {
         return entity;
     }
 
-    public static Entity enemyShip(Enemy.Type enemy, float posX, float posY, float velX, float velY) {
+    public static Entity enemyShip(EnemyTag.EnemyType enemy, EnergyColor.Type energyColor, float posX, float posY, float velX, float velY) {
         var entity = createEntity();
-
         var tag = new EnemyTag();
-        var animType = enemy.getAnimType();
+        AnimEnemy animType = null;
+        switch (energyColor) {
+            case RED:
+                tag.energyColor = EnergyColor.Type.RED;
+                animType = AnimEnemy.redShips.get(enemy.ordinal());
+                break;
+            case GREEN:
+                tag.energyColor = EnergyColor.Type.GREEN;
+                animType = AnimEnemy.greenShips.get(enemy.ordinal());
+                break;
+            case BLUE:
+                tag.energyColor = EnergyColor.Type.BLUE;
+                animType = AnimEnemy.blueShips.get(enemy.ordinal());
+                break;
+            default:
+                tag.energyColor = EnergyColor.Type.RED;
+                animType = AnimEnemy.RED_1;
+        }
+        tag.state = EnemyTag.State.MOVE;
+        tag.type = EnemyTag.EnemyType.FLYER;
         var width = animType.get().getKeyFrame(0).getRegionWidth();
         var height = animType.get().getKeyFrame(0).getRegionHeight();
         Util.log("Factory", "Creating enemy ship with anim type: " + animType + " width: " + width + " height: " + height);
         var animOrigin = new Vector2(width / 2f, height / 2f);
         var collidesWith = new CollisionMask[] { CollisionMask.COCKPIT_SHIELD, CollisionMask.TURRET };
 
-        var name = new Name(enemy.name());
+        var name = new Name(energyColor.name() + " " + enemy.name());
         var position = new Position(posX, posY);
         var velocity = new Velocity(velX, velY);
-        var animator = new Animator(enemy.getAnimType(), animOrigin);
+        var animator = new Animator(animType, animOrigin);
         var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, width/2f, collidesWith);
 
         entity.add(name);
@@ -82,7 +101,6 @@ public class Factory {
         entity.add(velocity);
         entity.add(animator);
         entity.add(collider);
-
         return entity;
     }
 
