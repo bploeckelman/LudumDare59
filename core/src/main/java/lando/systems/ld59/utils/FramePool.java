@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.PoolManager;
 import com.github.tommyettinger.gdcrux.PointF2;
@@ -29,10 +30,21 @@ public class FramePool {
     private final Pool<PointI2> pi2;
     private final Pool<PointI3> pi3;
     private final Pool<PointI4> pi4;
-    private final Pool<Circle> circle;
     private final Pool<Position> pos;
+    private final Pool<Circle> circle;
     private final Pool<Rectangle> rect;
     private final Pool<Color> color;
+
+    private final Array<Vector2> vec2Active;
+    private final Array<Vector3> vec3Active;
+    private final Array<PointF2> pf2Active;
+    private final Array<PointI2> pi2Active;
+    private final Array<PointI3> pi3Active;
+    private final Array<PointI4> pi4Active;
+    private final Array<Position> posActive;
+    private final Array<Circle> circleActive;
+    private final Array<Rectangle> rectActive;
+    private final Array<Color> colorActive;
 
     private FramePool() {
         this.pools = new PoolManager();
@@ -57,6 +69,30 @@ public class FramePool {
         this.circle = pools.getPool(Circle.class);
         this.rect   = pools.getPool(Rectangle.class);
         this.color  = pools.getPool(Color.class);
+
+        this.vec2Active   = new Array<>();
+        this.vec3Active   = new Array<>();
+        this.pf2Active    = new Array<>();
+        this.pi2Active    = new Array<>();
+        this.pi3Active    = new Array<>();
+        this.pi4Active    = new Array<>();
+        this.posActive    = new Array<>();
+        this.circleActive = new Array<>();
+        this.rectActive   = new Array<>();
+        this.colorActive  = new Array<>();
+    }
+
+    public void resetAll() {
+        vec2.freeAll(vec2Active);
+        vec3.freeAll(vec3Active);
+        pf2.freeAll(pf2Active);
+        pi2.freeAll(pi2Active);
+        pi3.freeAll(pi3Active);
+        pi4.freeAll(pi4Active);
+        pos.freeAll(posActive);
+        circle.freeAll(circleActive);
+        rect.freeAll(rectActive);
+        color.freeAll(colorActive);
     }
 
     public void clear() {
@@ -68,7 +104,9 @@ public class FramePool {
     // ------------------------------------------------------------------------
 
     public static Vector2 vec2() {
-        return instance.vec2.obtain();
+        var obj = instance.vec2.obtain();
+        instance.vec2Active.add(obj);
+        return obj;
     }
 
     public static Vector2 vec2(float x, float y) {
@@ -76,7 +114,9 @@ public class FramePool {
     }
 
     public static Vector3 vec3() {
-        return instance.vec3.obtain();
+        var obj = instance.vec3.obtain();
+        instance.vec3Active.add(obj);
+        return obj;
     }
 
     public static Vector3 vec3(Vector2 xy) {
@@ -96,7 +136,9 @@ public class FramePool {
     // ------------------------------------------------------------------------
 
     public static PointF2 pf2() {
-        return instance.pf2.obtain();
+        var obj = instance.pf2.obtain();
+        instance.pf2Active.add(obj);
+        return obj;
     }
 
     public static PointF2 pf2(float x, float y) {
@@ -104,7 +146,9 @@ public class FramePool {
     }
 
     public static PointI2 pi2() {
-        return instance.pi2.obtain();
+        var obj = instance.pi2.obtain();
+        instance.pi2Active.add(obj);
+        return obj;
     }
 
     public static PointI2 pi2(int x, int y) {
@@ -112,7 +156,9 @@ public class FramePool {
     }
 
     public static PointI3 pi3() {
-        return instance.pi3.obtain();
+        var obj = instance.pi3.obtain();
+        instance.pi3Active.add(obj);
+        return obj;
     }
 
     public static PointI3 pi3(int x, int y, int z) {
@@ -120,7 +166,9 @@ public class FramePool {
     }
 
     public static PointI4 pi4() {
-        return instance.pi4.obtain();
+        var obj = instance.pi4.obtain();
+        instance.pi4Active.add(obj);
+        return obj;
     }
 
     public static PointI4 pi4(int x, int y, int z, int w) {
@@ -132,11 +180,17 @@ public class FramePool {
     // ------------------------------------------------------------------------
 
     public static Position pos() {
-        return instance.pos.obtain();
+        var obj = instance.pos.obtain();
+        instance.posActive.add(obj);
+        return obj;
     }
 
     public static Position pos(int x, int y) {
         return pos().set(x, y);
+    }
+
+    public static Position pos(Position other) {
+        return pos().set(other);
     }
 
     // ------------------------------------------------------------------------
@@ -144,7 +198,9 @@ public class FramePool {
     // ------------------------------------------------------------------------
 
     public static Circle circle() {
-        return instance.circle.obtain();
+        var obj = instance.circle.obtain();
+        instance.circleActive.add(obj);
+        return obj;
     }
 
     public static Circle circle(float x, float y, float r) {
@@ -159,7 +215,9 @@ public class FramePool {
     // ------------------------------------------------------------------------
 
     public static Rectangle rect() {
-        return instance.rect.obtain();
+        var obj = instance.rect.obtain();
+        instance.rectActive.add(obj);
+        return obj;
     }
 
     public static Rectangle rect(float x, float y, float w, float h) {
@@ -171,7 +229,9 @@ public class FramePool {
     // ------------------------------------------------------------------------
 
     public static Color color() {
-        return instance.color.obtain();
+        var obj = instance.color.obtain();
+        instance.colorActive.add(obj);
+        return obj;
     }
 
     public static Color color(float r, float g, float b) {
