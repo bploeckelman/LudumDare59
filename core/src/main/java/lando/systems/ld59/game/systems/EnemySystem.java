@@ -26,7 +26,7 @@ public class EnemySystem extends IteratingSystem {
 
     private void move(Entity entity, EnemyTag enemy, float delta) {
         var vel = Components.get(entity, Velocity.class);
-        vel.set(vel.x(), vel.y() * 1.1f);
+        vel.set(vel.x(), vel.y() * 1.01f);
     }
 
     private void shoot(Entity entity, EnemyTag enemy, float delta) {
