@@ -7,6 +7,7 @@ import lando.systems.ld59.utils.Util;
 import java.util.EnumMap;
 
 public enum MusicType implements AssetType<Music> {
+    SAMPLE_MUSIC("music.wav")
     ;
 
     private static final String TAG = MusicType.class.getSimpleName();

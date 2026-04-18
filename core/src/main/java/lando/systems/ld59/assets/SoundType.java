@@ -7,6 +7,7 @@ import lando.systems.ld59.utils.Util;
 import java.util.EnumMap;
 
 public enum SoundType implements AssetType<Sound> {
+    SHOT("shot.wav")
     ;
 
     private static final String TAG = SoundType.class.getSimpleName();

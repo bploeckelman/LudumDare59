@@ -36,6 +36,8 @@ public class Assets implements Disposable {
     public NinePatch plainNine;
     public NinePatch dimNine;
 
+    public TextureRegion settingsUI;
+
     public Assets() {
         this(Load.SYNC);
     }
@@ -94,6 +96,7 @@ public class Assets implements Disposable {
 
         plainNine = new NinePatch(atlas.findRegion("patch/plain"), 5, 5, 5, 5);
         dimNine = new NinePatch(atlas.findRegion("patch/plain-dim"), 5, 5, 5, 5);
+        settingsUI = new TextureRegion(atlas.findRegion("ui/settings-modal"));
 
         loaded = true;
         return 1;

@@ -2,8 +2,6 @@ package lando.systems.ld59.game.signals;
 
 import lando.systems.ld59.assets.MusicType;
 import lando.systems.ld59.assets.SoundType;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 
 public abstract class AudioEvent implements SignalEvent {
 

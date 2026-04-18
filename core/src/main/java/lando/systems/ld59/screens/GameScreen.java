@@ -3,24 +3,29 @@ package lando.systems.ld59.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.scenes.Scene;
 import lando.systems.ld59.game.scenes.SceneGame;
+import lando.systems.ld59.ui.SettingsUI;
 
 public class GameScreen extends BaseScreen {
 
     private final Color backgroundColor = new Color(0x333333ff);
 
     private final SceneGame scene;
+    private final SettingsUI settingsUI = new SettingsUI();
 
     public GameScreen() {
         this.scene = new SceneGame(this, 5);
-
+        uiStage.addActor(settingsUI);
         initializeUI();
 
         game.inputMux.setProcessors(scene, uiStage);
@@ -35,7 +40,9 @@ public class GameScreen extends BaseScreen {
     @Override
     public void update(float delta) {
         super.update(delta);
-
+        if (settingsUI.isVisible()) {
+            return;
+        }
         var TEMP_CLICK_TO_TRANSITION = Gdx.input.justTouched()
                 && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
                 ||  Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
@@ -82,8 +89,17 @@ public class GameScreen extends BaseScreen {
     protected void initializeUI() {
         if (Flag.DEBUG_RENDER.isEnabled()) {
             var screenName = new VisLabel(getClass().getSimpleName());
-            screenName.setPosition(10, windowCamera.viewportHeight - 10 - screenName.getHeight());
+            screenName.setPosition(10f, windowCamera.viewportHeight - 10f - screenName.getHeight());
             uiStage.addActor(screenName);
         }
+        var button = new VisTextButton("Settings");
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                settingsUI.toggle();
+            }
+        });
+        button.setPosition(windowCamera.viewportWidth - button.getWidth() - 10f, windowCamera.viewportHeight - button.getHeight() - 10f);
+        uiStage.addActor(button);
     }
 }
