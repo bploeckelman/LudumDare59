@@ -1,15 +1,18 @@
 package lando.systems.ld59.game.scenes;
 
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.game.Factory;
+import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.components.BaseButton;
 import lando.systems.ld59.game.components.EnemyTag;
 import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.game.components.SceneContainer;
 import lando.systems.ld59.screens.GameScreen;
+import lando.systems.ld59.utils.FramePool;
 
-public class SceneGame extends Scene<GameScreen> {
+public class SceneGame extends Scene<GameScreen> implements InputProcessor {
 
     public SceneGame(GameScreen screen, int turrets) {
         super(screen);
@@ -21,13 +24,20 @@ public class SceneGame extends Scene<GameScreen> {
 
         var centerX = screen.worldCamera.viewportWidth / 2f;
         var topY = screen.worldCamera.viewportHeight;
-        var buttonY = 30f;
+        var buttonY = BaseButton.SIZE - 10;
 
         var base = Factory.base(centerX, 0f);
         var enemy1 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX + 150, topY, 10f, -10f);
         var enemy2 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX - 150, topY, -10f, -10f);
-        var blueButton = Factory.baseButton(BaseButton.Type.BLUE, centerX - 125, buttonY);
-        var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, centerX + 125, buttonY);
+
+        // @formatter:off
+        var redButton      = Factory.baseButton(BaseButton.Type.RED,      centerX - 125,           buttonY);
+        var greenButton    = Factory.baseButton(BaseButton.Type.GREEN,    centerX - 125 - 80,      buttonY);
+        var blueButton     = Factory.baseButton(BaseButton.Type.BLUE,     centerX - 125 - 80 - 80, buttonY);
+        var circleButton   = Factory.baseButton(BaseButton.Type.CIRCLE,   centerX + 125,           buttonY);
+        var squareButton   = Factory.baseButton(BaseButton.Type.SQUARE,   centerX + 125 + 80,      buttonY);
+        var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, centerX + 125 + 80 + 80, buttonY);
+        // @formatter:on
 
         float rotationRange = 120f;
         float deltaRotation = rotationRange / (turrets+1);
@@ -42,7 +52,58 @@ public class SceneGame extends Scene<GameScreen> {
         engine().addEntity(base);
         engine().addEntity(enemy1);
         engine().addEntity(enemy2);
+        engine().addEntity(redButton);
+        engine().addEntity(greenButton);
         engine().addEntity(blueButton);
+        engine().addEntity(circleButton);
+        engine().addEntity(squareButton);
         engine().addEntity(triangleButton);
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        var touchPos = FramePool.vec3(screenX, screenY, 0);
+        screen.worldCamera.unproject(touchPos);
+        return Systems.baseButtons.handleTouchUp(touchPos.x, touchPos.y, pointer, button);
+    }
+
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        return false;
     }
 }

@@ -7,10 +7,26 @@ import lando.systems.ld59.assets.AnimType;
 import java.util.EnumMap;
 
 public enum AnimBaseButton implements AnimType {
-      BLUE_HIT, BLUE_IDLE, BLUE_ON
-    , GREEN_HIT, GREEN_IDLE, GREEN_ON
-    , RED_HIT, RED_IDLE, RED_ON
-    , CIRCLE_IDLE, SQUARE_IDLE, TRIANGLE_IDLE
+    // Color Energy button animations -----------------------------------------
+      BLUE_HIT
+    , BLUE_IDLE
+    , BLUE_ON(0.3f, Animation.PlayMode.LOOP)
+    , GREEN_HIT
+    , GREEN_IDLE
+    , GREEN_ON(0.3f, Animation.PlayMode.LOOP)
+    , RED_HIT
+    , RED_IDLE
+    , RED_ON(0.3f, Animation.PlayMode.LOOP)
+    // Shape button animations ------------------------------------------------
+    , CIRCLE_HIT
+    , CIRCLE_IDLE
+    , CIRCLE_ON(0.3f, Animation.PlayMode.LOOP)
+    , SQUARE_HIT
+    , SQUARE_IDLE
+    , SQUARE_ON(0.3f, Animation.PlayMode.LOOP)
+    , TRIANGLE_HIT
+    , TRIANGLE_IDLE
+    , TRIANGLE_ON(0.3f, Animation.PlayMode.LOOP)
     ;
 
     private static final String BASE_PATH = "buttons/";
@@ -18,13 +34,21 @@ public enum AnimBaseButton implements AnimType {
     private static final EnumMap<AnimBaseButton, AnimType.AnimConfig> configs = AnimType.createConfigs(
             AnimBaseButton.values(), BASE_PATH,
             e -> e.folderPrefix + e.name().toLowerCase().replace("_", "-"),
-            e -> new AnimType.Data(Animation.PlayMode.NORMAL)
+            e -> new AnimType.Data(e.frameDuration, e.playMode)
     );
 
     public final String folderPrefix;
+    public final Animation.PlayMode playMode;
+    public final float frameDuration;
 
     AnimBaseButton() {
+        this(0.1f, Animation.PlayMode.NORMAL);
+    }
+
+    AnimBaseButton(float frameDuration, Animation.PlayMode playMode) {
         this.folderPrefix = name().toLowerCase().replace("_", "-") + "/";
+        this.playMode = playMode;
+        this.frameDuration = frameDuration;
     }
 
     @Override

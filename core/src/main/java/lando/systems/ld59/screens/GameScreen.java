@@ -9,23 +9,36 @@ import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
 import lando.systems.ld59.game.Systems;
+import lando.systems.ld59.game.scenes.Scene;
 import lando.systems.ld59.game.scenes.SceneGame;
 
 public class GameScreen extends BaseScreen {
 
     private final Color backgroundColor = new Color(0x333333ff);
 
+    private final SceneGame scene;
+
     public GameScreen() {
         this.scene = new SceneGame(this, 5);
 
         initializeUI();
+
+        game.inputMux.setProcessors(scene, uiStage);
+        Gdx.input.setInputProcessor(game.inputMux);
+    }
+
+    @Override
+    public Scene<? extends BaseScreen> scene() {
+        return scene;
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
 
-        var TEMP_CLICK_TO_TRANSITION = Gdx.input.justTouched();
+        var TEMP_CLICK_TO_TRANSITION = Gdx.input.justTouched()
+                && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+                && Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
         if (!transitioning && TEMP_CLICK_TO_TRANSITION){
             transitioning = true;
             game.setScreen(new EndingScreen(), EffectType.DREAMY);

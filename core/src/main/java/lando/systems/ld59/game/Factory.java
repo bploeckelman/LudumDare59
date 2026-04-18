@@ -113,8 +113,8 @@ public class Factory {
         var position = new Position(x, y);
         var animator = new Animator(animOrigin);
         var baseButton = new BaseButton(type, entity);
-        // NOTE(Brian): don't remember if this is origin relative like collider
-        var bounds = new Bounds(x, y, size, size);
+        // NOTE(Brian): Bounds is not Position relative like Collider, Animator
+        var bounds = new Bounds(x - size / 2f, y - size / 2f, size, size);
 
         animator.depth = Base.ANIM_DEPTH + 20;
         animator.size.set(size, size);
@@ -123,9 +123,6 @@ public class Factory {
         entity.add(animator);
         entity.add(baseButton);
         entity.add(bounds);
-
-        // TODO: temporary, remove once a BaseButtonSystem is implemented
-        baseButton.updateAnimator();
 
         return entity;
     }

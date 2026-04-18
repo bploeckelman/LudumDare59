@@ -36,7 +36,6 @@ public abstract class BaseScreen implements Screen {
     public VisTable uiRoot;
     public Layout layout;
     public Font font;
-    public Scene<? extends BaseScreen> scene;
     public boolean transitioning = false;
 
     public BaseScreen() {
@@ -70,7 +69,7 @@ public abstract class BaseScreen implements Screen {
     }
 
     public Scene<? extends BaseScreen> scene() {
-        return scene;
+        return null;
     }
 
     /** Called when this screen becomes the current screen for a {@link Game}. */

@@ -8,6 +8,7 @@ public class Systems {
 
     public static AnimationSystem        animation;
     public static AudioSystem            audio;
+    public static BaseButtonSystem       baseButtons;
     public static CollisionCheckSystem   collisionCheck;
     public static CollisionHandlerSystem collisionHandler;
     public static CooldownSystem         cooldown;
@@ -25,6 +26,7 @@ public class Systems {
     public static void init(Engine engine) {
         Systems.animation        = new AnimationSystem();
         Systems.audio            = new AudioSystem();
+        Systems.baseButtons      = new BaseButtonSystem();
         Systems.collisionCheck   = new CollisionCheckSystem();
         Systems.collisionHandler = new CollisionHandlerSystem();
         Systems.cooldown         = new CooldownSystem();
@@ -41,6 +43,7 @@ public class Systems {
 
         engine.addSystem(animation);
         engine.addSystem(audio);
+        engine.addSystem(baseButtons);
         engine.addSystem(collisionCheck);
         engine.addSystem(collisionHandler);
         engine.addSystem(cooldown);
