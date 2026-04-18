@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.assets.anims.AnimBase;
 import lando.systems.ld59.game.Factory;
+import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 
 public class Turret implements Component {
@@ -15,31 +16,34 @@ public class Turret implements Component {
     public final Position pos;
 
     public final Entity base;
-    public final Entity gun;
+    public final Entity cannon;
 
     public Turret(Engine engine, Position pos) {
         this.pos = pos;
         this.base = Factory.createEntity();
-        this.gun = Factory.createEntity();
+        this.cannon = Factory.createEntity();
 
         var width = 200;
         var height = 200;
-        var baseAnimator = new Animator(AnimBase.TURRET_BASE, new Vector2(width / 2f, 0));
-        var gunAnimator = new Animator(AnimBase.TURRET_CANNON, new Vector2(width / 2f, 0));
+        var baseAnim = new Animator(AnimBase.TURRET_BASE, new Vector2(width / 2f, 0));
+        var cannonAnim = new Animator(AnimBase.TURRET_CANNON, new Vector2(width / 2f, 0));
+        var baseCollider = Collider.circ(CollisionMask.TURRET, 0, 10, 80);
+        var cannonCollider = Collider.circ(CollisionMask.TURRET, 0, 96, 23);
 
-        baseAnimator.depth = ANIM_DEPTH + 1;
-        gunAnimator.depth = ANIM_DEPTH + 2;
-        baseAnimator.size.set(width, height);
-        gunAnimator.size.set(width, height);
+        baseAnim.depth = ANIM_DEPTH + 1;
+        cannonAnim.depth = ANIM_DEPTH + 2;
+        baseAnim.size.set(width, height);
+        cannonAnim.size.set(width, height);
 
         base.add(new Position(pos.x, pos.y));
-        base.add(baseAnimator);
-        gun.add(new Position(pos.x, pos.y));
-        gun.add(gunAnimator);
+        base.add(baseAnim);
+        base.add(baseCollider);
 
-        // TODO: colliders
+        cannon.add(new Position(pos.x, pos.y));
+        cannon.add(cannonAnim);
+        cannon.add(cannonCollider);
 
         engine.addEntity(base);
-        engine.addEntity(gun);
+        engine.addEntity(cannon);
     }
 }
