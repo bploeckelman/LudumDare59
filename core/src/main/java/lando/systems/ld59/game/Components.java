@@ -15,11 +15,14 @@ import static java.util.Map.entry;
 public class Components {
 
     private static final Map<Class<? extends Component>, ComponentMapper<?>> mappers = Map.ofEntries(
+        entry(Base.class,           ComponentMapper.getFor(Base.class)),
+        entry(BaseButton.class,     ComponentMapper.getFor(BaseButton.class)),
         entry(Bounds.class,         ComponentMapper.getFor(Bounds.class)),
         entry(Collider.class,       ComponentMapper.getFor(Collider.class)),
         entry(Cooldowns.class,      ComponentMapper.getFor(Cooldowns.class)),
         entry(Emitter.class,        ComponentMapper.getFor(Emitter.class)),
         entry(EnemyTag.class,       ComponentMapper.getFor(EnemyTag.class)),
+        entry(EnergyColor.class,    ComponentMapper.getFor(EnergyColor.class)),
         entry(Friction.class,       ComponentMapper.getFor(Friction.class)),
         entry(Gravity.class,        ComponentMapper.getFor(Gravity.class)),
         entry(Id.class,             ComponentMapper.getFor(Id.class)),
@@ -33,16 +36,15 @@ public class Components {
         entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
         entry(TileLayer.class,      ComponentMapper.getFor(TileLayer.class)),
         entry(Tilemap.class,        ComponentMapper.getFor(Tilemap.class)),
+        entry(Turret.class,         ComponentMapper.getFor(Turret.class)),
         entry(Velocity.class,       ComponentMapper.getFor(Velocity.class)),
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
 
         // Renderables --------------------------------------------------------
-        entry(Animator.class,              ComponentMapper.getFor(Animator.class)),
-        entry(Image.class,                 ComponentMapper.getFor(Image.class)),
+        entry(Animator.class,       ComponentMapper.getFor(Animator.class)),
+        entry(Image.class,          ComponentMapper.getFor(Image.class)),
 
         // Enemies ------------------------------------------------------------
-        entry(Turret.class,         ComponentMapper.getFor(Turret.class)),
-
 
         // Map Objects --------------------------------------------------------
         entry(TilemapObject.Simple.class,  ComponentMapper.getFor(TilemapObject.Simple.class)),
