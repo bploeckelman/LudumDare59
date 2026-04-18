@@ -18,6 +18,11 @@ public class Animator extends Renderable implements Component {
     public float stateTime = 0;
     public int facing = 1;
 
+    public Animator(Vector2 origin) {
+        this.type = null;
+        this.origin.set(origin);
+    }
+
     public Animator(AnimType type) {
         this(type.get());
         this.type = type;

@@ -40,6 +40,7 @@ public interface AnimType extends AssetType<Animation<TextureRegion>> {
 
         public Data() { this(DEFAULT_FRAME_DURATION, DEFAULT_PLAY_MODE); }
         public Data(float frameDuration) { this(frameDuration, DEFAULT_PLAY_MODE); }
+        public Data(Animation.PlayMode playMode) { this(DEFAULT_FRAME_DURATION, playMode); }
         public Data(float frameDuration, Animation.PlayMode playMode) {
             this.frameDuration = (frameDuration > 0) ? frameDuration : DEFAULT_FRAME_DURATION;
             this.playMode = (playMode != null) ? playMode : DEFAULT_PLAY_MODE;

@@ -2,7 +2,6 @@ package lando.systems.ld59.game;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,13 +11,13 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.ImageType;
-import lando.systems.ld59.assets.anims.AnimEnemy;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.enemies.Enemy;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.particles.ParticleEffectParams;
+import lando.systems.ld59.utils.Util;
 
 public class Factory {
 
@@ -33,7 +32,7 @@ public class Factory {
         return entity;
     }
 
-    public static Entity base(int x, int y) {
+    public static Entity base(float x, float y) {
         var entity = createEntity();
 
         var position = new Position(x, y);
@@ -43,6 +42,10 @@ public class Factory {
         entity.add(base);
 
         return entity;
+    }
+
+    public static Entity turret(float x, float y) {
+        return turret(x, y, 0f);
     }
 
     public static Entity turret(float x, float y, float rotation) {
@@ -56,14 +59,14 @@ public class Factory {
         return entity;
     }
 
-    public static Entity enemyShip(Enemy.Type enemy, int posX, int posY, float velX, float velY) {
+    public static Entity enemyShip(Enemy.Type enemy, float posX, float posY, float velX, float velY) {
         var entity = createEntity();
-        var tag = new EnemyTag();
 
-        AnimEnemy animType = enemy.getAnimType();
+        var tag = new EnemyTag();
+        var animType = enemy.getAnimType();
         var width = animType.get().getKeyFrame(0).getRegionWidth();
         var height = animType.get().getKeyFrame(0).getRegionHeight();
-        Gdx.app.log("Factory", "Creating enemy ship with anim type: " + animType + " width: " + width + " height: " + height);
+        Util.log("Factory", "Creating enemy ship with anim type: " + animType + " width: " + width + " height: " + height);
         var animOrigin = new Vector2(width / 2f, height / 2f);
         var collidesWith = new CollisionMask[] { CollisionMask.COCKPIT_SHIELD, CollisionMask.TURRET };
 
@@ -79,6 +82,32 @@ public class Factory {
         entity.add(velocity);
         entity.add(animator);
         entity.add(collider);
+
+        return entity;
+    }
+
+    public static Entity baseButton(BaseButton.Type type, float x, float y) {
+        var entity = createEntity();
+
+        var size = BaseButton.SIZE;
+        var animOrigin = new Vector2(size / 2f, size / 2f);
+
+        var position = new Position(x, y);
+        var animator = new Animator(animOrigin);
+        var baseButton = new BaseButton(type, entity);
+        // NOTE(Brian): don't remember if this is origin relative like collider
+        var bounds = new Bounds(x, y, size, size);
+
+        animator.depth = Base.ANIM_DEPTH + 20;
+        animator.size.set(size, size);
+
+        entity.add(position);
+        entity.add(animator);
+        entity.add(baseButton);
+        entity.add(bounds);
+
+        // TODO: temporary, remove once a BaseButtonSystem is implemented
+        baseButton.updateAnimator();
 
         return entity;
     }
