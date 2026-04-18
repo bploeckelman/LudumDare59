@@ -10,6 +10,8 @@ public enum AnimPet implements AnimType {
     ASUKA,
     OSHA,
     CHERRY,
+    ROXIE,
+    NOVA
     ;
 
     private static final String BASE_PATH = "pets/";

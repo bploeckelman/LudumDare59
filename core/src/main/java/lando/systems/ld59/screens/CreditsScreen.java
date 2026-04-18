@@ -20,6 +20,8 @@ public class CreditsScreen extends BaseScreen {
     private static final Color BACKGROUND_COLOR = new Color(.0f, .0f, .2f, 1f);
     private float accum = 0f;
     private Image asukaImage;
+    private Image roxieImage;
+    private Image novaImage;
     private Image cherryImage;
     private Image oshaImage;
 
@@ -69,11 +71,15 @@ public class CreditsScreen extends BaseScreen {
             petsTable.add(new TypingLabel(assets.strings.get("credits.body.left.pets-names"), FontType.COUSINE.get())).growY();
             petsTable.add(new VisLabel()).width(10f);
             asukaImage = new Image(AnimPet.ASUKA.get().getKeyFrame(accum));
+            roxieImage = new Image(AnimPet.ROXIE.get().getKeyFrame(accum));
+            novaImage = new Image(AnimPet.ASUKA.get().getKeyFrame(accum));
             cherryImage = new Image(AnimPet.CHERRY.get().getKeyFrame(accum));
             oshaImage = new Image(AnimPet.OSHA.get().getKeyFrame(accum));
             petSprites.add(asukaImage).size(32f, 32f).row();
             petSprites.add(oshaImage).size(32f, 32f).row();
-            petSprites.add(cherryImage).size(32f, 32f);
+            petSprites.add(cherryImage).size(32f, 32f).row();
+            petSprites.add(roxieImage).size(32f, 32f).row();
+            petSprites.add(novaImage).size(32f, 32f);
             petsTable.add(petSprites);
             panelLeft.add(petsTable).row();
 
@@ -135,6 +141,12 @@ public class CreditsScreen extends BaseScreen {
         // Update animated pet sprites
         if (asukaImage != null) {
             asukaImage.setDrawable(new Image(AnimPet.ASUKA.get().getKeyFrame(accum)).getDrawable());
+        }
+        if (roxieImage != null) {
+            roxieImage.setDrawable(new Image(AnimPet.ROXIE.get().getKeyFrame(accum)).getDrawable());
+        }
+        if (novaImage != null) {
+            novaImage.setDrawable(new Image(AnimPet.NOVA.get().getKeyFrame(accum)).getDrawable());
         }
         if (cherryImage != null) {
             cherryImage.setDrawable(new Image(AnimPet.CHERRY.get().getKeyFrame(accum)).getDrawable());
