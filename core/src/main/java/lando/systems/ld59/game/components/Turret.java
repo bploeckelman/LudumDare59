@@ -70,7 +70,7 @@ public class Turret implements Component {
 
     /**
      * Connects a new pattern to the turret. Can be null to remove a pattern
-     * @param pattern
+     * @param pattern The new pattern to connect.
      */
     public void connectPattern(TurretPattern pattern) {
         // remove old pattern, add new one
@@ -88,7 +88,7 @@ public class Turret implements Component {
 
     /**
      * Connects a new color to the turret. Can be null to remove a color
-     * @param color
+     * @param color the new color to connect
      */
     public void connectEnergy(EnergyColor color) {
         cannon.remove(EnergyColor.class);
