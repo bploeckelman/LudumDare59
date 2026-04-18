@@ -16,6 +16,7 @@ public class Turret implements Component {
     public static final float ANIM_DEPTH = Base.ANIM_DEPTH + 10;
 
     public final float rotation;
+    public float cannonRotation;
     public final Position pos;
 
     public final Entity base;
@@ -50,11 +51,25 @@ public class Turret implements Component {
         cannon.add(cannonCollider);
         cannon.add(new Interp(1f, Interpolation.linear, Interp.Repeat.PINGPONG));
 
+        //DEBUG
+        TurretPattern.Type[] values = TurretPattern.Type.values();
+        connectPattern(new TurretPattern(values[MathUtils.random(values.length-1)]));
+
         engine.addEntity(base);
         engine.addEntity(cannon);
     }
 
     public void shoot() {
 
+    }
+
+    public void connectPattern(TurretPattern pattern) {
+        // remove old pattern, add new one
+        cannon.remove(TurretPattern.class);
+        cannon.add(pattern);
+
+        // reset the interpolation
+        cannon.remove(Interp.class);
+        cannon.add(pattern.getInterp());
     }
 }

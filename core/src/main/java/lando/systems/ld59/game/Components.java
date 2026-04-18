@@ -36,7 +36,6 @@ public class Components {
         entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
         entry(TileLayer.class,      ComponentMapper.getFor(TileLayer.class)),
         entry(Tilemap.class,        ComponentMapper.getFor(Tilemap.class)),
-        entry(Turret.class,         ComponentMapper.getFor(Turret.class)),
         entry(Velocity.class,       ComponentMapper.getFor(Velocity.class)),
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
 
@@ -45,6 +44,9 @@ public class Components {
         entry(Image.class,          ComponentMapper.getFor(Image.class)),
 
         // Enemies ------------------------------------------------------------
+        entry(Turret.class,         ComponentMapper.getFor(Turret.class)),
+        entry(TurretPattern.class,  ComponentMapper.getFor(TurretPattern.class)),
+
 
         // Map Objects --------------------------------------------------------
         entry(TilemapObject.Simple.class,  ComponentMapper.getFor(TilemapObject.Simple.class)),
