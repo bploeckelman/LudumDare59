@@ -45,12 +45,11 @@ public class Factory {
         return entity;
     }
 
-    public static Entity turret(int x, int y) {
+    public static Entity turret(float x, float y, float rotation) {
         var entity = createEntity();
 
         var position = new Position(x, y);
-        var turret = new Turret(Main.game.engine, position);
-
+        var turret = new Turret(Main.game.engine, position, rotation);
         entity.add(position);
         entity.add(turret);
 

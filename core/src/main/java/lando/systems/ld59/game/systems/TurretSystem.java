@@ -17,13 +17,14 @@ public class TurretSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float dt) {
         var turret = Components.get(entity, Turret.class);
+
         // update gun rotation from iterp
         var gunAnim = Components.get(turret.cannon, Animator.class);
         var interp = Components.optional(turret.cannon, Interp.class);
         if (interp.isPresent()) {
-            gunAnim.rotation = interp.get().apply(-45, 45);
+            gunAnim.rotation = -turret.rotation + interp.get().apply(-45, 45);
         } else {
-            gunAnim.rotation = 0;
+            gunAnim.rotation = turret.rotation;
         }
 
 

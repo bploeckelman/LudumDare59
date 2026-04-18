@@ -26,6 +26,7 @@ public class Animator extends Renderable implements Component {
     public Animator(AnimType type, Vector2 origin) {
         this(type);
         this.origin.set(origin);
+        this.rotationOrigin.set(origin);
     }
 
     public Animator(Animation<TextureRegion> animation) {
