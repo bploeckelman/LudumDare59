@@ -2,6 +2,7 @@ package lando.systems.ld59.game.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.game.Components;
 
 public class EnemyTag implements Component {
@@ -18,7 +19,14 @@ public class EnemyTag implements Component {
     }
     public enum EnemyType {
         FLYER,
-        RUNNER
+        RUNNER,
+        LOVER,
+        MUNCHER,
+        SUCKER;
+
+        public static EnemyType getRandom() {
+            return values()[MathUtils.random(values().length - 1)];
+        }
     }
 
     public EnemyTag() {

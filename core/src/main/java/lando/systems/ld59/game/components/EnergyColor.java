@@ -1,9 +1,15 @@
 package lando.systems.ld59.game.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.math.MathUtils;
 
 public class EnergyColor implements Component {
-    public enum Type {RED, GREEN, BLUE}
+    public enum Type {
+        RED, GREEN, BLUE;
+        public static Type getRandom() {
+            return values()[MathUtils.random(values().length - 1)];
+        }
+    }
 
     public final Type type;
 

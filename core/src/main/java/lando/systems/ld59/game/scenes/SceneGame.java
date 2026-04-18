@@ -24,8 +24,8 @@ public class SceneGame extends Scene<GameScreen> {
         var buttonY = 30f;
 
         var base = Factory.base(centerX, 0f);
-        var enemy1 = Factory.enemyShip(EnemyTag.EnemyType.FLYER, EnergyColor.Type.RED, centerX + 150, topY, 10f, -10f);
-        var enemy2 = Factory.enemyShip(EnemyTag.EnemyType.RUNNER, EnergyColor.Type.BLUE, centerX - 150, topY, -10f, -10f);
+        var enemy1 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX + 150, topY, 10f, -10f);
+        var enemy2 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX - 150, topY, -10f, -10f);
         var blueButton = Factory.baseButton(BaseButton.Type.BLUE, centerX - 125, buttonY);
         var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, centerX + 125, buttonY);
 
