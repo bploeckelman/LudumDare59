@@ -2,6 +2,7 @@ package lando.systems.ld59.game;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,10 +12,10 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.ImageType;
-import lando.systems.ld59.assets.anims.AnimBase;
 import lando.systems.ld59.assets.anims.AnimEnemy;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionMask;
+import lando.systems.ld59.game.components.enemies.Enemy;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.particles.ParticleEffectParams;
@@ -56,19 +57,23 @@ public class Factory {
         return entity;
     }
 
-    public static Entity enemyShip(AnimEnemy animEnemy, int posX, int posY, float velX, float velY) {
+    public static Entity enemyShip(Enemy.Type enemy, int posX, int posY, float velX, float velY) {
         var entity = createEntity();
+        var tag = new EnemyTag();
 
-        var width = 32;
-        var height = 32;
+        AnimEnemy animType = enemy.getAnimType();
+        var width = animType.get().getKeyFrame(0).getRegionWidth();
+        var height = animType.get().getKeyFrame(0).getRegionHeight();
+        Gdx.app.log("Factory", "Creating enemy ship with anim type: " + animType + " width: " + width + " height: " + height);
         var animOrigin = new Vector2(width / 2f, height / 2f);
         var collidesWith = new CollisionMask[] { CollisionMask.COCKPIT_SHIELD, CollisionMask.TURRET };
 
         var position = new Position(posX, posY);
         var velocity = new Velocity(velX, velY);
-        var animator = new Animator(animEnemy, animOrigin);
-        var collider = Collider.rect(CollisionMask.ENEMY, 0, 0, width, height, collidesWith);
+        var animator = new Animator(enemy.getAnimType(), animOrigin);
+        var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, width/2f, collidesWith);
 
+        entity.add(tag);
         entity.add(position);
         entity.add(velocity);
         entity.add(animator);

@@ -4,6 +4,8 @@ import lando.systems.ld59.Config;
 import lando.systems.ld59.assets.anims.AnimEnemy;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.SceneContainer;
+import lando.systems.ld59.game.components.enemies.Enemy;
+import lando.systems.ld59.game.components.enemies.EnemyShipBlack;
 import lando.systems.ld59.screens.GameScreen;
 
 public class SceneGame extends Scene<GameScreen> {
@@ -21,10 +23,12 @@ public class SceneGame extends Scene<GameScreen> {
 
         var base = Factory.base(centerX, 0);
         var turret = Factory.turret(centerX, 190);
-        var enemy = Factory.enemyShip(AnimEnemy.BLACK_1, centerX, topY, 20f, -50f);
+        var enemy1 = Factory.enemyShip(Enemy.Type.RED, centerX + 50, topY, 20f, -10f);
+        var enemy2 = Factory.enemyShip(Enemy.Type.BLACK, centerX - 50, topY, -20f, -10f);
 
         engine().addEntity(base);
         engine().addEntity(turret);
-        engine().addEntity(enemy);
+        engine().addEntity(enemy1);
+        engine().addEntity(enemy2);
     }
 }
