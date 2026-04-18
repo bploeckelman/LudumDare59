@@ -2,9 +2,12 @@ package lando.systems.ld59.game.components.renderable;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.assets.AnimType;
+import lando.systems.ld59.game.components.Position;
+import lando.systems.ld59.utils.Util;
 
 public class Animator extends Renderable implements Component {
 
@@ -33,6 +36,12 @@ public class Animator extends Renderable implements Component {
     public Animator(TextureRegion keyframe) {
         this.keyframe = keyframe;
         this.size.set(keyframe.getRegionWidth(), keyframe.getRegionHeight());
+    }
+
+    @Override
+    public void render(SpriteBatch batch, Position position) {
+        if (keyframe == null) return;
+        Util.draw(batch, keyframe, rect(position), tint);
     }
 
     public TextureRegion keyframe() {

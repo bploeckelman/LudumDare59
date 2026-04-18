@@ -19,7 +19,6 @@ public interface AnimType extends AssetType<Animation<TextureRegion>> {
 
     static final Map<Class<?>, EnumMap<?, Animation<TextureRegion>>> CONTAINERS = new IdentityHashMap<>();
 
-
     class AnimConfig {
         public final String basePath;
         public final String animName;

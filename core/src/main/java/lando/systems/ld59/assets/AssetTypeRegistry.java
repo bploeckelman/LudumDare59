@@ -1,7 +1,9 @@
 package lando.systems.ld59.assets;
 
 import com.badlogic.gdx.utils.Null;
+import lando.systems.ld59.assets.anims.AnimCockpit;
 import lando.systems.ld59.assets.anims.AnimHero;
+import lando.systems.ld59.assets.anims.AnimTemp;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,6 +17,8 @@ public class AssetTypeRegistry {
 
     public AssetTypeRegistry() {
         register(AnimHero.class,    AnimType::initEnum);
+        register(AnimCockpit.class, AnimType::initEnum);
+        register(AnimTemp.class,    AnimType::initEnum);
         register(ColorType.class,   ColorType::initEnum);
         register(EffectType.class,  EffectType::initEnum);
         register(EmitterType.class, EmitterType::initEnum);

@@ -8,13 +8,17 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
+import lando.systems.ld59.assets.anims.AnimCockpit;
 import lando.systems.ld59.game.Systems;
+import lando.systems.ld59.game.scenes.SceneGame;
 
 public class GameScreen extends BaseScreen {
 
     private final Color backgroundColor = new Color(0x333333ff);
 
     public GameScreen() {
+        this.scene = new SceneGame(this);
+
         initializeUI();
     }
 

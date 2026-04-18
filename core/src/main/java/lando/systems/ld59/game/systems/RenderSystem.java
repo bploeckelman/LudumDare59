@@ -51,6 +51,12 @@ public class RenderSystem extends SortedIteratingSystem {
 
     public void draw(SpriteBatch batch) {
         for (var entity : getEntities()) {
+            var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
+
+            // Draw simple renderables
+            Components.optional(entity, Image.class).ifPresent(img -> img.render(batch, pos));
+            Components.optional(entity, Animator.class).ifPresent(anim -> anim.render(batch, pos));
+
             renderTileLayer(batch, entity);
         }
     }

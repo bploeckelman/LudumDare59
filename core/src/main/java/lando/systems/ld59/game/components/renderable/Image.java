@@ -1,14 +1,18 @@
 package lando.systems.ld59.game.components.renderable;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.assets.ImageType;
-import lombok.AllArgsConstructor;
+import lando.systems.ld59.game.components.Position;
+import lando.systems.ld59.utils.Util;
 
 public class Image extends Renderable implements Component {
 
+    private final Color prevColor = Color.WHITE.cpy();
     private ImageValue value;
 
     public Image(ImageType type)                     { this(type, type.get(), null); }
@@ -49,6 +53,28 @@ public class Image extends Renderable implements Component {
         }
         return null;
     }
+
+    @Override
+    public void render(SpriteBatch batch, Position position) {
+        if (value == null) return;
+
+        prevColor.set(batch.getColor());
+        batch.setColor(tint);
+
+        var bounds = rect(position);
+        if (value instanceof RegionImage) {
+            Util.draw(batch, getTextureRegion(), bounds, tint);
+        } else if (value instanceof TextureImage) {
+            // repeat texture as much as needed to fill the draw bounds
+            var texture = getTexture();
+            float u2 = bounds.width / texture.getWidth();
+            float v2 = bounds.height / texture.getHeight();
+            batch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height, 0, 0, u2, -v2);
+        }
+
+        batch.setColor(prevColor);
+    }
+
 
     // ------------------------------------------------------------------------
     // Internal structures to allow for either Texture or TextureRegion values

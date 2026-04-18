@@ -20,8 +20,8 @@ public enum Flag {
     , DEBUG_UI      (false)
     , DEBUG_SCENES  (false)
     , FRAME_STEP    (false)
-    , LAUNCH_SCREEN (true)
-    , GAME_SCREEN   (false)
+    , LAUNCH_SCREEN (false)
+    , GAME_SCREEN   (true)
     ;
     //@formatter:on
 

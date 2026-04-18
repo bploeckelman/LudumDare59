@@ -1,6 +1,8 @@
 package lando.systems.ld59.game.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.game.components.renderable.Renderable;
 import lando.systems.ld59.particles.ParticleData;
@@ -20,6 +22,11 @@ public class Emitter extends Renderable implements Component {
         this.type = type;
         this.effect = type.get();
         this.params = params;
+    }
+
+    @Override
+    public void render(SpriteBatch batch, Position position) {
+        throw new GdxRuntimeException("render() not yet implemented for Emitter renderable");
     }
 
     public List<ParticleData> spawn() {

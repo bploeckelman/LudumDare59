@@ -2,7 +2,9 @@ package lando.systems.ld59.game.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.renderable.Renderable;
 
@@ -15,6 +17,11 @@ public class TileLayer extends Renderable implements Component {
         this.tilemap = tilemap;
         this.tileLayer = tileLayer;
         this.depth = depth;
+    }
+
+    @Override
+    public void render(SpriteBatch batch, Position position) {
+        throw new GdxRuntimeException(getClass().getSimpleName() + " does not implement 'render()', see RenderSystem.renderTileLayer()");
     }
 
     public boolean isBackground() { return tileLayer.getName().equals("background"); }

@@ -2,6 +2,7 @@ package lando.systems.ld59.game.components.renderable;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.game.Components;
@@ -21,6 +22,8 @@ public abstract class Renderable {
     public final Vector2 defaultScale     = new Vector2(1, 1);
     public final Vector2 scale            = defaultScale.cpy();
     public final float   scaleReturnSpeed = 4f;
+
+    public abstract void render(SpriteBatch batch, Position position);
 
     public Rectangle rect(Position position) {
         return FramePool.rect(

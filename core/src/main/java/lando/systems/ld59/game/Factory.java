@@ -11,8 +11,11 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.ImageType;
+import lando.systems.ld59.assets.anims.AnimCockpit;
+import lando.systems.ld59.assets.anims.AnimEnemy;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionMask;
+import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.particles.ParticleEffectParams;
 
@@ -26,6 +29,81 @@ public class Factory {
         var engine = Main.game.engine;
         var entity = engine.createEntity();
         entity.add(new Id());
+        return entity;
+    }
+
+    public static Entity turretEmplacement(int x, int y) {
+        var entity = createEntity();
+
+        var width = 64;
+        var height = 64;
+        var animOrigin = new Vector2(width / 2f, height / 2f);
+
+        var position = new Position(x, y);
+        var animator = new Animator(AnimCockpit.TURRET_EMPLACEMENT_1, animOrigin);
+        var collider = Collider.rect(CollisionMask.TURRET, 0, 0, width, height, CollisionMask.ENEMY_PROJECTILE);
+
+        entity.add(position);
+        entity.add(animator);
+        entity.add(collider);
+
+        return entity;
+    }
+
+    public static Entity cable(int x, int y) {
+        var entity = createEntity();
+
+        var width = 32;
+        var height = 270;
+        var animOrigin = new Vector2(width / 2f, height / 2f);
+
+        var position = new Position(x, y);
+        var animator = new Animator(AnimCockpit.CABLE_2, animOrigin);
+        var collider = Collider.rect(CollisionMask.CABLE, 0, 0, width, height);
+
+        entity.add(position);
+        entity.add(animator);
+        entity.add(collider);
+
+        return entity;
+    }
+
+    public static Entity port(int x, int y) {
+        var entity = createEntity();
+
+        var width = 32;
+        var height = 32;
+        var animOrigin = new Vector2(width / 2f, height / 2f);
+
+        var position = new Position(x, y);
+        var animator = new Animator(AnimCockpit.PORT_1, animOrigin);
+        var collider = Collider.rect(CollisionMask.PORT, 0, 0, width, height);
+
+        entity.add(position);
+        entity.add(animator);
+        entity.add(collider);
+
+        return entity;
+    }
+
+    public static Entity enemyShip(AnimEnemy animEnemy, int posX, int posY, float velX, float velY) {
+        var entity = createEntity();
+
+        var width = 32;
+        var height = 32;
+        var animOrigin = new Vector2(width / 2f, height / 2f);
+        var collidesWith = new CollisionMask[] { CollisionMask.COCKPIT_SHIELD, CollisionMask.TURRET };
+
+        var position = new Position(posX, posY);
+        var velocity = new Velocity(velX, velY);
+        var animator = new Animator(animEnemy, animOrigin);
+        var collider = Collider.rect(CollisionMask.ENEMY, 0, 0, width, height, collidesWith);
+
+        entity.add(position);
+        entity.add(velocity);
+        entity.add(animator);
+        entity.add(collider);
+
         return entity;
     }
 
