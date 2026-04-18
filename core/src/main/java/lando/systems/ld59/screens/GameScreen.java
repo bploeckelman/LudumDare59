@@ -51,6 +51,7 @@ public class GameScreen extends BaseScreen {
         {
             Systems.render.draw(batch);
             Systems.renderDebug.draw(shapes);
+            Systems.renderDebug.drawText(batch);
         }
         batch.end();
 

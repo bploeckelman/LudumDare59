@@ -68,11 +68,13 @@ public class Factory {
         var animOrigin = new Vector2(width / 2f, height / 2f);
         var collidesWith = new CollisionMask[] { CollisionMask.COCKPIT_SHIELD, CollisionMask.TURRET };
 
+        var name = new Name(enemy.name());
         var position = new Position(posX, posY);
         var velocity = new Velocity(velX, velY);
         var animator = new Animator(enemy.getAnimType(), animOrigin);
         var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, width/2f, collidesWith);
 
+        entity.add(name);
         entity.add(tag);
         entity.add(position);
         entity.add(velocity);

@@ -5,10 +5,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 import lando.systems.ld59.Flag;
+import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.ColorType;
+import lando.systems.ld59.assets.FontType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionCirc;
@@ -35,6 +40,7 @@ public class RenderDebugSystem extends EntitySystem {
     public boolean drawGravities = false; // NOTE: currently gravity is constant for just the player, doesn't really pay to draw it
     public boolean drawVelocities = true;
     public boolean drawMapTriggers = true;
+    public boolean drawEnemyNames = true;
 
     @Override
     public void addedToEngine(Engine engine) {
@@ -56,6 +62,11 @@ public class RenderDebugSystem extends EntitySystem {
         drawGravities(shapes);
         drawVelocities(shapes);
         drawMapTriggers(shapes);
+    }
+
+    public void drawText(SpriteBatch batch) {
+        if (Flag.DEBUG_RENDER.isDisabled()) return;
+        drawEnemyNames(batch);
     }
 
     private void drawPositions(ShapeDrawer shapes) {
@@ -238,5 +249,26 @@ public class RenderDebugSystem extends EntitySystem {
             shapes.filledRectangle(trigger.bounds, color);
         }
         shapes.setColor(prevColor);
+    }
+
+    private void drawEnemyNames(SpriteBatch batch) {
+        if (!drawEnemyNames) return;
+
+        var font = FontType.ROUNDABOUT.get();
+
+        for (var entity : entities) {
+            var enemyTag = Components.get(entity, EnemyTag.class);
+            if (enemyTag == null) continue;
+
+            var pos = Components.get(entity, Position.class);
+            var anim = Components.get(entity, Animator.class);
+            var name = Components.get(entity, Name.class);
+
+            if (pos != null && anim != null) {
+                var textX = pos.x;
+                var textY = pos.y;
+                font.drawText(batch, name.name(), textX, textY, Color.RED.toIntBits());
+            }
+        }
     }
 }
