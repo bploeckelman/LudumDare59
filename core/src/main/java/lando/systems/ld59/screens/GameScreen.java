@@ -37,8 +37,8 @@ public class GameScreen extends BaseScreen {
         super.update(delta);
 
         var TEMP_CLICK_TO_TRANSITION = Gdx.input.justTouched()
-                && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
-                && Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+                && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+                ||  Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
         if (!transitioning && TEMP_CLICK_TO_TRANSITION){
             transitioning = true;
             game.setScreen(new EndingScreen(), EffectType.DREAMY);
