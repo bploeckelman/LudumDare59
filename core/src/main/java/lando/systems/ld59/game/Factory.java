@@ -32,7 +32,7 @@ public class Factory {
         return entity;
     }
 
-    public static Entity turretEmplacement(int x, int y) {
+    public static Entity turret(int x, int y) {
         var entity = createEntity();
 
         var width = 64;
@@ -40,10 +40,19 @@ public class Factory {
         var animOrigin = new Vector2(width / 2f, height / 2f);
 
         var position = new Position(x, y);
+        var turret = new Turret(Main.game.engine, position);
         var animator = new Animator(AnimCockpit.TURRET_EMPLACEMENT_1, animOrigin);
-        var collider = Collider.rect(CollisionMask.TURRET, 0, 0, width, height, CollisionMask.ENEMY_PROJECTILE);
+        var collider = Collider.rect(CollisionMask.TURRET,
+                -width / 2f,
+                -height / 2f,
+                width, height,
+                CollisionMask.ENEMY_PROJECTILE);
+
+        animator.size.set(width, height);
+        animator.depth = Turret.ANIM_DEPTH;
 
         entity.add(position);
+        entity.add(turret);
         entity.add(animator);
         entity.add(collider);
 
