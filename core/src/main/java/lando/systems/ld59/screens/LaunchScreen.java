@@ -40,13 +40,12 @@ public class LaunchScreen extends BaseScreen {
     @Override
     public void initializeUI() {
         if (Flag.DEBUG_RENDER.isEnabled()) {
-            var screenName = LaunchScreen.class.getSimpleName();
-            uiRoot.add(new VisLabel(screenName)).pad(10).expandX().left().row();
+            var screenName = new VisLabel(getClass().getSimpleName());
+            screenName.setPosition(10, windowCamera.viewportHeight - 10 - screenName.getHeight());
+            uiStage.addActor(screenName);
         }
 
-        var skin = SkinType.ZENDO.get();
-        var styleName = FontType.ATKINSON_HYPERLEGIBLE.textraLabelStyleName;
-        var text = "{WAVE}{RAINBOW}Click to Begin{ENDRAINBOW}{ENDWAVE}";
-        uiRoot.add(new TypingLabel(text, skin, styleName)).expand().center();
+        var clickToBegin = new TypingLabel(assets.strings.get("launch.click-text"), FontType.ROUNDABOUT_LARGE.get());
+        uiRoot.add(clickToBegin).expand().center();
     }
 }

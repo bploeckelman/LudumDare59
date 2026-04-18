@@ -1,187 +1,114 @@
 package lando.systems.ld59.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.tommyettinger.textra.TypingLabel;
+import com.kotcrab.vis.ui.layout.FlowGroup;
 import com.kotcrab.vis.ui.widget.VisLabel;
-import lando.systems.ld59.Config;
+import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 import lando.systems.ld59.Flag;
-import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.FontType;
-import lando.systems.ld59.ui.Button;
 
 public class CreditsScreen extends BaseScreen {
 
-    private final TypingLabel titleLabel;
-    private final TypingLabel themeLabel;
-    private final TypingLabel leftCreditLabel;
-    private final TypingLabel rightCreditLabel;
-    private final TypingLabel thanksLabel;
-    private final TypingLabel disclaimerLabel;
+    private static final Color BACKGROUND_COLOR = new Color(.0f, .0f, .2f, 1f);
 
-    //    private final Animation<TextureRegion> catAnimation;
-//    private final Animation<TextureRegion> dogAnimation;
-//    private final Animation<TextureRegion> kittenAnimation;
-    private final Texture background;
+    // TODO: in i18n strings...
+    //  how to mix formatting placeholders: {0}, {1}, ..., with typing label placeholders like {GRADIENT},
+    //  I think they don't play nice because they use the same delimiter `{}`
+    //  usage: assets.strings.format("property.name", placeholderValue)
 
-    private final String title;
-    private final String theme;
+    // TODO: add pet sprites to Body
 
-    private final String thanks;
-    private final String code;
-    private final String art;
-    private final String pets;
-    private final String audio;
-    private final String libgdx;
-    private final String disclaimer;
+    // TODO: get the Header, Body, Footer row sections to fill the screen properly
 
-    private float accum = 0f;
-    private boolean showPets = false;
+    private class Header extends VisTable {
+        private Header() {
+            //setDebug(true);
+            padTop(10);
+            padBottom(10);
+            //setHeight(32 + 24 + 50); // font large + font default + padding
 
-    private Button afterCreditsButton;
+            var title = new TypingLabel(assets.strings.get("credits.header.title"), FontType.ROUNDABOUT_LARGE.get());
+            var theme = new TypingLabel(assets.strings.get("credits.header.theme"), FontType.ROUNDABOUT.get());
+
+            add(title).expand().padTop(20).padBottom(20).row();
+            add(theme).expandX();
+        }
+    }
+
+    private class Body extends VisTable {
+        private Body() {
+            //setDebug(true);
+            padTop(10);
+            padBottom(10);
+
+            var rowSpacing = 10f;
+            var vertical = true;
+            var panelLeft = new FlowGroup(vertical, rowSpacing);
+            var panelRight = new FlowGroup(vertical, rowSpacing);
+
+            // TODO: set a background texture on the panels (might have to extend and customize)
+
+            // TODO: maybe don't use FlowGroups, harder to align the text than just straight table cells
+
+            panelLeft.addActor(new TypingLabel(assets.strings.get("credits.body.left.code-heading"), FontType.ROUNDABOUT.get()));
+            panelLeft.addActor(new TypingLabel(assets.strings.get("credits.body.left.code-names"), FontType.ROBOTO.get()));
+            panelLeft.addActor(new VisLabel()); // spacer
+            panelLeft.addActor(new VisLabel()); // spacer
+            panelLeft.addActor(new TypingLabel(assets.strings.get("credits.body.left.pets-heading"), FontType.ROUNDABOUT.get()));
+            panelLeft.addActor(new TypingLabel(assets.strings.get("credits.body.left.pets-names"), FontType.COUSINE.get()));
+
+            panelRight.addActor(new TypingLabel(assets.strings.get("credits.body.right.art-heading"), FontType.ROUNDABOUT.get()));
+            panelRight.addActor(new TypingLabel(assets.strings.get("credits.body.right.art-names"), FontType.ROBOTO.get()));
+            panelRight.addActor(new VisLabel()); // spacer
+            panelRight.addActor(new VisLabel()); // spacer
+            panelRight.addActor(new TypingLabel(assets.strings.get("credits.body.right.audio-heading"), FontType.ROUNDABOUT.get()));
+            panelRight.addActor(new TypingLabel(assets.strings.get("credits.body.right.audio-names"), FontType.COUSINE.get()));
+
+            add(panelLeft).grow().pad(40);
+            add(panelRight).grow().pad(40);
+        }
+    }
+
+    private class Footer extends VisTable {
+        private Footer() {
+            //setDebug(true);
+            defaults().padBottom(10);
+
+            var thanks = new TypingLabel(assets.strings.get("credits.footer.thanks"), FontType.ROBOTO_LARGE.get());
+            var madeWith = new TypingLabel(assets.strings.get("credits.footer.made-with"), FontType.ROBOTO.get());
+            var disclaimer = new TypingLabel(assets.strings.get("credits.footer.disclaimer"), FontType.ROBOTO_SMALL.get());
+            var returnToTitleBtn = new VisTextButton("Return to title...", new ChangeListener() {
+                public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                    if (transitioning) return;
+                    game.setScreen(new TitleScreen());
+                    transitioning = true;
+                }
+            });
+
+            add(thanks).expand().row();
+            add(madeWith).expandX().row();
+            add(returnToTitleBtn).growX().height(40).row();
+            add(disclaimer).expandX().bottom();
+        }
+    }
 
     public CreditsScreen() {
         initializeUI();
-
-        var strings = assets.strings;
-        // TODO: figure out how to mix formatting placeholders like {0}, {1}, ... usage: assets.strings.format("property.name", placeholderValue)
-        //  with typing label placeholders like {GRADIENT}, they don't play nice because they use the same delimiter `{}`
-        this.title = strings.get("credits.title");
-        this.theme = strings.get("credits.theme");
-        this.thanks = strings.get("credits.thanks");
-        this.code = strings.get("credits.code");
-        this.art = strings.get("credits.art");
-        this.pets = strings.get("credits.pets");
-        this.audio = strings.get("credits.audio");
-        this.libgdx = strings.get("credits.libgdx");
-        this.disclaimer = strings.get("credits.disclaimer");
-
-
-        // TODO: add variants to FontType2
-        var extraLargeTypingFont = FontType.ROUNDABOUT.get();//.font("large");
-        var largeTypingFont = FontType.ROUNDABOUT.get();//.font("large");
-        var typingFont = FontType.ROUNDABOUT.get();//.font("medium");
-        var smallTypingFont = FontType.ROUNDABOUT.get();//.font("small");
-
-//        font.setColor(Color.WHITE);
-
-        titleLabel = new TypingLabel(title, extraLargeTypingFont);
-        titleLabel.setPosition(0f, Config.window_height - 90f);
-        titleLabel.setWidth(Config.window_width);
-        titleLabel.setAlignment(Align.center);
-        titleLabel.setScale(3f);
-
-        themeLabel = new TypingLabel(theme, largeTypingFont);
-        themeLabel.setWidth(Config.window_width);
-        themeLabel.setPosition(0f, Config.window_height - 180f);
-        themeLabel.setAlignment(Align.center);
-
-        leftCreditLabel = new TypingLabel(code.toLowerCase() + "\n\n" + pets.toLowerCase() + "\n\n", typingFont);
-        leftCreditLabel.setWidth(Config.window_width / 2f - 150f);
-        leftCreditLabel.setPosition(75f, Config.window_height / 2f - 70f);
-
-        background = Main.game.assets.pixel;
-
-        rightCreditLabel = new TypingLabel(art.toLowerCase() + "\n" + audio.toLowerCase() + "\n" + libgdx.toLowerCase(), typingFont);
-        rightCreditLabel.setPosition(Config.window_width / 2 + 75f, Config.window_height / 2f);
-        rightCreditLabel.setWidth(Config.window_width / 2f - 150f);
-
-        thanksLabel = new TypingLabel(thanks, typingFont);
-        thanksLabel.setWidth(Config.window_width);
-        thanksLabel.setPosition(0f, 105f);
-        thanksLabel.setAlignment(Align.center);
-
-        disclaimerLabel = new TypingLabel(disclaimer, smallTypingFont);
-        disclaimerLabel.setPosition(0f, 75f);
-        disclaimerLabel.setWidth(Config.window_width);
-        disclaimerLabel.setAlignment(Align.center);
-
-        var bounds = new Rectangle((windowCamera.viewportWidth /3), 10, (windowCamera.viewportWidth /3), 50);
-        afterCreditsButton = new Button(bounds, "Return to Title", game.assets.plainNine, game.assets.dimNine, font);
-        afterCreditsButton.setOnClickAction(() -> {
-            if (transitioning) return;
-            game.setScreen(new TitleScreen());
-            transitioning = true;
-        });
-    }
-
-    @Override
-    public void update(float dt) {
-        if (transitioning) { return; }
-        Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-        windowCamera.unproject(mousePos);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isTouched()) {
-            if (!transitioning && afterCreditsButton.getBounds().contains(mousePos.x, mousePos.y)) {
-                afterCreditsButton.onClick();
-                transitioning = true;
-                return;
-            }
-            var allDone = titleLabel.hasEnded() && themeLabel.hasEnded() && leftCreditLabel.hasEnded() && rightCreditLabel.hasEnded() && thanksLabel.hasEnded() && disclaimerLabel.hasEnded();
-            if (!allDone && accum > 1) {
-                titleLabel.skipToTheEnd();
-                themeLabel.skipToTheEnd();
-                leftCreditLabel.skipToTheEnd();
-                rightCreditLabel.skipToTheEnd();
-                thanksLabel.skipToTheEnd();
-                disclaimerLabel.skipToTheEnd();
-                showPets = true;
-                return;
-            }
-        }
-        accum += dt;
-        titleLabel.act(dt);
-        themeLabel.act(dt);
-        leftCreditLabel.act(dt);
-        rightCreditLabel.act(dt);
-        thanksLabel.act(dt);
-        disclaimerLabel.act(dt);
-        afterCreditsButton.update(mousePos.x, mousePos.y);
     }
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(.0f, .0f, .1f, 1f);
+        ScreenUtils.clear(BACKGROUND_COLOR);
 
-        batch.enableBlending();
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
         {
-            batch.setColor(.5f, .5f, .5f, .9f);
-            batch.draw(background, 0, 0, Config.window_width, Config.window_height);
-
-            batch.setColor(0f, 0f, 0f, .6f);
-            batch.draw(assets.pixelRegion, 25f, 130f, Config.window_width / 2f - 50f, 400f);
-            batch.draw(assets.pixelRegion, Config.window_width / 2f + 25f, 130f, Config.window_width / 2f - 50f, 400f);
-
-            batch.setColor(Color.WHITE);
-            titleLabel.draw(batch, 1f);
-            themeLabel.draw(batch, 1f);
-            leftCreditLabel.draw(batch, 1f);
-            rightCreditLabel.draw(batch, 1f);
-            thanksLabel.draw(batch, 1f);
-            disclaimerLabel.draw(batch, 1f);
-            if (accum > 7.5 || showPets) {
-//                TextureRegion cherryTexture = assets.cherry.getKeyFrame(accum);
-//                TextureRegion asukaTexture = assets.asuka.getKeyFrame(accum);
-//                TextureRegion oshaTexture = assets.osha.getKeyFrame(accum);
-//                batch.draw(oshaTexture, 450f, 175f);
-//                batch.draw(asukaTexture, 500f, 175f);
-//                batch.draw(cherryTexture, 550f, 175f);
-            }
-            if (accum > 8.5 || showPets) {
-//                TextureRegion obiTexture = assets.obi.getKeyFrame(accum);
-//                TextureRegion yodaTexture = assets.yoda.getKeyFrame(accum);
-//                batch.draw(obiTexture, 475f, 125f);
-//                batch.draw(yodaTexture, 525f, 125f);
-            }
-            batch.setColor(Color.WHITE);
-            afterCreditsButton.draw(batch);
+            // nothing to draw, it's all in the ui
         }
         batch.end();
 
@@ -191,11 +118,14 @@ public class CreditsScreen extends BaseScreen {
     @Override
     protected void initializeUI() {
         if (Flag.DEBUG_RENDER.isEnabled()) {
-            var screenName = CreditsScreen.class.getSimpleName();
-            uiRoot.add(new VisLabel(screenName)).pad(10).top().left().row();
-            uiRoot.add(new VisLabel()).grow();
+            var screenName = new VisLabel(getClass().getSimpleName());
+            screenName.setPosition(10, windowCamera.viewportHeight - 10 - screenName.getHeight());
+            uiStage.addActor(screenName);
         }
 
-
+        uiRoot.setDebug(true);
+        uiRoot.add(new Header()).growX().row();
+        uiRoot.add(new Body()).grow().row();
+        uiRoot.add(new Footer()).growX();
     }
 }

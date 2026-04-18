@@ -24,6 +24,8 @@ public enum FontType implements AssetType<Font> {
     , INCONSOLATA                ("inconsolata.otf")
     , NOTO_SANS                  ("noto-sans-cjk-jp-medium.otf")
     , ROBOTO                     ("roboto-regular.ttf")
+    , ROBOTO_SMALL               ("roboto-regular.ttf", 16)
+    , ROBOTO_LARGE               ("roboto-regular.ttf", 32)
     , ROUNDABOUT                 ("chevyray-roundabout.ttf")
     , ROUNDABOUT_LARGE           ("chevyray-roundabout.ttf", 32)
     , SOURCE_CODE_PRO            ("source-code-pro-regular.otf")

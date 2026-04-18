@@ -91,8 +91,9 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
     @Override
     protected void initializeUI() {
         if (Flag.DEBUG_RENDER.isEnabled()) {
-            var screenName = IntroScreen.class.getSimpleName();
-            uiRoot.add(new VisLabel(screenName)).pad(10).top().left().row();
+            var screenName = new VisLabel(getClass().getSimpleName());
+            screenName.setPosition(10, windowCamera.viewportHeight - 10 - screenName.getHeight());
+            uiStage.addActor(screenName);
         }
 
         // TEMP: remove when we have story stuff in this screen

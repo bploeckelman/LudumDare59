@@ -56,9 +56,9 @@ public class TitleScreen extends BaseScreen {
     @Override
     protected void initializeUI() {
         if (Flag.DEBUG_RENDER.isEnabled()) {
-            var screenName = TitleScreen.class.getSimpleName();
-            uiRoot.add(new VisLabel(screenName)).pad(10).top().left().row();
-            uiRoot.add(new VisLabel()).grow();
+            var screenName = new VisLabel(getClass().getSimpleName());
+            screenName.setPosition(10, windowCamera.viewportHeight - 10 - screenName.getHeight());
+            uiStage.addActor(screenName);
         }
     }
 }

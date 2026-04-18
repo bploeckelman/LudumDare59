@@ -55,10 +55,9 @@ public class EndingScreen extends BaseScreen {
     @Override
     protected void initializeUI() {
         if (Flag.DEBUG_RENDER.isEnabled()) {
-            var screenName = EndingScreen.class.getSimpleName();
-            uiRoot.add(new VisLabel(screenName)).pad(10).top().left().row();
-            // TODO: uncomment when removing countdownLabel, unless there is already other ui stuff
-            // uiRoot.add(new VisLabel()).grow();
+            var screenName = new VisLabel(getClass().getSimpleName());
+            screenName.setPosition(10, windowCamera.viewportHeight - 10 - screenName.getHeight());
+            uiStage.addActor(screenName);
         }
 
         // TEMP: remove when we have story stuff in this screen
