@@ -50,7 +50,7 @@ public class EnemySystem extends IteratingSystem {
         var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
 
-        vel.set(0f, -20f);
+        vel.set(0f, vel.y() * 1.005f);
     }
 
     private void flyer(Entity entity, EnemyTag enemy, float delta) {

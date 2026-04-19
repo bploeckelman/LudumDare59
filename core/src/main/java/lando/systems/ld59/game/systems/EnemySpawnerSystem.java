@@ -45,7 +45,7 @@ public class EnemySpawnerSystem extends IteratingSystem {
             spawnX,
             spawnY,
             0,
-            0
+            -10f
         );
         getEngine().addEntity(enemy);
         spawnTimer = 0f;
