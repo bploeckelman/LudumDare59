@@ -41,6 +41,7 @@ public class TurretSystem extends IteratingSystem {
 
         var health = Components.get(entity, Health.class);
         var gunAnim = Components.get(turret.cannon, Animator.class);
+        var baseAnim = Components.get(turret.base, Animator.class);
 
         health.update(dt);
         if (health.isDead()) {
@@ -64,6 +65,8 @@ public class TurretSystem extends IteratingSystem {
             } else {
                 gunAnim.tint.set(.6f, .6f, .6f, 1f);
             }
+
+            baseAnim.tint.set(.6f, .6f, .6f, 1f);
 
             // don't update anything else
             return;
