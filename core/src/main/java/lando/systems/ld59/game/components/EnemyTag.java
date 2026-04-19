@@ -6,10 +6,11 @@ import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.game.Components;
 
 public class EnemyTag implements Component {
-    public boolean alive;
+    public final Entity entity;
     public EnergyColor.Type energyColor;
     public EnemyType type;
     public State state;
+    public float lastHit;
 
 
     public enum State {
@@ -29,8 +30,19 @@ public class EnemyTag implements Component {
         }
     }
 
-    public EnemyTag() {
-        alive = true;
+    public EnemyTag(Entity entity) {
+        this.entity = entity;
+    }
+
+    public void update(float dt) {
+        lastHit -= dt;
+    }
+
+    public void getHit(float damage) {
+        lastHit = .1f;
+        // play sound or make particle effect
+        var health = Components.get(entity, Health.class);
+        health.damage(damage);
     }
 
 }

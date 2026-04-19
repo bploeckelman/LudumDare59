@@ -71,7 +71,7 @@ public class Factory {
 
     public static Entity enemyShip(EnemyTag.EnemyType enemy, EnergyColor.Type energyColor, float posX, float posY, float velX, float velY) {
         var entity = createEntity();
-        var tag = new EnemyTag();
+        var tag = new EnemyTag(entity);
         AnimEnemy animType = null;
         switch (energyColor) {
             case RED:
@@ -110,6 +110,7 @@ public class Factory {
         entity.add(animator);
         entity.add(collider);
         entity.add(health);
+        entity.add(new EnergyColor(energyColor));
         return entity;
     }
 

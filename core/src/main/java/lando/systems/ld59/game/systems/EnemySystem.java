@@ -7,6 +7,7 @@ import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.EnemyTag;
 import lando.systems.ld59.game.components.Health;
 import lando.systems.ld59.game.components.Velocity;
+import lando.systems.ld59.game.components.renderable.Animator;
 
 public class EnemySystem extends IteratingSystem {
 
@@ -32,9 +33,14 @@ public class EnemySystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float delta) {
 
-
-
         var enemy = Components.get(entity, EnemyTag.class);
+        enemy.update(delta);
+        var anim = Components.get(entity, Animator.class);
+        if (enemy.lastHit > 0) {
+            anim.tint.set(.8f, 0f, 0f, 1f);
+        } else {
+            anim.tint.set(1f, 1f, 1f, 1f);
+        }
 
         if      (EnemyTag.State.MOVE == enemy.state) move(entity, enemy, delta);
         else if (EnemyTag.State.SHOOT == enemy.state) shoot(entity, enemy, delta);

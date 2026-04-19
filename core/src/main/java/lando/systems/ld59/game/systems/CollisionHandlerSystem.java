@@ -51,6 +51,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
         if (bullet != null && enemy != null) {
 
             var enemyHealth = Components.get(enemy, Health.class);
+            var enemyTag = Components.get(enemy, EnemyTag.class);
             var bulletDamage = Components.get(bullet, Projectile.class);
 
             if (enemyHealth.isDead() || bulletDamage.damage <= 0) {
@@ -64,7 +65,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             if (bulletColor != null && enemyColor != null) {
                 damageMultiplier = bulletColor.type == enemyColor.type ? 3f : 1.0f;
             }
-            enemyHealth.damage(bulletDamage.damage * damageMultiplier);
+            enemyTag.getHit(bulletDamage.damage * damageMultiplier);
             bulletDamage.damage = 0;
 
         } else {
