@@ -97,12 +97,19 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             var damageMultiplier = 1f;
             if (bulletColor != null && entityColor != null) {
                 damageMultiplier = bulletColor.type == entityColor.type ? 3f : 1.0f;
+            }
+            if (Components.has(other, EnemyTag.class)) {
+                // bullet collided with enemy ship
                 var pos = Components.get(bullet, Position.class);
                 var effectPos = new Position(pos.x, pos.y);
                 var params = new SmokeEffect.Params(effectPos);
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);
                 getEngine().addEntity(emitter);
                 AudioEvent.playSound(SoundType.BOARD_CLICK);
+            } else if (Components.has(other, TurretPart.class)) {
+                //bullet collided with turret part
+            } else if (Components.has(other, CityShield.class)) {
+                //bullet collided with city shield
             }
             health.getHit(other, bulletDamage.damage * damageMultiplier);
             bulletDamage.damage = 0f;
