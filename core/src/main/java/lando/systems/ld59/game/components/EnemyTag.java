@@ -9,6 +9,8 @@ import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 
+import static lando.systems.ld59.game.Constants.ENEMY_PROJECTILE_DAMAGE;
+
 public class EnemyTag implements Component {
     public final Entity entity;
     public EnergyColor.Type energyColor;
@@ -55,7 +57,7 @@ public class EnemyTag implements Component {
         bullet.add(new Position(pos.x, pos.y - width));
         bullet.add(baseAnim);
         bullet.add(new Velocity(0, -100));
-        bullet.add(new Projectile(4));
+        bullet.add(new Projectile(ENEMY_PROJECTILE_DAMAGE));
         bullet.add(bulletCollider);
         bullet.add(new Health(1));
         if (energyColor != null) {

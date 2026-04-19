@@ -20,6 +20,8 @@ import lando.systems.ld59.game.components.renderable.Outline;
 import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.utils.FramePool;
 
+import static lando.systems.ld59.game.Constants.PLAYER_PROJECTILE_DAMAGE;
+
 public class Turret implements Component {
 
     public static final float size = 200f;
@@ -139,7 +141,7 @@ public class Turret implements Component {
         bullet.add(pos);
         bullet.add(baseAnim);
         bullet.add(vel);
-        bullet.add(new Projectile(4));
+        bullet.add(new Projectile(PLAYER_PROJECTILE_DAMAGE));
         bullet.add(bulletCollider);
         bullet.add(new Health(1));
         if (energyColor != null) {

@@ -17,6 +17,7 @@ import lando.systems.ld59.particles.ParticleEffectParams;
 
 import java.util.List;
 
+import static lando.systems.ld59.game.Constants.ENEMY_MAX_HEALTH;
 import static lando.systems.ld59.game.Constants.TURRET_MAX_HEALTH;
 
 public class Factory {
@@ -104,7 +105,7 @@ public class Factory {
         var velocity = new Velocity(velX, velY);
         var animator = new Animator(animType, new Vector2(size, size), animOrigin);
         var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, size / 2f, collidesWith);
-        var health = new Health(5);
+        var health = new Health(ENEMY_MAX_HEALTH);
 
         entity.add(name);
         entity.add(tag);

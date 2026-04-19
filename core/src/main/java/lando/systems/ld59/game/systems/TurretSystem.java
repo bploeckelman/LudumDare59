@@ -62,12 +62,12 @@ public class TurretSystem extends IteratingSystem {
             }
 
             if (health.lastHit % .5f < .1f) {
-                gunAnim.tint.set(.6f, 0f, 0f, 1f);
+                gunAnim.tint.set(.5f, .5f, .5f, .5f);
             } else {
-                gunAnim.tint.set(.6f, .6f, .6f, 1f);
+                gunAnim.tint.set(.6f, .6f, .6f, .7f);
             }
 
-            baseAnim.tint.set(.6f, .6f, .6f, 1f);
+            baseAnim.tint.set(.6f, .6f, .6f, .7f);
 
             // don't update anything else
             return;
@@ -102,9 +102,11 @@ public class TurretSystem extends IteratingSystem {
 
         gunAnim.rotation = turret.cannonRotation;
         if (health.lastHit < .1f) {
-            gunAnim.tint.set(.8f, 0f, 0f, 1f);
+            gunAnim.tint.set(.8f, .4f, .4f, 1f);
+            baseAnim.tint.set(.8f, .4f, .4f, 1f);
         } else {
             gunAnim.tint.set(1f, 1f, 1f, 1f);
+            baseAnim.tint.set(1f, 1f, 1f, 1f);
         }
 
 
