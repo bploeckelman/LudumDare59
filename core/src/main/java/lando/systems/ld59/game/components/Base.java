@@ -56,6 +56,7 @@ public class Base implements Component {
         city.add(new Outline(Color.LIME, Color.CLEAR_WHITE, 2));
         city.add(new Health(CITY_BASE_MAX_HEALTH));
         city.add(groundCollider);
+        city.add(new GroundPart());
 
 
         shieldCollider = Collider.circ(CollisionMask.SHIELD, 0, -350, 730, collidesWith);

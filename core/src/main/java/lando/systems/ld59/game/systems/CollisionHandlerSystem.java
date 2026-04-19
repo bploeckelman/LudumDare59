@@ -72,6 +72,10 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                    : Components.has(overlap.entityB(), CityShield.class) ? overlap.entityB()
                    : null;
 
+        var city = Components.has(overlap.entityA(), GroundPart.class) ? overlap.entityA()
+                   : Components.has(overlap.entityB(), GroundPart.class) ? overlap.entityB()
+                   : null;
+
         if (bullet != null) {
             var other = bullet == overlap.entityA() ? overlap.entityB() : overlap.entityA();
 
@@ -146,6 +150,12 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             var other = shield == overlap.entityA() ? overlap.entityB() : overlap.entityA();
             Components.get(other, Health.class).getHit(other, 1000f);
             Components.get(shield, Health.class).getHit(shield, ENEMY_RAMMING_DAMAGE);
+        } else if (city != null) {
+            // something not a bullet hit the city
+            Components.get(city, Health.class).getHit(city, ENEMY_RAMMING_DAMAGE);
+            var other = city == overlap.entityA() ? overlap.entityB() : overlap.entityA();
+            Components.get(other, Health.class).getHit(other, 1000f);
+
         } else {
             Util.warn(TAG, "Overlap collision that wasn't handled between: \n\t" + Util.entityString(overlap.entityA()) + " and \n\t" + Util.entityString(overlap.entityB()) + ".");
             Components.get(overlap.entityA(), Health.class).getHit(overlap.entityA(), 100f);
