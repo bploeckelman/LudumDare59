@@ -9,15 +9,17 @@ import java.util.EnumMap;
 
 public enum SoundType implements AssetType<Sound> {
     SHOT("shot.wav", 1.0f)
-    ,BOARD_CLICK("board_click.ogg")
+    ,EXPLODE_SMALL("explode_small.ogg")
     ,BLIP("blip1.ogg")
-    ,LASER("laser1.wav", 1.5f)
+    ,THUD("thud.wav")
+    ,LASER("laser1.wav", 1f)
+    ,CLANG("clang.wav", 1f)
     ,SINE_C1("sine_c1.wav", (float) Math.pow(2,(0./12.)))
     ,SINE_D("sine_c1.wav", (float) Math.pow(2,(2./12.)))
     ,SINE_E("sine_c1.wav", (float) Math.pow(2,(4./12.)))
     ,SINE_F("sine_c1.wav", (float) Math.pow(2,(5./12.)))
     ,SINE_G("sine_c1.wav", (float) Math.pow(2,(7./12.)))
-    ,SINE_A("sine_c1.wav", (float) Math.pow(2,(8./12.)))
+    ,SINE_A("sine_c1.wav", (float) Math.pow(2,(9./12.)))
     ,SINE_B("sine_c1.wav", (float) Math.pow(2,(11./12.)))
     ,SINE_C2("sine_c1.wav", (float) Math.pow(2,(12./12)))
     ,SQUARE_C1("square_c1.wav", (float) Math.pow(2,(0./12.)))
@@ -25,7 +27,7 @@ public enum SoundType implements AssetType<Sound> {
     ,SQUARE_E("square_c1.wav", (float) Math.pow(2,(4./12.)))
     ,SQUARE_F("square_c1.wav", (float) Math.pow(2,(5./12.)))
     ,SQUARE_G("square_c1.wav", (float) Math.pow(2,(7./12.)))
-    ,SQUARE_A("square_c1.wav", (float) Math.pow(2,(8./12.)))
+    ,SQUARE_A("square_c1.wav", (float) Math.pow(2,(9./12.)))
     ,SQUARE_B("square_c1.wav", (float) Math.pow(2,(11./12.)))
     ,SQUARE_C2("square_c1.wav", (float) Math.pow(2,(12./12)))
     ,SAW_C1("saw_c1.wav", (float) Math.pow(2,(0./12.)))
@@ -33,7 +35,7 @@ public enum SoundType implements AssetType<Sound> {
     ,SAW_E("saw_c1.wav", (float) Math.pow(2,(4./12.)))
     ,SAW_F("saw_c1.wav", (float) Math.pow(2,(5./12.)))
     ,SAW_G("saw_c1.wav", (float) Math.pow(2,(7./12.)))
-    ,SAW_A("saw_c1.wav", (float) Math.pow(2,(8./12.)))
+    ,SAW_A("saw_c1.wav", (float) Math.pow(2,(9/12.)))
     ,SAW_B("saw_c1.wav", (float) Math.pow(2,(11./12.)))
     ,SAW_C2("saw_c1.wav", (float) Math.pow(2,(12./12)))
     ;
@@ -80,18 +82,55 @@ public enum SoundType implements AssetType<Sound> {
         }
     }
 
-    public static SoundType getRandomSineSound() {
-        SoundType[] sineSounds = {SINE_C1, SINE_D, SINE_E, SINE_F, SINE_G, SINE_A, SINE_B, SINE_C2};
-        return sineSounds[MathUtils.random(0, sineSounds.length - 1)];
+    public static int[] cMaj = {0, 2, 4};
+    public static int[] dMin = {1, 3, 5};
+    public static int[] fMaj = {0, 3, 5};
+    public static int[] gMaj = {1, 4, 6};
+    public enum NoteType  {
+        SAW,
+        SQUARE,
+        SINE
+    }
+    // 0 - 1 - 2 - 3 - 4 - 5 - 6 - 7
+    // C - D - E - F - G - A - B - C
+
+    public static SoundType getRandomSound(int[] notes, NoteType noteType) {
+
+        SoundType[] sounds;
+
+        switch (noteType) {
+            case SAW:
+                sounds = new SoundType[] {SAW_C1, SAW_D, SAW_E, SAW_F, SAW_G, SAW_A, SAW_B, SAW_C2};
+                break;
+            case SINE:
+                sounds = new SoundType[] {SINE_C1, SINE_D, SINE_E, SINE_F, SINE_G, SINE_A, SINE_B, SINE_C2};
+                break;
+            case SQUARE:
+                sounds = new SoundType[] {SQUARE_C1, SQUARE_D, SQUARE_E, SQUARE_F, SQUARE_G, SQUARE_A, SQUARE_B, SQUARE_C2};
+                break;
+            default:
+                sounds = new SoundType[] {SINE_C1, SINE_D, SINE_E, SINE_F, SINE_G, SINE_A, SINE_B, SINE_C2};
+                break;
+        }
+        int noteIndex = notes[MathUtils.random(0, notes.length - 1)];
+        return sounds[noteIndex];
     }
 
-    public static SoundType getRandomSawSound() {
+    public static SoundType getRandomSineSound(int[] notes, NoteType noteType) {
+        SoundType[] sineSounds = {SINE_C1, SINE_D, SINE_E, SINE_F, SINE_G, SINE_A, SINE_B, SINE_C2};
+        int noteIndex = notes[MathUtils.random(0, notes.length - 1)];
+        return sineSounds[noteIndex];
+    }
+
+    public static SoundType getRandomSawSound(int[] notes) {
         SoundType[] sawSounds = {SAW_C1, SAW_D, SAW_E, SAW_F, SAW_G, SAW_A, SAW_B, SAW_C2};
+        int noteIndex = notes[MathUtils.random(0, notes.length - 1)];
         return sawSounds[MathUtils.random(0, sawSounds.length - 1)];
     }
 
-    public static SoundType getRandomSquareSound() {
+    public static SoundType getRandomSquareSound(int[] notes) {
         SoundType[] squareSounds = {SQUARE_C1, SQUARE_D, SQUARE_E, SQUARE_F, SQUARE_G, SQUARE_A, SQUARE_B, SQUARE_C2};
+        int noteIndex = notes[MathUtils.random(0, notes.length - 1)];
         return squareSounds[MathUtils.random(0, squareSounds.length - 1)];
     }
 }

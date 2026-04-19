@@ -7,6 +7,7 @@ public abstract class AudioEvent implements SignalEvent {
 
     public static void playSound(SoundType sound)               { signal.dispatch(new PlaySound(sound)); }
     public static void playSound(SoundType sound, float volume) { signal.dispatch(new PlaySound(sound, volume)); }
+    public static void playSound(SoundType sound, float volume, float pan) { signal.dispatch(new PlaySound(sound, volume, pan)); }
     public static void playMusic(MusicType music)               { signal.dispatch(new PlayMusic(music)); }
     public static void playMusic(MusicType music, float volume) { signal.dispatch(new PlayMusic(music, volume)); }
     public static void stopMusic(MusicType music)               { signal.dispatch(new StopMusic(music)); }
@@ -15,11 +16,21 @@ public abstract class AudioEvent implements SignalEvent {
     public static final class PlaySound extends AudioEvent {
         public final SoundType soundType;
         public final float volume;
-        private PlaySound(SoundType soundType) { this(soundType, 1f); }
+        public float pan;
+
+        private PlaySound(SoundType soundType) {
+            this(soundType, 1f);
+        }
         private PlaySound(SoundType soundType, float volume) {
             this.soundType = soundType;
             this.volume = volume;
         }
+        private PlaySound(SoundType soundType, float volume, float pan) {
+            this.soundType = soundType;
+            this.volume = volume;
+            this.pan = pan;
+        }
+
     }
 
     public static final class PlayMusic extends AudioEvent {

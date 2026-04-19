@@ -148,7 +148,7 @@ public class Turret implements Component {
         if (energyColor != null) {
             bullet.add(energyColor);
         }
-        AudioEvent.playSound(SoundType.LASER, .5f);
+//        AudioEvent.playSound(SoundType.LASER, .25f);
 
         engine.addEntity(bullet);
     }

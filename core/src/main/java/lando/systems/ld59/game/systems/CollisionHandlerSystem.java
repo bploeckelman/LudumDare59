@@ -8,7 +8,9 @@ import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import lando.systems.ld59.Config;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.SoundType;
@@ -80,7 +82,12 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 var params = new SmokeEffect.Params(effectPos);
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);
                 getEngine().addEntity(emitter);
-                AudioEvent.playSound(SoundType.BOARD_CLICK);
+
+                float panValue = MathUtils.map(
+                    0, Config.window_width,
+                    -1, 1,
+                    pos.x);
+                AudioEvent.playSound(SoundType.THUD, .25f, panValue);
             }
 
             var health = Components.get(other, Health.class);
@@ -98,6 +105,8 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             if (bulletColor != null && entityColor != null) {
                 damageMultiplier = bulletColor.type == entityColor.type ? 3f : 1.0f;
             }
+
+
             if (Components.has(other, EnemyTag.class)) {
                 // bullet collided with enemy ship
                 var pos = Components.get(bullet, Position.class);
@@ -105,8 +114,20 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 var params = new SmokeEffect.Params(effectPos);
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);
                 getEngine().addEntity(emitter);
-                AudioEvent.playSound(SoundType.BOARD_CLICK);
+
+                float panValue = MathUtils.map(
+                    0, Config.window_width,
+                    -1, 1,
+                    pos.x);
+
+                AudioEvent.playSound(SoundType.EXPLODE_SMALL, .5f, panValue);
             } else if (Components.has(other, TurretPart.class)) {
+                var pos = Components.get(bullet, Position.class);
+                float panValue = MathUtils.map(
+                    0, Config.window_width,
+                    -1, 1,
+                    pos.x);
+                AudioEvent.playSound(SoundType.CLANG, .5f, panValue);
                 //bullet collided with turret part
             } else if (Components.has(other, CityShield.class)) {
                 //bullet collided with city shield
