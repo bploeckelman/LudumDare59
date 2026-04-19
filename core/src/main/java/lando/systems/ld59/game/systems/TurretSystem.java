@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.*;
-import lando.systems.ld59.game.components.collision.CollisionCirc;import lando.systems.ld59.game.components.renderable.Animator;import lando.systems.ld59.game.signals.ConnectionEvent;
+import lando.systems.ld59.game.components.renderable.Animator;
+import lando.systems.ld59.game.signals.ConnectionEvent;
+import lando.systems.ld59.utils.Util;
 
 public class TurretSystem extends IteratingSystem {
 
@@ -34,6 +36,8 @@ public class TurretSystem extends IteratingSystem {
         }
     }
 
+    private Entity loggingEntity = null;
+
     @Override
     protected void processEntity(Entity entity, float dt) {
         var turret = Components.get(entity, Turret.class);
@@ -43,6 +47,8 @@ public class TurretSystem extends IteratingSystem {
         var health = Components.get(entity, Health.class);
         var gunAnim = Components.get(turret.cannon, Animator.class);
         var baseAnim = Components.get(turret.base, Animator.class);
+        var interp = Components.optional(turret.cannon, Interp.class);
+        var turretPattern = Components.optional(turret.cannon, TurretPattern.class);
 
         health.update(dt);
         if (health.isDead()) {
@@ -74,33 +80,41 @@ public class TurretSystem extends IteratingSystem {
         }
         baseAnim.tint.set(Color.WHITE);
 
-        var interp = Components.optional(turret.cannon, Interp.class);
-        var turretPattern = Components.optional(turret.cannon, TurretPattern.class);
-        float targetRotation = turret.rotation;
+        var targetRotation = turret.rotation;
         if (interp.isPresent() && turretPattern.isPresent()) {
-            float extents = turretPattern.get().angleExtents();
-             targetRotation = turret.rotation + interp.get().apply(-extents, extents);
+            var extents = turretPattern.get().angleExtents();
+            targetRotation = turret.rotation + interp.get().apply(-extents, extents);
         }
 
         // Lerp cannonRotation toward targetRotation with max angular speed
-        float maxDegreesPerSecond = 1000f;
-        float maxDelta = maxDegreesPerSecond * dt;
+        var maxDegreesPerSecond = 1000f;
+        var maxDelta = maxDegreesPerSecond * dt;
 
         // Get shortest signed angle difference: [-180, 180]
-        float deltaAngle = ((targetRotation - turret.cannonRotation + 540) % 360) - 180;
+        float deltaAngle = ((targetRotation - turret.cannonRotation.floatValue() + 540) % 360) - 180;
 
         // Clamp the step to maxDelta
         float step = MathUtils.clamp(deltaAngle, -maxDelta, maxDelta);
 
-        float dist = Math.abs(turret.cannonRotation - targetRotation);
-        if (dist <= Math.abs(maxDelta)) {
-            turret.cannonRotation = targetRotation;
-            canShoot = true;
+        if (!turret.swappingCannonBarrel) {
+            float dist = Math.abs(turret.cannonRotation.floatValue() - targetRotation);
+            if (dist <= Math.abs(maxDelta)) {
+                turret.cannonRotation.setValue(targetRotation);
+                canShoot = true;
+            } else {
+                turret.cannonRotation.setValue(turret.cannonRotation.floatValue() + step);
+            }
         } else {
-            turret.cannonRotation += step;
+            if (loggingEntity == null) {
+                loggingEntity = entity;
+            } else {
+                if (entity == loggingEntity) {
+                    Util.log(Components.get(loggingEntity, Id.class).toString(), "cannonRotation: " + turret.cannonRotation.floatValue());
+                }
+            }
         }
 
-        gunAnim.rotation = turret.cannonRotation;
+        gunAnim.rotation = turret.cannonRotation.floatValue();
         if (health.lastHit < .1f) {
             gunAnim.tint.set(.8f, .4f, .4f, 1f);
             baseAnim.tint.set(.8f, .4f, .4f, 1f);
@@ -108,7 +122,6 @@ public class TurretSystem extends IteratingSystem {
             gunAnim.tint.set(1f, 1f, 1f, 1f);
             baseAnim.tint.set(1f, 1f, 1f, 1f);
         }
-
 
         if (interp.isEmpty() || turretPattern.isEmpty()) {
             // we need to attach something
@@ -122,8 +135,6 @@ public class TurretSystem extends IteratingSystem {
         if (shootThisFrame && canShoot)  {
             turret.shoot();
         }
-
-
     }
 
     public boolean handleTouchUp(float worldX, float worldY, int pointer, int button) {

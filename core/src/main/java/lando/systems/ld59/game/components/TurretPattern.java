@@ -2,6 +2,7 @@ package lando.systems.ld59.game.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Interpolation;
+import lando.systems.ld59.assets.anims.AnimBaseTurret;
 
 public class TurretPattern implements Component {
     public enum Type { LINE, FAN, SWEEP }
@@ -14,6 +15,15 @@ public class TurretPattern implements Component {
 
     public TurretPattern(Type type) {
         this.type = type;
+    }
+
+    public AnimBaseTurret getCannonBarrelAnim() {
+        switch (type) {
+            case LINE:  return AnimBaseTurret.CANNON_BARREL_C;
+            case FAN:   return AnimBaseTurret.CANNON_BARREL_B;
+            case SWEEP: return AnimBaseTurret.CANNON_BARREL_A;
+            default:    return AnimBaseTurret.CANNON_BARREL_E;
+        }
     }
 
     public Interp getInterp() {

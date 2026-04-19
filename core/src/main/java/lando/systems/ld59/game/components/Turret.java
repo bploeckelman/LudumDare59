@@ -1,5 +1,8 @@
 package lando.systems.ld59.game.components;
 
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -32,10 +35,10 @@ public class Turret implements Component {
     };
 
     public final float rotation;
-    public float cannonRotation;
+    public final MutableFloat cannonRotation;
     public float repairTimer;
 
-    private Engine engine;
+    private final Engine engine;
 
     public final Entity entity;
     public final Position pos;
@@ -48,15 +51,18 @@ public class Turret implements Component {
     private final Outline baseOutline;
     private final Outline cannonOutline;
 
+    public boolean swappingCannonBarrel = false;
+
     public Turret(Engine engine, Entity entity, Position pos, float rot, Health turretHealth) {
         this.engine = engine;
         this.entity = entity;
         this.pos = pos;
         this.rotation = rot;
+        this.cannonRotation = new MutableFloat(0);
         this.base = Factory.createEntity();
         this.cannon = Factory.createEntity();
-        this.baseOutline    = new Outline(Color.MAGENTA, Color.CLEAR_WHITE, 2f);
-        this.cannonOutline  = new Outline(Color.MAGENTA, Color.CLEAR_WHITE, 4f);
+        this.baseOutline    = new Outline(Color.CLEAR_WHITE, Color.CLEAR_WHITE, 3f);
+        this.cannonOutline  = new Outline(Color.CLEAR_WHITE, Color.CLEAR_WHITE, 2f);
         this.baseCollider   = Collider.circ(CollisionMask.TURRET, 0, 10, 80, COLLIDES_WITH);
         this.cannonCollider = Collider.circ(CollisionMask.TURRET, 96,  0, 23, COLLIDES_WITH);
 
@@ -75,14 +81,15 @@ public class Turret implements Component {
         baseAnim.size.set(width, height);
         baseAnim.rotation = rotation;
 
+        var cannonOffset = 96f;
         cannon.add(turretHealth);
         cannon.add(cannonAnim);
         cannon.add(cannonOutline);
         cannon.add(cannonCollider);
         cannon.add(new TurretPart());
         cannon.add(new Position(
-                pos.x - 96 + MathUtils.cosDeg(rot) * 96,
-                pos.y + MathUtils.sinDeg(rot) * 96));
+                pos.x + MathUtils.cosDeg(rot) * cannonOffset - cannonOffset,
+                pos.y + MathUtils.sinDeg(rot) * cannonOffset));
         cannon.add(new Interp(1f, Interpolation.linear, Interp.Repeat.PINGPONG));
 
         base.add(turretHealth);
@@ -97,6 +104,8 @@ public class Turret implements Component {
     }
 
     public void shoot() {
+        if (swappingCannonBarrel) return;
+
         float width = 10f;
 
         var bullet = Factory.createEntity();
@@ -108,21 +117,20 @@ public class Turret implements Component {
         }
 
         var pos = new Position(cannonPos.x + 100, cannonPos.y );
-        Vector2 tempVec = FramePool.vec2();
-        tempVec.set(60, 0);
-        tempVec.rotateDeg(cannonRotation);
+        var tempVec = FramePool.vec2(60, 0).rotateDeg(cannonRotation.floatValue());
         pos.add((int) tempVec.x, (int)tempVec.y);
 
-
-        float totalRotation = cannonRotation;
-        var vel = new Velocity(MathUtils.cosDeg(totalRotation) * 100, MathUtils.sinDeg(totalRotation) * 100);
+        var speed = 100f;
+        var totalRotation = cannonRotation.floatValue();
+        var vel = new Velocity(
+                MathUtils.cosDeg(totalRotation) * speed,
+                MathUtils.sinDeg(totalRotation) * speed);
 
         var baseAnim = new Animator(Main.game.assets.pixelRegion);
         baseAnim.depth = 100;
         baseAnim.size.set(width, width);
         baseAnim.tint.set(energyColor.getColor());
         baseAnim.origin.set(width / 2f, width / 2f);
-
 
         var collidesWith = new CollisionMask[] { CollisionMask.ENEMY, CollisionMask.ENEMY_PROJECTILE };
         var bulletCollider = Collider.circ(CollisionMask.PLAYER_PROJECTILE, 0,  0, width/2f, collidesWith);
@@ -150,6 +158,26 @@ public class Turret implements Component {
         cannon.remove(TurretPattern.class);
         if (pattern != null) {
             cannon.add(pattern);
+
+            // Update cannon barrel based on firing pattern;
+            // - rotate existing barrel behind base (base turret rotation + 180 == relative 270 deg)
+            // - swap barrel animation
+            // - rotate new barrel out from behind base (base turret rotation == relative 90 deg)
+            var animator = Components.get(cannon, Animator.class);
+            Timeline.createSequence()
+                    // Set fence so we don't do extra rotation, shooting during swap
+                    .push(Tween.call((type, source) -> swappingCannonBarrel = true))
+                    // Rotate until barrel is hidden
+                    .push(Tween.to(cannonRotation, -1, 0.2f).target(rotation + 180))
+                    // Change cannon barrel animation and pause briefly
+                    .push(Tween.call((type, source) -> animator.play(pattern.getCannonBarrelAnim())))
+                    .pushPause(0.3f)
+                    // Return to standard starting position
+                    .push(Tween.to(cannonRotation, -1, 0.2f).target(rotation))
+                    .pushPause(0.3f)
+                    // Free fence to allow normal rotation, shooting now that swap is done
+                    .push(Tween.call((type, source) -> swappingCannonBarrel = false))
+                    .start(Main.game.tween);
         }
 
         // reset the interpolation
