@@ -12,7 +12,7 @@ public enum AnimBaseCity implements AnimType {
     , CRACK_3
     , CRACK_4
     , DEAD
-    , GLASS_BREAK
+    , GLASS_BREAK(Animation.PlayMode.NORMAL)
     , HIT_A
     , IDLE(Animation.PlayMode.LOOP)
     , IDLE_WEAK(Animation.PlayMode.LOOP)
@@ -34,12 +34,24 @@ public enum AnimBaseCity implements AnimType {
         return next;
     }
 
+    public AnimBaseCity getFromPercent(float percent) {
+        if (percent > .9f) return IDLE;
+        if (percent > .7f) return IDLE_WEAK;
+        if (percent > .5f) return CRACK_1;
+        if (percent > .4f) return CRACK_2;
+        if (percent > .3f) return CRACK_3;
+        if (percent > .2f) return CRACK_4;
+        if (percent > .05f) return GLASS_BREAK;
+        if (percent > 0f) return DEAD;
+        return DEAD;
+    }
+
     private static final String BASE_PATH = "base/city/";
     private static final EnumMap<AnimBaseCity, Animation<TextureRegion>> container = AnimType.createAndRegisterContainer(AnimBaseCity.class);
     private static final EnumMap<AnimBaseCity, AnimType.AnimConfig> configs = AnimType.createConfigs(
             AnimBaseCity.values(), BASE_PATH,
             e -> e.folderPrefix + e.name().toLowerCase().replace("_", "-"),
-            e -> new AnimType.Data()
+            e -> new AnimType.Data(e.frameDuration, e.playMode)
     );
 
     public final String folderPrefix;

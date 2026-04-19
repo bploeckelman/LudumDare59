@@ -9,6 +9,7 @@ public class Systems {
     public static AnimationSystem        animation;
     public static AudioSystem            audio;
     public static BaseButtonSystem       baseButtons;
+    public static CityBaseSystem         cityBase;
     public static CollisionCheckSystem   collisionCheck;
     public static CollisionHandlerSystem collisionHandler;
     public static ConnectionSystem       connections;
@@ -28,6 +29,7 @@ public class Systems {
         Systems.animation        = new AnimationSystem();
         Systems.audio            = new AudioSystem();
         Systems.baseButtons      = new BaseButtonSystem();
+        Systems.cityBase         = new CityBaseSystem();
         Systems.collisionCheck   = new CollisionCheckSystem();
         Systems.collisionHandler = new CollisionHandlerSystem();
         Systems.connections      = new ConnectionSystem();
@@ -46,6 +48,7 @@ public class Systems {
         engine.addSystem(animation);
         engine.addSystem(audio);
         engine.addSystem(baseButtons);
+        engine.addSystem(cityBase);
         engine.addSystem(collisionCheck);
         engine.addSystem(collisionHandler);
         engine.addSystem(connections);

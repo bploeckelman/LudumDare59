@@ -12,6 +12,8 @@ import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Outline;
 
+import static lando.systems.ld59.game.Constants.*;
+
 public class Base implements Component {
 
     public static final float ANIM_DEPTH = 100;
@@ -51,14 +53,14 @@ public class Base implements Component {
         city.add(new Position(pos.x, pos.y + 25));
         city.add(cityAnim);
         city.add(new Outline(Color.LIME, Color.CLEAR_WHITE, 2));
-        city.add(new Health(1000));
+        city.add(new Health(CITY_BASE_MAX_HEALTH));
         city.add(groundCollider);
 
 
         shieldCollider = Collider.circ(CollisionMask.SHIELD, 0, -350, 730, collidesWith);
         shield.add(new Position(pos.x, pos.y));
         shield.add(shieldCollider);
-        shield.add(new Health(400));
+        shield.add(new Health(SHIELD_MAX_HEALTH));
         shield.add(new CityShield());
 
         engine.addEntity(ground);

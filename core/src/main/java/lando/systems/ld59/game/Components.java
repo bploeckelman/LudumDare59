@@ -49,6 +49,7 @@ public class Components {
         entry(Health.class,         ComponentMapper.getFor(Health.class)),
         entry(TurretPart.class,     ComponentMapper.getFor(TurretPart.class)),
         entry(CityShield.class,     ComponentMapper.getFor(CityShield.class)),
+        entry(Boss.class,           ComponentMapper.getFor(Boss.class)),
 
         // Map Objects --------------------------------------------------------
         entry(EnemySpawner.class, ComponentMapper.getFor(EnemySpawner.class))
