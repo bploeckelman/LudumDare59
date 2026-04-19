@@ -41,7 +41,7 @@ public class TurretSystem extends IteratingSystem {
         var gunAnim = Components.get(turret.cannon, Animator.class);
         var interp = Components.optional(turret.cannon, Interp.class);
         var turretPattern = Components.optional(turret.cannon, TurretPattern.class);
-        float targetRotation = 0;
+        float targetRotation = 90;
         if (interp.isPresent() && turretPattern.isPresent()) {
             float extents = turretPattern.get().angleExtents();
              targetRotation = turret.rotation + interp.get().apply(-extents, extents);
@@ -67,7 +67,12 @@ public class TurretSystem extends IteratingSystem {
 
         gunAnim.rotation = turret.cannonRotation;
 
-        if (shootThisFrame && canShoot)  {
+        if (interp.isEmpty() || turretPattern.isEmpty()) {
+            // we need to attach something
+            canShoot = false;
+        }
+
+            if (shootThisFrame && canShoot)  {
             turret.shoot();
         }
 

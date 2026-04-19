@@ -66,11 +66,11 @@ public class Turret implements Component {
         cannon.add(new Interp(1f, Interpolation.linear, Interp.Repeat.PINGPONG));
 
         //DEBUG
-        TurretPattern.Type[] values = TurretPattern.Type.values();
-        connectPattern(new TurretPattern(values[MathUtils.random(values.length-1)]));
-
-        EnergyColor.Type[] colors = EnergyColor.Type.values();
-        connectEnergy(new EnergyColor(colors[MathUtils.random(colors.length-1)]));
+//        TurretPattern.Type[] values = TurretPattern.Type.values();
+//        connectPattern(new TurretPattern(values[MathUtils.random(values.length-1)]));
+//
+//        EnergyColor.Type[] colors = EnergyColor.Type.values();
+//        connectEnergy(new EnergyColor(colors[MathUtils.random(colors.length-1)]));
 
         // END DEBUG
 
