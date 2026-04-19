@@ -15,6 +15,8 @@ import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.particles.ParticleEffectParams;
 
+import java.util.List;
+
 public class Factory {
 
     /**
@@ -58,10 +60,10 @@ public class Factory {
         return entity;
     }
 
-    public static Entity enemySpawner(float x, float y) {
+    public static Entity enemySpawner(float x, float y, List<EnemyTag.EnemyType> enemyType) {
         var entity = createEntity();
         var position = new Position(x, y);
-        var spawner = new EnemySpawner();
+        var spawner = new EnemySpawner(enemyType);
         entity.add(position);
         entity.add(spawner);
         return entity;
@@ -69,7 +71,7 @@ public class Factory {
 
     public static Entity enemyShip(EnemyTag.EnemyType enemy, EnergyColor.Type energyColor, float posX, float posY, float velX, float velY) {
         var entity = createEntity();
-        var tag = new EnemyTag(entity);
+        var tag = new EnemyTag(entity, Main.game.engine);
         AnimEnemy animType = null;
         switch (energyColor) {
             case RED:
@@ -88,8 +90,7 @@ public class Factory {
                 tag.energyColor = EnergyColor.Type.RED;
                 animType = AnimEnemy.RED_1;
         }
-        tag.state = EnemyTag.State.MOVE;
-        tag.type = EnemyTag.EnemyType.FLYER;
+        tag.type = enemy;
         var size = 32f;
         var animOrigin = new Vector2(size / 2f, size / 2f);
         var collidesWith = new CollisionMask[] { CollisionMask.SHIELD, CollisionMask.TURRET, CollisionMask.PLAYER_PROJECTILE };

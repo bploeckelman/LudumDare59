@@ -12,6 +12,8 @@ import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.screens.GameScreen;
 import lando.systems.ld59.utils.FramePool;
 
+import java.util.List;
+
 public class SceneGame extends Scene<GameScreen> implements InputProcessor {
 
     private final Animator cityAnimator;
@@ -26,14 +28,15 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
 
         var centerX = screen.worldCamera.viewportWidth / 2f;
         var topY = screen.worldCamera.viewportHeight;
+        var customY = 3 * topY / 4f;
         var buttonY = BaseButton.SIZE - 10;
 
         var base = Factory.base(centerX, 0f);
         var baseComp = Components.get(base, Base.class);
         this.cityAnimator = Components.get(baseComp.city, Animator.class);
 
-        var enemy1 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX + 150, topY, 10f, -10f);
-        var enemy2 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX - 150, topY, -10f, -10f);
+        var enemy1 = Factory.enemyShip(EnemyTag.EnemyType.SUICIDER, EnergyColor.Type.getRandom(), centerX + 150, topY, 10f, -10f);
+        var enemy2 = Factory.enemyShip(EnemyTag.EnemyType.FLYER, EnergyColor.Type.getRandom(), centerX - 150, customY, -10f, -10f);
 
         // @formatter:off
         var redButton      = Factory.baseButton(BaseButton.Type.RED,      centerX - 125,           buttonY);
@@ -57,7 +60,14 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         for (int i = 0; i < 6; i++) {
             var x = Config.window_width / 8f * i + Config.window_width / 8f;
             var y = topY;
-            var spawner = Factory.enemySpawner(x, y);
+            var spawner = Factory.enemySpawner(x, y, List.of(EnemyTag.EnemyType.SUICIDER));
+            engine().addEntity(spawner);
+        }
+
+        for (int i = 0; i < 6; i++) {
+            var x = Config.window_width / 8f * i + Config.window_width / 8f;
+            var y = customY;
+            var spawner = Factory.enemySpawner(x, y, List.of(EnemyTag.EnemyType.FLYER));
             engine().addEntity(spawner);
         }
 

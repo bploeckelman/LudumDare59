@@ -53,19 +53,17 @@ public class EnemySpawnerSystem extends IteratingSystem {
 
         if (shouldSpawn) {
             var massSpawnColor = EnergyColor.Type.getRandom();
-            int spawnCount = massSpawn ? 5 : 1;
+            int spawnCount = massSpawn ? 2 : 1;
             for (int i = 0; i < spawnCount; i++) {
                 float spawnX = position.x + MathUtils.random(-100f, 100f);
                 float spawnY = position.y;
-                float velX = MathUtils.random(-20f, 20f);
-                float velY = -10f;
 
-                var enemy = Factory.enemyShip(EnemyTag.EnemyType.getRandom(),
+                var enemy = Factory.enemyShip(spawner.enemyType.get(spawner.enemyType.size() - 1),
                     massSpawn ? massSpawnColor : EnergyColor.Type.getRandom(),
                     spawnX,
                     spawnY,
-                    velX,
-                    velY
+                    0,
+                    0
                 );
 
                 getEngine().addEntity(enemy);

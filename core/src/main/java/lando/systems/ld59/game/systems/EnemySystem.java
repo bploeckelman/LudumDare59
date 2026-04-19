@@ -1,12 +1,11 @@
 package lando.systems.ld59.game.systems;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import lando.systems.ld59.game.Components;
-import lando.systems.ld59.game.components.EnemyTag;
-import lando.systems.ld59.game.components.Health;
-import lando.systems.ld59.game.components.Velocity;
+import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 
 public class EnemySystem extends IteratingSystem {
@@ -43,18 +42,27 @@ public class EnemySystem extends IteratingSystem {
             anim.tint.set(1f, 1f, 1f, 1f);
         }
 
-        if      (EnemyTag.State.MOVE == enemy.state) move(entity, enemy, delta);
-        else if (EnemyTag.State.SHOOT == enemy.state) shoot(entity, enemy, delta);
+        if      (EnemyTag.EnemyType.SUICIDER == enemy.type) suicider(entity, enemy, delta);
+        else if (EnemyTag.EnemyType.FLYER == enemy.type) flyer(entity, enemy, delta);
     }
 
-    private void move(Entity entity, EnemyTag enemy, float delta) {
+    private void suicider(Entity entity, EnemyTag enemy, float delta) {
+        var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
-//        vel.set(vel.x(), vel.y() * 1.01f);
+
+        vel.set(0f, -20f);
     }
 
-    private void shoot(Entity entity, EnemyTag enemy, float delta) {
+    private void flyer(Entity entity, EnemyTag enemy, float delta) {
+        var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
 
-        vel.set(0, -20f);
+        vel.set(0f, 0f);
+        if (enemy.fireTimer > enemy.FIRE_RATE) {
+            enemy.shoot();
+            enemy.fireTimer = 0f;
+        }
+        enemy.fireTimer += delta;
+
     }
 }
