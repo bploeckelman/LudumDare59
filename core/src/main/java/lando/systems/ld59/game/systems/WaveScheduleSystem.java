@@ -4,7 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import lando.systems.ld59.Config;
+import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
+import lando.systems.ld59.game.components.EnemySpawner;
 import lando.systems.ld59.game.components.EnemyTag;
 import lando.systems.ld59.game.components.SceneContainer;
 import lando.systems.ld59.utils.Util;
@@ -80,6 +82,10 @@ public class WaveScheduleSystem extends IteratingSystem {
                     EnemyTag.EnemyType.SPLITTER,
                     EnemyTag.EnemyType.FLYER
                 ));
+                var spawnerComponent = Components.get(spawner, EnemySpawner.class);
+                spawnerComponent.fireOnce = false;
+                spawnerComponent.spawnInterval = 10f;
+
                 getEngine().addEntity(spawner);
             }
         }));
