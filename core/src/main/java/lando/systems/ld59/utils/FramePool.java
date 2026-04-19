@@ -109,6 +109,10 @@ public class FramePool {
         return obj;
     }
 
+    public static Vector2 vec2(Vector2 v) {
+        return vec2(v.x, v.y);
+    }
+
     public static Vector2 vec2(float x, float y) {
         return vec2().set(x, y);
     }

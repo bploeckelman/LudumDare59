@@ -129,7 +129,7 @@ public class Factory {
         // NOTE(Brian): Bounds is not Position relative like Collider, Animator
         var bounds = new Bounds(x - size / 2f, y - size / 2f, size, size);
 
-        animator.depth = Base.ANIM_DEPTH + 20;
+        animator.depth = BaseButton.ANIM_DEPTH;
         animator.size.set(size, size);
 
         entity.add(position);

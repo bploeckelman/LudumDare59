@@ -5,14 +5,14 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld59.Flag;
@@ -53,6 +53,91 @@ public class Util {
         StringBuilder sb = new StringBuilder();
         entity.getComponents().forEach(c -> sb.append(c.getClass().getSimpleName()).append(", "));
         return sb.toString();
+    }
+
+    // ------------------------------------------------------------------------
+    // Path related
+    // ------------------------------------------------------------------------
+
+    /**
+     * Generates points along a line between start to end, with internal points randomly displaced perpendicularly from
+     * the line for variation.
+     */
+    public static Array<Vector2> generateDisplacedPath(Vector2 start, Vector2 end) {
+        var defaultDensity = 0.1f;
+        var defaultMaxDisplacement = 20f;
+        return generateDisplacedPath(start, end, defaultDensity, defaultMaxDisplacement);
+    }
+
+    /**
+     * Generates points along a line between start to end, with internal points randomly displaced perpendicularly from
+     * the line for variation, customizing the number of points along the length based on {@code density} and the
+     * maximum perpendicular displacement distance from the line with {@code maxDisplacement}
+     */
+    public static Array<Vector2> generateDisplacedPath(Vector2 start, Vector2 end, float density, float maxDisplacement) {
+        var points = new Array<Vector2>();
+
+        var direction = FramePool.vec2(end).sub(start);
+        var distance = direction.len();
+        direction.nor();
+
+        var perpendicular = FramePool.vec2(-direction.y, direction.x);
+
+        var numPoints = Math.max(2, Math.round(distance * density));
+        for (int i = 0; i < numPoints; i++) {
+            var t = (float) i / (numPoints - 1);
+            var point = new Vector2(start).lerp(end, t);
+
+            // Displace this point perpendicularly from line, if it's not the start or end point
+            if (i > 0 && i < numPoints - 1) {
+                var displacement = (MathUtils.random() - 0.5f) * 2 * maxDisplacement;
+                point.add(perpendicular.x * displacement, perpendicular.y * displacement);
+            }
+
+            points.add(point);
+        }
+        return points;
+    }
+
+    /**
+     * Produce a new array of points by smoothing points in the specified array (reducing the jaggedness between points)
+     */
+    public static Array<Vector2> smoothPath(Array<Vector2> controlPoints) {
+        var defaultSamplingDensity = 1f;
+        return smoothPath(controlPoints, defaultSamplingDensity);
+    }
+
+    /**
+     * Produce a new array of points by smoothing points in the specified array (reducing the jaggedness between points)
+     * @param samplingDensity 1f produces a slightly smoothed path, 0.5-1.0 for improved performance,
+     *                       2.0-3.0 for a more heavily smoothed path (high fidelity), avoid < 0.5 as it doesn't smooth much at all.
+     */
+    public static Array<Vector2> smoothPath(Array<Vector2> controlPoints, float samplingDensity) {
+        if (controlPoints.size <= 2) {
+            return controlPoints;
+        }
+
+        var points = controlPoints.toArray(Vector2[]::new);
+        var spline = new CatmullRomSpline<>(points, false);
+
+        // Estimate path length
+        float estimatedLength = 0;
+        for (int i = 0; i < controlPoints.size - 1; i++) {
+            estimatedLength += controlPoints.get(i).dst(controlPoints.get(i + 1));
+        }
+
+        // Calculate sample count based on density
+        int numSamples = Math.max(2, Math.round(estimatedLength * samplingDensity));
+
+        var sample = new Vector2();
+        var smoothedPath = new Array<Vector2>();
+        for (int i = 0; i < numSamples; i++) {
+            float t = (float) i / (numSamples - 1);
+            spline.valueAt(sample, t);
+            smoothedPath.add(new Vector2(sample));
+        }
+
+        return smoothedPath;
     }
 
     // ------------------------------------------------------------------------

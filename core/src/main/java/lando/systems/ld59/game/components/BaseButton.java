@@ -9,6 +9,8 @@ import lando.systems.ld59.game.Components;
 
 public class BaseButton implements Component {
 
+    public static final float ANIM_DEPTH = Base.ANIM_DEPTH_CITY;
+
     public enum Type { BLUE, GREEN, RED, CIRCLE, SQUARE, TRIANGLE }
     private enum State { IDLE, PRESSED, ACTIVE, DISABLED }
 

@@ -9,7 +9,6 @@ import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.signals.ConnectionEvent;
-import lando.systems.ld59.utils.Util;
 
 public class TurretSystem extends IteratingSystem {
 
@@ -35,8 +34,6 @@ public class TurretSystem extends IteratingSystem {
             processEntity(getEntities().get(i), dt);
         }
     }
-
-    private Entity loggingEntity = null;
 
     @Override
     protected void processEntity(Entity entity, float dt) {
@@ -103,14 +100,6 @@ public class TurretSystem extends IteratingSystem {
                 canShoot = true;
             } else {
                 turret.cannonRotation.setValue(turret.cannonRotation.floatValue() + step);
-            }
-        } else {
-            if (loggingEntity == null) {
-                loggingEntity = entity;
-            } else {
-                if (entity == loggingEntity) {
-                    Util.log(Components.get(loggingEntity, Id.class).toString(), "cannonRotation: " + turret.cannonRotation.floatValue());
-                }
             }
         }
 

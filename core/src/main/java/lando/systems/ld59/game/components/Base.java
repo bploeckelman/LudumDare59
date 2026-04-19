@@ -13,11 +13,13 @@ import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Outline;
 import lando.systems.ld59.game.components.renderable.ShieldShaderRenderable;
 
-import static lando.systems.ld59.game.Constants.*;
+import static lando.systems.ld59.game.Constants.CITY_BASE_MAX_HEALTH;
+import static lando.systems.ld59.game.Constants.SHIELD_MAX_HEALTH;
 
 public class Base implements Component {
 
     public static final float ANIM_DEPTH = 100;
+    public static final float ANIM_DEPTH_CITY = ANIM_DEPTH + 5;
 
     public final Position pos;
     public final Entity ground;
@@ -37,19 +39,17 @@ public class Base implements Component {
         groundAnim.depth = ANIM_DEPTH;
         groundAnim.size.set(groundW, groundH);
 
-
         var collidesWith = new CollisionMask[] { CollisionMask.ENEMY, CollisionMask.ENEMY_PROJECTILE };
         var groundCollider = Collider.circ(CollisionMask.CITY, 0, -400, 570, collidesWith);
 
         var cityW = 200f;
         var cityH = 200f;
         var cityAnim = new Animator(AnimBaseCity.IDLE, new Vector2(cityW / 2, 25));
-        cityAnim.depth = ANIM_DEPTH + 1;
+        cityAnim.depth = ANIM_DEPTH_CITY;
         cityAnim.size.set(cityW, cityH);
 
         ground.add(new Position(pos.x, pos.y));
         ground.add(groundAnim);
-
 
         city.add(new Position(pos.x, pos.y + 25));
         city.add(cityAnim);

@@ -2,10 +2,13 @@ package lando.systems.ld59.game.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
-import lando.systems.ld59.Main;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.renderable.FlatShape;
 import lando.systems.ld59.game.signals.EntityEvent;
+import lando.systems.ld59.utils.FramePool;
 import lando.systems.ld59.utils.Util;
 
 public class Connection implements Component {
@@ -51,11 +54,20 @@ public class Connection implements Component {
             Util.log(TAG, "Connected: pattern '" + turretPattern.type + "' to turret");
         }
 
+        // Create a 'path' FlatShape renderable for this connection if there isn't already one created
         if (flatShape == null) {
             var turretPos = Components.get(turret.entity, Position.class);
             var buttonPos = Components.get(baseButton.entity, Position.class);
-            flatShape = new FlatShape(buttonPos.x, buttonPos.y, turretPos.x, turretPos.y, turret.getCannonColor(), 10);
-            flatShape.depth = Base.ANIM_DEPTH + 20;
+
+            var start = FramePool.vec2(buttonPos.x, buttonPos.y);
+            var end = FramePool.vec2(turretPos.x, turretPos.y);
+            var rawPoints = Util.generateDisplacedPath(start, end);
+            var smoothedPoints = Util.smoothPath(rawPoints);
+
+            var lineWidth = 10f;
+            var cannonColor = turret.getCannonColor();
+            var pathColor = FramePool.color(cannonColor.r, cannonColor.g, cannonColor.b, 0.9f);
+            flatShape = FlatShape.path(BaseButton.ANIM_DEPTH - 1, smoothedPoints, pathColor, lineWidth);
             entity.add(flatShape);
         }
     }
@@ -86,5 +98,43 @@ public class Connection implements Component {
             EntityEvent.remove(entity);
         }
 
+    }
+
+    /**
+     * Generates points along a line between start to end, with internal points randomly displaced perpendicularly from the line for variation
+     */
+    private Array<Vector2> generatePathPoints(Vector2 start, Vector2 end) {
+        var defaultDensity = 0.1f;
+        var defaultMaxDisplacement = 30f;
+        return generatePathPoints(start, end, defaultDensity, defaultMaxDisplacement);
+    }
+
+    /**
+     * Generates points along a line between start to end, with internal points randomly displaced perpendicularly from the line for variation,
+     * customizing the number of points along the length based on {@code density} and the maximum perpendicular displacement distance from the line with {@code maxDisplacement}
+     */
+    private Array<Vector2> generatePathPoints(Vector2 start, Vector2 end, float density, float maxDisplacement) {
+        var points = new Array<Vector2>();
+
+        var direction = FramePool.vec2(end).sub(start);
+        var distance = direction.len();
+        direction.nor();
+
+        var perpendicular = FramePool.vec2(-direction.y, direction.x);
+
+        var numPoints = Math.max(2, Math.round(distance * density));
+        for (int i = 0; i < numPoints; i++) {
+            var t = (float) i / (numPoints - 1);
+            var point = new Vector2(start).lerp(end, t);
+
+            // Displace this point perpendicularly from line, if it's not the start or end point
+            if (i > 0 && i < numPoints - 1) {
+                var displacement = (MathUtils.random() - 0.5f) * 2 * maxDisplacement;
+                point.add(perpendicular.x * displacement, perpendicular.y * displacement);
+            }
+
+            points.add(point);
+        }
+        return points;
     }
 }
