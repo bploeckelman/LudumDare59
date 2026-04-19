@@ -80,7 +80,7 @@ public class Turret implements Component {
     }
 
     public void shoot() {
-        float width = 20f;
+        float width = 10f;
 
         var bullet = Factory.createEntity();
         var cannonPos = cannon.getComponent(Position.class);

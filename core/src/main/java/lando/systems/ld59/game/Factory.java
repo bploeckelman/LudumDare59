@@ -39,6 +39,7 @@ public class Factory {
 
         entity.add(position);
         entity.add(base);
+        entity.add(new CityBase());
 
         return entity;
     }
@@ -54,6 +55,7 @@ public class Factory {
         var turret = new Turret(Main.game.engine, entity, position, rotation);
         entity.add(position);
         entity.add(turret);
+        entity.add(new Health(100));
 
         return entity;
     }

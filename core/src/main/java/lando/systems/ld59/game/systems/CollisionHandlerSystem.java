@@ -1,5 +1,6 @@
 package lando.systems.ld59.game.systems;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.signals.Listener;
@@ -9,6 +10,7 @@ import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionResponse;
 import lando.systems.ld59.game.signals.CollisionEvent;
+import lando.systems.ld59.game.signals.EntityEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
 import lando.systems.ld59.utils.FramePool;
 import lando.systems.ld59.utils.Util;
@@ -48,28 +50,34 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                    : Components.has(overlap.entityB(), EnemyTag.class) ? overlap.entityB()
                    : null;
 
-        if (bullet != null && enemy != null) {
+        var turret = Components.has(overlap.entityA(), Turret.class) ? overlap.entityA()
+                   : Components.has(overlap.entityB(), Turret.class) ? overlap.entityB()
+                   : null;
 
-            var enemyHealth = Components.get(enemy, Health.class);
-            var enemyTag = Components.get(enemy, EnemyTag.class);
+        if (bullet != null) {
+            var other = bullet == overlap.entityA() ? overlap.entityB() : overlap.entityA();
+
+            var health = Components.get(other, Health.class);
             var bulletDamage = Components.get(bullet, Projectile.class);
 
-            if (enemyHealth.isDead() || bulletDamage.damage <= 0) {
+            if (health.isDead() || bulletDamage.damage <= 0) {
                 // don't let dead things interact
                 return;
             }
 
             var bulletColor = Components.get(bullet, EnergyColor.class);
-            var enemyColor = Components.get(enemy, EnergyColor.class);
+            var entityColor = Components.get(other, EnergyColor.class);
             var damageMultiplier = 1f;
-            if (bulletColor != null && enemyColor != null) {
-                damageMultiplier = bulletColor.type == enemyColor.type ? 3f : 1.0f;
+            if (bulletColor != null && entityColor != null) {
+                damageMultiplier = bulletColor.type == entityColor.type ? 3f : 1.0f;
             }
-            enemyTag.getHit(bulletDamage.damage * damageMultiplier);
+            health.getHit(other, bulletDamage.damage * damageMultiplier);
             bulletDamage.damage = 0;
 
         } else {
             Util.warn(TAG, "Overlap collision that wasn't handled");
+            EntityEvent.remove(overlap.entityA());
+            EntityEvent.remove(overlap.entityB());
         }
     }
 }
