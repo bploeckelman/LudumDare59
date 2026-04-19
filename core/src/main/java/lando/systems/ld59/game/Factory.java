@@ -74,7 +74,7 @@ public class Factory {
         return entity;
     }
 
-    public static Entity enemyShip(EnemyTag.EnemyType enemy, EnergyColor.Type energyColor, float posX, float posY, float velX, float velY) {
+    public static Entity enemyShip(EnemyTag.EnemyType enemy, EnergyColor.Type energyColor, float posX, float posY, float velX, float velY, float size) {
         var entity = createEntity();
         var tag = new EnemyTag(entity, Main.game.engine);
         AnimEnemy animType = null;
@@ -96,7 +96,6 @@ public class Factory {
                 animType = AnimEnemy.RED_1;
         }
         tag.type = enemy;
-        var size = 32f;
         var animOrigin = new Vector2(size / 2f, size / 2f);
         var collidesWith = new CollisionMask[] { CollisionMask.SHIELD, CollisionMask.TURRET, CollisionMask.PLAYER_PROJECTILE, CollisionMask.CITY };
 

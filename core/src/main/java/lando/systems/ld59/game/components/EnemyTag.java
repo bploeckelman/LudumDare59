@@ -19,11 +19,13 @@ public class EnemyTag implements Component {
     public float FIRE_RATE = 2f;
     public float fireTimer = 0f;
     public float floatTimer = 0f;
+    public int split = 0;
+    public int MAX_SPLIT = 1;
 
     public enum EnemyType {
         FLYER,
         SUICIDER,
-        LOVER,
+        SPLITTER,
         MUNCHER,
         SUCKER,
         ;
