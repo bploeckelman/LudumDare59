@@ -1,5 +1,6 @@
 package lando.systems.ld59.ui;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -20,6 +21,7 @@ public class SettingsUI extends VisWindow {
     public boolean isVisible = false;
     float panelWidth = Config.window_width / 2f;
     float panelHeight = Config.window_height / 2f;
+    Preferences prefs = Main.game.assets.prefs;
     public SettingsUI() {
         super("");
         setBackground(new TextureRegionDrawable(Main.game.assets.settingsUI));
@@ -33,12 +35,12 @@ public class SettingsUI extends VisWindow {
         add(musicLabel).row();
 
         VisSlider musicSlider = new VisSlider(0, 1f, 0.1f, false);
-        musicSlider.setValue(0.5f);
+        musicSlider.setValue(prefs.getFloat("musicVolume", 0.5f));
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Util.log("musicSlider changed: " + musicSlider.getValue());
-                AudioSystem.musicVolume.setValue(musicSlider.getValue());
+                AudioSystem.setMusicVolume(musicSlider.getValue());
             }
         });
         add(musicSlider).width(panelWidth / 2f).row();
@@ -49,12 +51,12 @@ public class SettingsUI extends VisWindow {
         add(soundLabel).row();
 
         VisSlider soundSlider = new VisSlider(0, 1f, 0.1f, false);
-        soundSlider.setValue(0.5f);
+        soundSlider.setValue(prefs.getFloat("soundVolume", 0.5f));
         soundSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Util.log("soundSlider changed: " + soundSlider.getValue());
-                AudioSystem.soundVolume.setValue(soundSlider.getValue());
+                AudioSystem.setSoundVolume(soundSlider.getValue());
                 AudioEvent.playSound(SoundType.SHOT);
             }
         });
