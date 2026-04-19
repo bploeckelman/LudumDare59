@@ -11,9 +11,11 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
+import lando.systems.ld59.assets.MusicType;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.scenes.Scene;
 import lando.systems.ld59.game.scenes.SceneGame;
+import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.ui.SettingsUI;
 
 public class GameScreen extends BaseScreen {
@@ -30,6 +32,7 @@ public class GameScreen extends BaseScreen {
 
         game.inputMux.setProcessors(scene, uiStage);
         Gdx.input.setInputProcessor(game.inputMux);
+        AudioEvent.playMusic(MusicType.MAIN_MUSIC);
     }
 
     @Override

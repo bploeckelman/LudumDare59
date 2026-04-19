@@ -8,6 +8,7 @@ import java.util.EnumMap;
 
 public enum MusicType implements AssetType<Music> {
     SAMPLE_MUSIC("music.wav")
+    ,MAIN_MUSIC("main1.ogg")
     ;
 
     private static final String TAG = MusicType.class.getSimpleName();
