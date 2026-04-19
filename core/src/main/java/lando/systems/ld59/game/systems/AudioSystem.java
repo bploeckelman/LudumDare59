@@ -10,6 +10,7 @@ import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.MusicType;
 import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
+import lando.systems.ld59.utils.Util;
 
 public class AudioSystem extends EntitySystem implements Listener<SignalEvent> {
 
@@ -46,7 +47,8 @@ public class AudioSystem extends EntitySystem implements Listener<SignalEvent> {
     public void receive(Signal<SignalEvent> signal, SignalEvent event) {
         if (event instanceof AudioEvent.PlaySound) {
             var play = (AudioEvent.PlaySound) event;
-            play.soundType.get().play(play.volume * soundVolume.floatValue());
+            Util.log(String.valueOf(play.soundType.pitch));
+            play.soundType.get().play(play.volume * soundVolume.floatValue(), play.soundType.pitch, 1.0f);
         }
         else if (event instanceof AudioEvent.PlayMusic) {
             var play = (AudioEvent.PlayMusic) event;
