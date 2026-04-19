@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.Main;
+import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBase;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
@@ -16,6 +17,7 @@ import lando.systems.ld59.game.components.collision.CollisionCirc;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Outline;
+import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.utils.FramePool;
 
 public class Turret implements Component {
@@ -142,6 +144,7 @@ public class Turret implements Component {
         if (energyColor != null) {
             bullet.add(energyColor);
         }
+        AudioEvent.playSound(SoundType.LASER, .5f);
 
         engine.addEntity(bullet);
     }

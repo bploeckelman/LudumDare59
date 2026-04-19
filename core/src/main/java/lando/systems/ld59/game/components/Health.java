@@ -47,44 +47,17 @@ public class Health implements Component {
             switch (energyColor.type) {
                 case RED:
                     float sineVolume = .45f;
-                    AudioEvent.playSound(SoundType.getRandomSineSound());
+                    AudioEvent.playSound(SoundType.getRandomSineSound(), sineVolume);
                     break;
 
                 case BLUE:
                     float squareVolume = .05f;
-                    AudioEvent.playSound(SoundType.getRandomSquareSound());
+                    AudioEvent.playSound(SoundType.getRandomSquareSound(), squareVolume);
                     break;
                 case GREEN:
                     float sawVolume = .125f;
-                    AudioEvent.playSound(SoundType.getRandomSawSound());
+                    AudioEvent.playSound(SoundType.getRandomSawSound(), sawVolume);
                     ;
-//                    switch (MathUtils.random(0, 7)) {
-//                        case 0:
-//                            AudioEvent.playSound(SoundType.SAW_C1, sawVolume);
-//                            break;
-//                        case 1:
-//                            AudioEvent.playSound(SoundType.SAW_D, sawVolume);
-//                            break;
-//                        case 2:
-//                            AudioEvent.playSound(SoundType.SAW_E, sawVolume);
-//                            break;
-//                        case 3:
-//                            AudioEvent.playSound(SoundType.SAW_F, sawVolume);
-//                            break;
-//                        case 4:
-//                            AudioEvent.playSound(SoundType.SAW_G, sawVolume);
-//                            break;
-//                        case 5:
-//                            AudioEvent.playSound(SoundType.SAW_A, sawVolume);
-//                            break;
-//                        case 6:
-//                            AudioEvent.playSound(SoundType.SAW_B, sawVolume);
-//                            break;
-//                        case 7:
-//                            AudioEvent.playSound(SoundType.SAW_C2, sawVolume);
-//                            break;
-//                    }
-
                     break;
                 default:
                     break;

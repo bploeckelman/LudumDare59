@@ -47,7 +47,6 @@ public class AudioSystem extends EntitySystem implements Listener<SignalEvent> {
     public void receive(Signal<SignalEvent> signal, SignalEvent event) {
         if (event instanceof AudioEvent.PlaySound) {
             var play = (AudioEvent.PlaySound) event;
-            Util.log(String.valueOf(play.soundType.pitch));
             play.soundType.get().play(play.volume * soundVolume.floatValue(), play.soundType.pitch, 1.0f);
         }
         else if (event instanceof AudioEvent.PlayMusic) {

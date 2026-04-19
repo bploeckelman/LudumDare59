@@ -10,6 +10,7 @@ import java.util.EnumMap;
 public enum SoundType implements AssetType<Sound> {
     SHOT("shot.wav", 1.0f)
     ,BLIP("blip1.ogg")
+    ,LASER("laser1.wav", 1.5f)
     ,SINE_C1("sine_c1.wav", (float) Math.pow(2,(0./12.)))
     ,SINE_D("sine_c1.wav", (float) Math.pow(2,(2./12.)))
     ,SINE_E("sine_c1.wav", (float) Math.pow(2,(4./12.)))
