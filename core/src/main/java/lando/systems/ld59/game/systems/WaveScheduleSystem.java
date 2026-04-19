@@ -76,7 +76,7 @@ public class WaveScheduleSystem extends IteratingSystem {
         // Wave 5 (30 seconds)
         waves.add(new WaveEvent(30f, () -> {
             for (int i = 0; i < 7; i++) {
-                var x = Config.window_width / 8f * i + (Config.window_width / 4f);
+                var x = Config.window_width / 8f * (i + 1);
                 var spawner = Factory.enemySpawner(x, topY, List.of(
                     EnemyTag.EnemyType.SUICIDER,
                     EnemyTag.EnemyType.SPLITTER,
