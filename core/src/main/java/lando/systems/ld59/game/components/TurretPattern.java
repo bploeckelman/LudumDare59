@@ -6,6 +6,10 @@ import com.badlogic.gdx.math.Interpolation;
 public class TurretPattern implements Component {
     public enum Type { LINE, FAN, SWEEP }
 
+    public static TurretPattern fan() { return new TurretPattern(Type.FAN); }
+    public static TurretPattern line() { return new TurretPattern(Type.LINE); }
+    public static TurretPattern sweep() { return new TurretPattern(Type.SWEEP); }
+
     public final Type type;
 
     public TurretPattern(Type type) {

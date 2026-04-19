@@ -5,10 +5,8 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.game.Components;
-import lando.systems.ld59.game.components.Interp;
-import lando.systems.ld59.game.components.Turret;
-import lando.systems.ld59.game.components.TurretPattern;
-import lando.systems.ld59.game.components.renderable.Animator;
+import lando.systems.ld59.game.components.*;
+import lando.systems.ld59.game.components.collision.CollisionCirc;import lando.systems.ld59.game.components.renderable.Animator;import lando.systems.ld59.game.signals.ConnectionEvent;
 
 public class TurretSystem extends IteratingSystem {
 
@@ -74,5 +72,24 @@ public class TurretSystem extends IteratingSystem {
         }
 
 
+    }
+
+    public boolean handleTouchUp(float worldX, float worldY, int pointer, int button) {
+        // NOTE(Brian): I remember for-each not playing nice with the getEntities() collection type, hence normal for loop
+        var entities = getEntities();
+        for (int i = 0; i < entities.size(); i++) {
+            var entity = entities.get(i);
+
+            var turret = Components.get(entity, Turret.class);
+            var turretBaseColliderCircle = turret.getBaseCollisionCircle();
+            var turretCannonColliderCircle = turret.getCannonCollisionCircle();
+            var isTouched = turretBaseColliderCircle.contains(worldX, worldY)
+                    || turretCannonColliderCircle.contains(worldX, worldY);
+
+            if (isTouched) {
+                ConnectionEvent.touchedTurret(turret);
+            }
+        }
+        return false;
     }
 }

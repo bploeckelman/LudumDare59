@@ -30,6 +30,7 @@ public class Components {
         entry(Interp.class,         ComponentMapper.getFor(Interp.class)),
         entry(Name.class,           ComponentMapper.getFor(Name.class)),
         entry(Particle.class,       ComponentMapper.getFor(Particle.class)),
+        entry(PendingConnection.class, ComponentMapper.getFor(PendingConnection.class)),
         entry(Pickup.class,         ComponentMapper.getFor(Pickup.class)),
         entry(Player.class,         ComponentMapper.getFor(Player.class)),
         entry(Position.class,       ComponentMapper.getFor(Position.class)),

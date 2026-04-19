@@ -3,11 +3,11 @@ package lando.systems.ld59.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.BaseButton;
 import lando.systems.ld59.game.components.renderable.Animator;
+import lando.systems.ld59.game.signals.ConnectionEvent;
 
 public class BaseButtonSystem extends IteratingSystem {
 
@@ -45,15 +45,7 @@ public class BaseButtonSystem extends IteratingSystem {
             var baseButton = Components.get(entity, BaseButton.class);
             var isTouched = baseButton.contains(worldX, worldY);
             if (isTouched) {
-                // TODO: safely handle various cases;
-                //  - disconnect if already connected
-                //  - complete connection if already in a 'pending connection' state
-                //  - enter 'pending connection' state if not already connected or already in state
-                //  ...
-                //  * add PendingConnection component, containing ref to BaseButton and Turret,
-                //    if we have an entity with such a component when something is clicked,
-                //    resolve the pending connection, otherwise create the entity+component with the clicked item
-                // ...for now just change the button state so we know the click handler is working...
+                ConnectionEvent.touchedBaseButton(baseButton);
                 if (baseButton.isIdle()) {
                     baseButton.setToPressed();
                     return true;

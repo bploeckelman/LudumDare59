@@ -36,6 +36,27 @@ public class BaseButton implements Component {
         setAnimations();
     }
 
+    public boolean isEnergy()  { return type == Type.BLUE || type == Type.GREEN || type == Type.RED; }
+    public boolean isPattern() { return type == Type.CIRCLE || type == Type.SQUARE || type == Type.TRIANGLE; }
+
+    public EnergyColor getEnergyColor() {
+        switch (type) {
+            case BLUE: return EnergyColor.blue();
+            case GREEN: return EnergyColor.green();
+            case RED: return EnergyColor.red();
+            default: return null;
+        }
+    }
+
+    public TurretPattern getTurretPattern() {
+        switch (type) {
+            case CIRCLE: return TurretPattern.sweep();
+            case SQUARE: return TurretPattern.line();
+            case TRIANGLE: return TurretPattern.fan();
+            default: return null;
+        }
+    }
+
     public AnimType getCurrentAnim() {
         AnimType currentAnim = null;
         switch (state) {

@@ -5,8 +5,10 @@ import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.Systems;
-import lando.systems.ld59.game.components.*;
-import lando.systems.ld59.game.components.EnemySpawner;
+import lando.systems.ld59.game.components.BaseButton;
+import lando.systems.ld59.game.components.EnemyTag;
+import lando.systems.ld59.game.components.EnergyColor;
+import lando.systems.ld59.game.components.SceneContainer;
 import lando.systems.ld59.screens.GameScreen;
 import lando.systems.ld59.utils.FramePool;
 
@@ -90,7 +92,14 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         var touchPos = FramePool.vec3(screenX, screenY, 0);
         screen.worldCamera.unproject(touchPos);
-        return Systems.baseButtons.handleTouchUp(touchPos.x, touchPos.y, pointer, button);
+
+        var baseButtonHandled = Systems.baseButtons.handleTouchUp(touchPos.x, touchPos.y, pointer, button);
+        if (baseButtonHandled) return true;
+
+        var turretHandled = Systems.turret.handleTouchUp(touchPos.x, touchPos.y, pointer, button);
+        if (turretHandled) return true;
+
+        return false;
     }
 
     @Override

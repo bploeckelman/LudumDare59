@@ -3,16 +3,18 @@ package lando.systems.ld59.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.assets.anims.AnimBase;
 import lando.systems.ld59.assets.anims.AnimBaseButton;
+import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
+import lando.systems.ld59.game.components.collision.CollisionCirc;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.utils.FramePool;
-import lando.systems.ld59.utils.Util;
 
 public class Turret implements Component {
 
@@ -127,11 +129,23 @@ public class Turret implements Component {
      */
     public void connectEnergy(EnergyColor color) {
         cannon.remove(EnergyColor.class);
-
         if (color == null) {
             return;
         }
-
         cannon.add(color);
+    }
+
+    public Circle getBaseCollisionCircle() {
+        var collider = Components.get(base, Collider.class);
+        var pos = Components.get(base, Position.class);
+        var shape = collider.shape(CollisionCirc.class);
+        return shape.circle(pos);
+    }
+
+    public Circle getCannonCollisionCircle() {
+        var collider = Components.get(cannon, Collider.class);
+        var pos = Components.get(cannon, Position.class);
+        var shape = collider.shape(CollisionCirc.class);
+        return shape.circle(pos);
     }
 }

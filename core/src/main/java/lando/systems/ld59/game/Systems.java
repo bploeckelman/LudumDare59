@@ -11,6 +11,7 @@ public class Systems {
     public static BaseButtonSystem       baseButtons;
     public static CollisionCheckSystem   collisionCheck;
     public static CollisionHandlerSystem collisionHandler;
+    public static ConnectionSystem       connections;
     public static CooldownSystem         cooldown;
     public static InputSystem            input;
     public static InterpSystem           interp;
@@ -30,6 +31,7 @@ public class Systems {
         Systems.baseButtons      = new BaseButtonSystem();
         Systems.collisionCheck   = new CollisionCheckSystem();
         Systems.collisionHandler = new CollisionHandlerSystem();
+        Systems.connections      = new ConnectionSystem();
         Systems.cooldown         = new CooldownSystem();
         Systems.input            = new InputSystem();
         Systems.interp           = new InterpSystem();
@@ -48,6 +50,7 @@ public class Systems {
         engine.addSystem(baseButtons);
         engine.addSystem(collisionCheck);
         engine.addSystem(collisionHandler);
+        engine.addSystem(connections);
         engine.addSystem(cooldown);
         engine.addSystem(input);
         engine.addSystem(interp);
