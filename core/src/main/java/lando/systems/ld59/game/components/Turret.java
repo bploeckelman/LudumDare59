@@ -64,13 +64,13 @@ public class Turret implements Component {
         base.add(baseAnim);
         base.add(baseOutline);
         base.add(new Position(pos.x, pos.y));
-        base.add(Collider.circ(CollisionMask.TURRET, 96,  0, 23));
+        base.add(Collider.circ(CollisionMask.TURRET, 0, 10, 80));
 
         cannon.add(cannonAnim);
         cannon.add(cannonOutline);
         cannon.add(new Position(pos.x -96 + MathUtils.cosDeg(rot) * 96, pos.y + MathUtils.sinDeg(rot) * 96 ));
         cannon.add(new Interp(1f, Interpolation.linear, Interp.Repeat.PINGPONG));
-        cannon.add(Collider.circ(CollisionMask.TURRET, 0, 10, 80));
+        cannon.add(Collider.circ(CollisionMask.TURRET, 96,  0, 23));
 
         //DEBUG
 //        var values = TurretPattern.Type.values();
