@@ -42,17 +42,17 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         float rotationRange = 120f;
         float deltaRotation = rotationRange / (turrets+1);
         for (int i = 0; i < turrets; i++) {
-            var rotation = 90 + -rotationRange / 2f + deltaRotation * (i+1);
+            var rotation = 90 + -rotationRange / 2f + deltaRotation * (i + 1);
             var x = centerX + MathUtils.cosDeg(rotation) * 600f;
             var y = -410f + MathUtils.sinDeg(rotation) * 620f;
             var turret = Factory.turret(x, y, rotation);
             engine().addEntity(turret);
         }
 
-        for (int i = 0; i < 10; i++) {
-            var x = Config.window_width / 10f * i;
+        for (int i = 0; i < 6; i++) {
+            var x = Config.window_width / 8f * i + Config.window_width / 8f;
             var y = topY;
-            var spawner = Factory.enemySpawner(x, y, i);
+            var spawner = Factory.enemySpawner(x, y);
             engine().addEntity(spawner);
         }
 

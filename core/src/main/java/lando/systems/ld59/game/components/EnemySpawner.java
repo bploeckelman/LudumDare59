@@ -8,7 +8,7 @@ public class EnemySpawner implements Component {
     public float spawnTimer;
 
     public EnemySpawner() {
-        this.spawnInterval = 5f;
+        this.spawnInterval = 4f;
         this.spawnTimer = 0f;
     }
 }

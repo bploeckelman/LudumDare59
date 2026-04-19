@@ -61,14 +61,9 @@ public class Factory {
     }
 
     public static Entity enemySpawner(float x, float y) {
-        return enemySpawner(x, y, 0);
-    }
-
-    public static Entity enemySpawner(float x, float y, int index) {
         var entity = createEntity();
         var position = new Position(x, y);
         var spawner = new EnemySpawner();
-        spawner.spawnTimer = spawner.spawnInterval - index * 1f;
         entity.add(position);
         entity.add(spawner);
         return entity;
