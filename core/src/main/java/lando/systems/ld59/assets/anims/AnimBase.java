@@ -7,7 +7,7 @@ import lando.systems.ld59.assets.AnimType;
 import java.util.EnumMap;
 
 public enum AnimBase implements AnimType {
-    GROUND, CITY, TURRET_BASE, TURRET_CANNON;
+    GROUND, TURRET_BASE, TURRET_CANNON;
 
     private static final String BASE_PATH = "base/";
     private static final EnumMap<AnimBase, Animation<TextureRegion>> container = AnimType.createAndRegisterContainer(AnimBase.class);

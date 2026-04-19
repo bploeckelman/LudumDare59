@@ -16,6 +16,7 @@ public class AssetTypeRegistry {
     public AssetTypeRegistry() {
         register(AnimBase.class,    AnimType::initEnum);
         register(AnimBaseButton.class, AnimType::initEnum);
+        register(AnimBaseCity.class, AnimType::initEnum);
         register(AnimEnemy.class,   AnimType::initEnum);
         register(AnimHero.class,    AnimType::initEnum);
         register(AnimPet.class,     AnimType::initEnum);

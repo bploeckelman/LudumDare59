@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.assets.anims.AnimBase;
+import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.renderable.Animator;
 
@@ -29,7 +30,7 @@ public class Base implements Component {
 
         var cityW = 200f;
         var cityH = 200f;
-        var cityAnim = new Animator(AnimBase.CITY, new Vector2(cityW / 2, 25));
+        var cityAnim = new Animator(AnimBaseCity.IDLE, new Vector2(cityW / 2, 25));
         cityAnim.depth = ANIM_DEPTH + 1;
         cityAnim.size.set(cityW, cityH);
 
