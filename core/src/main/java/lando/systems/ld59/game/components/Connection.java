@@ -81,6 +81,8 @@ public class Connection implements Component {
                 turret.connectPattern(null);
             }
             flatShape = null;
+            turret = null;
+            baseButton = null;
             EntityEvent.remove(entity);
         }
 

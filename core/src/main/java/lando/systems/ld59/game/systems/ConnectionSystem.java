@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.utils.Array;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.BaseButton;
@@ -58,12 +59,12 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                 getEngine().addEntity(entity);
 
                 // remove the connection in the turret
-                var conn = getConnectionEntityWithTurret(turret);
-                if (conn != null) {
-                    var connection = Components.get(conn, Connection.class);
-                    connection.removeConnection();
-                    EntityEvent.remove(conn);
-                }
+//                var conn = getConnectionEntityWithTurret(turret);
+//                if (conn != null) {
+//                    var connection = Components.get(conn, Connection.class);
+//                    connection.removeConnection();
+//                    EntityEvent.remove(conn);
+//                }
             }
             // ...otherwise update the existing pending connection...
             else {
@@ -80,16 +81,11 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                 }
                 // ...by attaching the turret to complete a connection!
                 else {
-                    // remove other connection to basebutton if exists
-                    var conn = getConnectionEntityWithTurret(turret);
-                    if (conn != null) {
-                        var connection = Components.get(conn, Connection.class);
-                        connection.removeConnection();
-                        EntityEvent.remove(conn);
-                    }
-
                     pendingConnection.setTurret(turret);
                     // ...and allowing the next processEntity call to finalize the connection
+
+                    // remove other connection to basebutton if exists
+                    cleanUpReplacedConnections(pendingConnection);
                 }
             }
         }
@@ -103,12 +99,12 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                 getEngine().addEntity(entity);
 
                 // remove the connection in the basebutton
-                var conn = getConnectionEntityWithBaseButton(baseButton);
-                if (conn != null) {
-                    var connection = Components.get(conn, Connection.class);
-                    connection.removeConnection();
-                    EntityEvent.remove(conn);
-                }
+//                var conn = getConnectionEntityWithBaseButton(baseButton);
+//                if (conn != null) {
+//                    var connection = Components.get(conn, Connection.class);
+//                    connection.removeConnection();
+//                    EntityEvent.remove(conn);
+//                }
             }
             // ...otherwise update the existing pending connection...
             else {
@@ -125,40 +121,68 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                 }
                 // ...by attaching the button to complete a connection!
                 else {
-                    // remove other connection to turret if exists
-                    var conn = getConnectionEntityWithBaseButton(baseButton);
-                    if (conn != null) {
-                        var connection = Components.get(conn, Connection.class);
-                        connection.removeConnection();
-                        EntityEvent.remove(conn);
-                    }
-
                     pendingConnection.setBaseButton(baseButton);
+
+                    cleanUpReplacedConnections(pendingConnection);
+
                     // ...and allowing the next processEntity call to finalize the connection
                 }
             }
         }
     }
 
-    public Entity getConnectionEntityWithTurret(Turret turret) {
+    public Array<Entity> getConnectionEntityWithTurret(Turret turret) {
+        Array<Entity> connectedEntities = new Array<>();
         var entities = getEntities();
         for (int i = 0; i < entities.size(); i++) {
             var connection = Components.get(entities.get(i), Connection.class);
             if (connection.isConnected() && connection.getTurret() == turret) {
-                return entities.get(i);
+                connectedEntities.add(entities.get(i));
             }
         }
-        return null;
+        return connectedEntities;
     }
 
-    public Entity getConnectionEntityWithBaseButton(BaseButton baseButton) {
+    public Array<Entity>  getConnectionEntityWithBaseButton(BaseButton baseButton) {
+        Array<Entity> connectedEntities = new Array<>();
         var entities = getEntities();
         for (int i = 0; i < entities.size(); i++) {
             var connection = Components.get(entities.get(i), Connection.class);
             if (connection.isConnected() && connection.getBaseButton() == baseButton) {
-                return entities.get(i);
+                connectedEntities.add(entities.get(i));
             }
         }
-        return null;
+        return connectedEntities;
+    }
+
+    public void cleanUpReplacedConnections(Connection pendingConnection) {
+        if (pendingConnection.hasTurret() && pendingConnection.hasBaseButton()) {
+            var baseButtonConnections = getConnectionEntityWithBaseButton(pendingConnection.getBaseButton());
+            for (int i = 0; i < baseButtonConnections.size; i++) {
+                var connection  = Components.get(baseButtonConnections.get(i), Connection.class);
+                connection.removeConnection();
+                EntityEvent.remove(baseButtonConnections.get(i));
+            }
+            var turretConnections = getConnectionEntityWithTurret(pendingConnection.getTurret());
+            for (int i = 0; i < turretConnections.size; i++) {
+                if (pendingConnection.getBaseButton().isEnergy()) {
+                    var connection  = Components.get(turretConnections.get(i), Connection.class);
+                    if (connection.getBaseButton().isEnergy()) {
+                        connection.removeConnection();
+                        EntityEvent.remove(turretConnections.get(i));
+                    }
+                } else {
+                    // pattern
+                    var connection  = Components.get(turretConnections.get(i), Connection.class);
+                    if (connection.getBaseButton().isPattern()) {
+                        connection.removeConnection();
+                        EntityEvent.remove(turretConnections.get(i));
+                    }
+                }
+            }
+
+        } else {
+            // shouldn't be calling this when it isn't about to replace a connection
+        }
     }
 }
