@@ -7,9 +7,12 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.assets.anims.AnimBase;
+import lando.systems.ld59.assets.anims.AnimBaseButton;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
+import lando.systems.ld59.utils.FramePool;
+import lando.systems.ld59.utils.Util;
 
 public class Turret implements Component {
 
@@ -17,21 +20,24 @@ public class Turret implements Component {
 
     public final float rotation;
     public float cannonRotation;
+
+    private Engine engine;
     public final Position pos;
 
     public final Entity base;
     public final Entity cannon;
 
-    public Turret(Engine engine, Position pos, float rotation) {
+    public Turret(Engine engine, Position pos, float rot) {
+        this.engine = engine;
         this.pos = pos;
-        this.rotation = rotation;
+        this.rotation = rot;
         this.base = Factory.createEntity();
         this.cannon = Factory.createEntity();
 
         var width = 200;
         var height = 200;
-        var baseAnim = new Animator(AnimBase.TURRET_BASE, new Vector2(width / 2f, 0));
-        var cannonAnim = new Animator(AnimBase.TURRET_CANNON, new Vector2(width / 2f, 0));
+        var baseAnim = new Animator(AnimBase.TURRET_BASE, new Vector2(0, width / 2f));
+        var cannonAnim = new Animator(AnimBase.TURRET_CANNON, new Vector2(0, width / 2f));
         var baseCollider = Collider.circ(CollisionMask.TURRET, 0, 10, 80);
         var cannonCollider = Collider.circ(CollisionMask.TURRET, 0,  96, 23);
 
@@ -39,14 +45,14 @@ public class Turret implements Component {
         cannonAnim.depth = ANIM_DEPTH + 2;
         baseAnim.size.set(width, height);
         cannonAnim.size.set(width, height);
-        baseAnim.rotation = -rotation;
+        baseAnim.rotation = rotation;
         cannonAnim.rotationOrigin.set(width / 2f, height / 2f);
 
         base.add(new Position(pos.x, pos.y));
         base.add(baseAnim);
         base.add(baseCollider);
 
-        cannon.add(new Position(pos.x + MathUtils.sinDeg(rotation) * 96, pos.y - 96 + MathUtils.cosDeg(rotation) * 96 ));
+        cannon.add(new Position(pos.x -96 + MathUtils.cosDeg(rot) * 96, pos.y + MathUtils.sinDeg(rot) * 96 ));
         cannon.add(cannonAnim);
         cannon.add(cannonCollider);
         cannon.add(new Interp(1f, Interpolation.linear, Interp.Repeat.PINGPONG));
@@ -65,7 +71,36 @@ public class Turret implements Component {
     }
 
     public void shoot() {
+        float width = 20f;
 
+        var bullet = Factory.createEntity();
+        var cannonPos = cannon.getComponent(Position.class);
+        var pos = new Position(cannonPos.x + 100, cannonPos.y );
+        Vector2 tempVec = FramePool.vec2();
+        tempVec.set(60, 0);
+        tempVec.rotateDeg(cannonRotation);
+        pos.add((int) tempVec.x, (int)tempVec.y);
+
+
+        float totalRotation = cannonRotation;
+        var vel = new Velocity(MathUtils.cosDeg(totalRotation) * 100, MathUtils.sinDeg(totalRotation) * 100);
+
+        var baseAnim = new Animator(AnimBaseButton.BLUE_ON, new Vector2(width / 2f, width / 2f));
+        baseAnim.depth = 100;
+        baseAnim.size.set(width, width);
+
+
+        var energyColor = cannon.getComponent(EnergyColor.class);
+
+        bullet.add(pos);
+        bullet.add(baseAnim);
+        bullet.add(vel);
+        bullet.add(new Projectile(4));
+        if (energyColor != null) {
+            bullet.add(energyColor);
+        }
+
+        engine.addEntity(bullet);
     }
 
     /**

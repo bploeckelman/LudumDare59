@@ -84,4 +84,12 @@ public class Velocity implements Component {
         value.y *= -1f;
         remainder.y = 0f;
     }
+
+    @Override
+    public String toString() {
+        return "Velocity{" +
+                "value=" + value +
+                ", remainder=" + remainder +
+                '}';
+    }
 }

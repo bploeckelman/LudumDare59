@@ -12,13 +12,32 @@ import lando.systems.ld59.game.components.renderable.Animator;
 
 public class TurretSystem extends IteratingSystem {
 
+
+    public float shootDelay = 0.5f;
+    public boolean shootThisFrame = false;
+
     public TurretSystem() {
         super(Family.one(Turret.class).get());
     }
 
     @Override
+    public void update (float dt) {
+        shootDelay -=dt;
+        shootThisFrame = false;
+        if (shootDelay <= 0 ) {
+            shootThisFrame = true;
+            shootDelay += .5f;
+        }
+        for (int i = 0; i < getEntities().size(); ++i) {
+            processEntity(getEntities().get(i), dt);
+        }
+    }
+
+    @Override
     protected void processEntity(Entity entity, float dt) {
         var turret = Components.get(entity, Turret.class);
+
+        boolean canShoot = false;
 
         // update gun rotation from iterp
         var gunAnim = Components.get(turret.cannon, Animator.class);
@@ -27,8 +46,7 @@ public class TurretSystem extends IteratingSystem {
         float targetRotation = 0;
         if (interp.isPresent() && turretPattern.isPresent()) {
             float extents = turretPattern.get().angleExtents();
-             targetRotation = -turret.rotation + interp.get().apply(-extents, extents);
-
+             targetRotation = turret.rotation + interp.get().apply(-extents, extents);
         }
 
         // Lerp cannonRotation toward targetRotation with max angular speed
@@ -42,13 +60,18 @@ public class TurretSystem extends IteratingSystem {
         float step = MathUtils.clamp(deltaAngle, -maxDelta, maxDelta);
 
         float dist = Math.abs(turret.cannonRotation - targetRotation);
-        if (dist < Math.abs(step)) {
+        if (dist <= Math.abs(maxDelta)) {
             turret.cannonRotation = targetRotation;
+            canShoot = true;
         } else {
             turret.cannonRotation += step;
         }
 
         gunAnim.rotation = turret.cannonRotation;
+
+        if (shootThisFrame && canShoot)  {
+            turret.shoot();
+        }
 
 
     }

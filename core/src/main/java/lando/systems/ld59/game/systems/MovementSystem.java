@@ -44,31 +44,8 @@ public class MovementSystem extends IteratingSystem {
         // Get components; required components throw, optional components provide an alternative
         var position  = Components.optional(entity, Position.class).orElseThrow();
         var velocity  = Components.optional(entity, Velocity.class).orElseThrow();
-        var friction  = Components.optional(entity, Friction.class).orElse(new Friction());
-        var gravity   = Components.optional(entity, Gravity.class).map(Gravity::value).orElse(0f);
         var collider  = Components.optional(entity, Collider.class);
 
-        // Determine whether we're grounded this frame or not
-        var ignoreSolids = !collider.map(c -> c.collidesWith(CollisionMask.SOLID)).orElse(false);
-        var grounded = collisionCheckSystem.onGround(entity, ignoreSolids);
-
-        // Apply friction
-        if (grounded) {
-            // let's change how friction works with 4 hours left in the jam, what could go wrong?
-//            velocity.value.x = Calc.approach(velocity.value.x, 0, friction * delta);
-            velocity.value.x *= (float) Math.pow(friction.ground, delta);
-        } else {
-            velocity.value.x *= (float) Math.pow(friction.air, delta);
-        }
-
-        // Apply gravity TODO: cap max y-velocity?
-        if (gravity != 0 && !grounded) {
-            velocity.value.y += gravity * delta;
-        }
-
-        if (velocity.value.y < -velocity.maxFallSpeed) {
-            velocity.value.y = -velocity.maxFallSpeed;
-        }
 
         // How far should we move this tick, assuming nothing is in the way
         var moveTotal = FramePool.vec2(

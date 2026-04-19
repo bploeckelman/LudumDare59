@@ -40,9 +40,9 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         float rotationRange = 120f;
         float deltaRotation = rotationRange / (turrets+1);
         for (int i = 0; i < turrets; i++) {
-            var rotation = -rotationRange / 2f + deltaRotation * (i+1);
-            var x = centerX + MathUtils.sinDeg(rotation) * 600f;
-            var y = -410f + MathUtils.cosDeg(rotation) * 620f;
+            var rotation = 90 + -rotationRange / 2f + deltaRotation * (i+1);
+            var x = centerX + MathUtils.cosDeg(rotation) * 600f;
+            var y = -410f + MathUtils.sinDeg(rotation) * 620f;
             var turret = Factory.turret(x, y, rotation);
             engine().addEntity(turret);
         }

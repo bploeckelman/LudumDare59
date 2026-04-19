@@ -43,9 +43,10 @@ public class Components {
         entry(Animator.class,       ComponentMapper.getFor(Animator.class)),
         entry(Image.class,          ComponentMapper.getFor(Image.class)),
 
-        // Enemies ------------------------------------------------------------
+        // Combat -------------------------------------------------------------
         entry(Turret.class,         ComponentMapper.getFor(Turret.class)),
         entry(TurretPattern.class,  ComponentMapper.getFor(TurretPattern.class)),
+        entry(Projectile.class,     ComponentMapper.getFor(Projectile.class)),
 
 
         // Map Objects --------------------------------------------------------
