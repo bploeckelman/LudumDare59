@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.Texture;import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -241,6 +241,17 @@ public class Util {
         prevColor.set(batch.getColor());
         batch.setColor(tint);
         batch.draw(texture, x, y, ox, oy, w, h, sx, sy, rot);
+        batch.setColor(prevColor);
+    }
+
+    public static void draw(SpriteBatch batch, Texture texture, Rectangle rect, Color tint, float ox, float oy, float sx, float sy, float rot) {
+        var x = rect.x;
+        var y = rect.y;
+        var h = rect.height;
+        var w = rect.width;
+        prevColor.set(batch.getColor());
+        batch.setColor(tint);
+        batch.draw(texture, x, y, ox, oy, w, h, sx, sy, rot, 0, 0, (int) w, (int) h, false, false);
         batch.setColor(prevColor);
     }
 

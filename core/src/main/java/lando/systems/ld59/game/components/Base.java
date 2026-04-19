@@ -3,11 +3,13 @@ package lando.systems.ld59.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.assets.anims.AnimBase;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.renderable.Animator;
+import lando.systems.ld59.game.components.renderable.Outline;
 
 public class Base implements Component {
 
@@ -38,6 +40,8 @@ public class Base implements Component {
         ground.add(groundAnim);
         city.add(new Position(pos.x, pos.y + 25));
         city.add(cityAnim);
+        city.add(new Outline(Color.LIME, Color.CLEAR_WHITE, 2));
+
         // TODO: city collider so it can take damage
 
         engine.addEntity(ground);

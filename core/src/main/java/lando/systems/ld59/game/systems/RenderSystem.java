@@ -3,19 +3,21 @@ package lando.systems.ld59.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import lando.systems.ld59.assets.ShaderType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.Position;
-import lando.systems.ld59.game.components.renderable.Animator;
-import lando.systems.ld59.game.components.renderable.FlatShape;
-import lando.systems.ld59.game.components.renderable.Image;
-import lando.systems.ld59.game.components.renderable.Renderable;
+import lando.systems.ld59.game.components.renderable.*;
+import lando.systems.ld59.utils.FramePool;
+import lando.systems.ld59.utils.Util;
 
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RenderSystem extends SortedIteratingSystem {
 
@@ -30,12 +32,10 @@ public class RenderSystem extends SortedIteratingSystem {
         return (int)(e1Depth - e2Depth);
     };
 
-    private final Map<Entity, TiledMapRenderer> mapRenderers;
     private float accum = 0;
 
     public RenderSystem() {
         super(RENDERABLES, comparator);
-        this.mapRenderers = new HashMap<>();
     }
 
     @Override
@@ -52,19 +52,92 @@ public class RenderSystem extends SortedIteratingSystem {
         for (var entity : getEntities()) {
             var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
 
-            // Draw simple renderables
-            Components.optional(entity, Image.class).ifPresent(img -> img.render(batch, pos));
-            Components.optional(entity, Animator.class).ifPresent(anim -> anim.render(batch, pos));
-            Components.optional(entity, FlatShape.class).ifPresent(shape -> shape.render(batch, pos));
-
+            // Draw simple renderables, apply outline component if exists, otherwise normal rendering
+            Components.optional(entity, Outline.class).ifPresentOrElse(
+                    outline -> renderWithOutline(batch, entity, outline),
+                    () -> {
+                        Components.optional(entity, Image.class).ifPresent(img -> img.render(batch, pos));
+                        Components.optional(entity, Animator.class).ifPresent(anim -> anim.render(batch, pos));
+                        Components.optional(entity, FlatShape.class).ifPresent(shape -> shape.render(batch, pos));
+                    }
+            );
         }
     }
 
     /**
      * For drawing stuff in 'window' space rather than 'world' space, typically for shader effects
      */
-    public void drawInWindowSpace(SpriteBatch batch, OrthographicCamera camera) {
+    public void drawInWindowSpace(SpriteBatch batch, OrthographicCamera camera) {}
+
+    /**
+     * For drawing renderables that have an
+     */
+    private void renderWithOutline(SpriteBatch batch, Entity entity, Outline outline) {
+        var pos      = Components.optional(entity, Position.class).orElse(Position.ZERO);
+        var image    = Components.get(entity, Image.class);
+        var animator = Components.get(entity, Animator.class);
+        // TODO: also include FlatShape renderable?
+
+        var tintColor = FramePool.color().set(Color.WHITE);
+
+        // Get the renderable content for this entity, if any, to draw an outline around
+        var region = (TextureRegion) null;
+        var texture = (Texture) null;
+        var rect = (Rectangle) null;
+        var rotationOrigin = (Vector2) null;
+        var scale = (Vector2) null;
+        var rotation = 0f;
+
+        // Extract render attribs from Image component
+        if (image != null) {
+            tintColor = image.tint;
+            region = image.getTextureRegion();
+            texture = image.getTexture();
+            rect = image.rect(pos);
+            rotationOrigin = image.rotationOrigin;
+            scale = image.scale;
+            rotation = image.rotation;
+        }
+
+        // Extract render attribs from Animator component
+        if (animator != null) {
+            region = animator.keyframe();
+            rect = animator.rect(pos);
+            tintColor = animator.tint;
+            rotationOrigin = animator.rotationOrigin;
+            scale = animator.scale;
+            rotation = animator.rotation;
+        }
+
+        // No renderable content to outline, bail out
+        if (image == null && animator == null) {
+            return;
+        }
+
+        var prevColor = FramePool.color().set(batch.getColor());
+        var shader = ShaderType.OUTLINE.get();
+
+        batch.setColor(tintColor);
+        batch.setShader(shader);
+        {
+            shader.setUniformf("u_fill_color", outline.fillColor());
+            shader.setUniformf("u_outline_color", outline.outlineColor());
+
+            if (texture != null) {
+                shader.setUniformf("u_thickness",
+                        outline.outlineThickness() / (float) texture.getWidth(),
+                        outline.outlineThickness() / (float) texture.getHeight());
+                Util.draw(batch, texture, rect, tintColor, rotationOrigin.x, rotationOrigin.y, scale.x, scale.y, rotation );
+            }
+
+            if (region != null) {
+                shader.setUniformf("u_thickness",
+                        outline.outlineThickness() / (float) region.getTexture().getWidth(),
+                        outline.outlineThickness() / (float) region.getTexture().getHeight());
+                Util.draw(batch, region, rect, tintColor, rotationOrigin.x, rotationOrigin.y, scale.x, scale.y, rotation );
+            }
+        }
+        batch.setShader(null);
+        batch.setColor(prevColor);
     }
-
-
 }

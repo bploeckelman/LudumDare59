@@ -2,12 +2,9 @@ package lando.systems.ld59.game;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.ImageType;
@@ -53,6 +50,7 @@ public class Factory {
 
         var position = new Position(x, y);
         var turret = new Turret(Main.game.engine, entity, position, rotation);
+
         entity.add(position);
         entity.add(turret);
         entity.add(new Health(100));

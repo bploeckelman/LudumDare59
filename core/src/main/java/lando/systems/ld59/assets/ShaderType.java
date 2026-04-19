@@ -9,7 +9,7 @@ import static com.badlogic.gdx.assets.loaders.ShaderProgramLoader.ShaderProgramP
 
 public enum ShaderType implements AssetType<ShaderProgram> {
     //@formatter:off
-//      OUTLINE   ("shaders/outline.frag")
+      OUTLINE   ("shaders/outline.frag")
     ;
     //@formatter:on
 

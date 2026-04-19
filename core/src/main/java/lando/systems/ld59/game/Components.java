@@ -8,6 +8,7 @@ import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.FlatShape;
 import lando.systems.ld59.game.components.renderable.Image;
+import lando.systems.ld59.game.components.renderable.Outline;
 
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class Components {
         entry(Id.class,             ComponentMapper.getFor(Id.class)),
         entry(Interp.class,         ComponentMapper.getFor(Interp.class)),
         entry(Name.class,           ComponentMapper.getFor(Name.class)),
+        entry(Outline.class,        ComponentMapper.getFor(Outline.class)),
         entry(Particle.class,       ComponentMapper.getFor(Particle.class)),
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
         entry(Velocity.class,       ComponentMapper.getFor(Velocity.class)),
