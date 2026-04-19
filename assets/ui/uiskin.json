@@ -150,6 +150,13 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 		focused: button_rectangle_depth_line_blue
 		disabled: button_rectangle_depth_flat_inverted
 	}
+	flat: {
+		up: button_rectangle_flat
+		down: button_rectangle_line
+		over: button_rectangle_flat_blue
+		focused: button_rectangle_line_blue
+		disabled: button_rectangle_depth_flat_inverted
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
@@ -322,7 +329,23 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 }
 com.kotcrab.vis.ui.widget.VisTextButton$VisTextButtonStyle: {
 	default: {
-		parent: default
+		parent: flat
+		font: vis-open-sans-12px
+		fontColor: black
+		downFontColor: sky
+		overFontColor: sky
+		disabledFontColor: grey-dark
+	}
+}
+com.kotcrab.vis.ui.widget.VisImageButton$VisImageButtonStyle: {
+	default: { parent: flat }
+}
+com.kotcrab.vis.ui.Sizes: {
+	default: {scaleFactor: 1, spacingBottom: 8, spacingRight: 6, buttonBarSpacing: 10, menuItemIconSize: 22, borderSize: 1, spinnerButtonHeight: 12, spinnerFieldSize: 40, fileChooserViewModeBigIconsSize: 200, fileChooserViewModeMediumIconsSize: 128, fileChooserViewModeSmallIconsSize: 64, fileChooserViewModeListWidthSize: 155 },
+}
+com.kotcrab.vis.ui.widget.Tooltip$TooltipStyle: {
+	default: {
+		background: rectangle_line
 	}
 }
 }

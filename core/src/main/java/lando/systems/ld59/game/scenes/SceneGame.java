@@ -3,16 +3,18 @@ package lando.systems.ld59.game.scenes;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Config;
+import lando.systems.ld59.assets.anims.AnimBaseCity;
+import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.Systems;
-import lando.systems.ld59.game.components.BaseButton;
-import lando.systems.ld59.game.components.EnemyTag;
-import lando.systems.ld59.game.components.EnergyColor;
-import lando.systems.ld59.game.components.SceneContainer;
+import lando.systems.ld59.game.components.*;
+import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.screens.GameScreen;
 import lando.systems.ld59.utils.FramePool;
 
 public class SceneGame extends Scene<GameScreen> implements InputProcessor {
+
+    private final Animator cityAnimator;
 
     public SceneGame(GameScreen screen, int turrets) {
         super(screen);
@@ -27,6 +29,9 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         var buttonY = BaseButton.SIZE - 10;
 
         var base = Factory.base(centerX, 0f);
+        var baseComp = Components.get(base, Base.class);
+        this.cityAnimator = Components.get(baseComp.city, Animator.class);
+
         var enemy1 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX + 150, topY, 10f, -10f);
         var enemy2 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX - 150, topY, -10f, -10f);
 
@@ -65,6 +70,11 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         engine().addEntity(circleButton);
         engine().addEntity(squareButton);
         engine().addEntity(triangleButton);
+    }
+
+    public void cityAnimTest() {
+        var cityAnim = (AnimBaseCity) cityAnimator.type;
+        cityAnimator.play(cityAnim.next());
     }
 
     @Override

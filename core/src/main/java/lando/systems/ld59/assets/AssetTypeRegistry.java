@@ -20,7 +20,7 @@ public class AssetTypeRegistry {
         register(AnimEnemy.class,   AnimType::initEnum);
         register(AnimHero.class,    AnimType::initEnum);
         register(AnimPet.class,     AnimType::initEnum);
-        register(AnimTemp.class,    AnimType::initEnum);
+        register(AnimMisc.class,    AnimType::initEnum);
         register(ColorType.class,   ColorType::initEnum);
         register(EffectType.class,  EffectType::initEnum);
         register(EmitterType.class, EmitterType::initEnum);

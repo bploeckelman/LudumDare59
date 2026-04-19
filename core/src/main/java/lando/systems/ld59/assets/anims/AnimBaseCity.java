@@ -18,6 +18,22 @@ public enum AnimBaseCity implements AnimType {
     , IDLE_WEAK(Animation.PlayMode.LOOP)
     ;
 
+    public AnimBaseCity next() {
+        var next = AnimBaseCity.IDLE;
+        switch (this) {
+            case CRACK_1:     next = CRACK_2; break;
+            case CRACK_2:     next = CRACK_3; break;
+            case CRACK_3:     next = CRACK_4; break;
+            case CRACK_4:     next = DEAD; break;
+            case DEAD:        next = GLASS_BREAK; break;
+            case GLASS_BREAK: next = HIT_A; break;
+            case HIT_A:       next = IDLE; break;
+            case IDLE:        next = IDLE_WEAK; break;
+            case IDLE_WEAK:   next = CRACK_1; break;
+        }
+        return next;
+    }
+
     private static final String BASE_PATH = "base/city/";
     private static final EnumMap<AnimBaseCity, Animation<TextureRegion>> container = AnimType.createAndRegisterContainer(AnimBaseCity.class);
     private static final EnumMap<AnimBaseCity, AnimType.AnimConfig> configs = AnimType.createConfigs(

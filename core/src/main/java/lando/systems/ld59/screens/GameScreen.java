@@ -5,13 +5,16 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTextButton;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
 import lando.systems.ld59.assets.MusicType;
+import lando.systems.ld59.assets.anims.AnimBaseCity;
+import lando.systems.ld59.assets.anims.AnimMisc;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.scenes.Scene;
 import lando.systems.ld59.game.scenes.SceneGame;
@@ -95,14 +98,36 @@ public class GameScreen extends BaseScreen {
             screenName.setPosition(10f, windowCamera.viewportHeight - 10f - screenName.getHeight());
             uiStage.addActor(screenName);
         }
-        var button = new VisTextButton("Settings");
-        button.addListener(new ClickListener() {
+
+        var gearRegion = AnimMisc.GEAR.get().getKeyFrame(0f);
+        var gearDrawable = new TextureRegionDrawable(gearRegion);
+        var settingsButton = new VisImageButton(gearDrawable, "Settings");
+        settingsButton.setSize(50, 50);
+        settingsButton.setPosition(
+                windowCamera.viewportWidth  - 10f - settingsButton.getWidth(),
+                windowCamera.viewportHeight - 10f - settingsButton.getHeight());
+        settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 settingsUI.toggle();
             }
         });
-        button.setPosition(windowCamera.viewportWidth - button.getWidth() - 10f, windowCamera.viewportHeight - button.getHeight() - 10f);
-        uiStage.addActor(button);
+
+        var cityRegion = AnimBaseCity.IDLE.get().getKeyFrame(0f);
+        var cityDrawable = new TextureRegionDrawable(cityRegion);
+        var cityTestButton = new VisImageButton(cityDrawable, "City Anim Test");
+        cityTestButton.setSize(50, 50);
+        cityTestButton.setPosition(
+                windowCamera.viewportWidth  - 10f - settingsButton.getWidth() - 10f - cityTestButton.getWidth(),
+                windowCamera.viewportHeight - 10f - cityTestButton.getHeight());
+        cityTestButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                scene.cityAnimTest();
+            }
+        });
+
+        uiStage.addActor(settingsButton);
+        uiStage.addActor(cityTestButton);
     }
 }
