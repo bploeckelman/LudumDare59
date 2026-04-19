@@ -9,6 +9,7 @@ import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.EnemySpawner;
 import lando.systems.ld59.game.components.EnemyTag;
 import lando.systems.ld59.game.components.EnergyColor;
+import lando.systems.ld59.game.components.Position;
 
 public class EnemySpawnerSystem extends IteratingSystem {
 
@@ -21,6 +22,7 @@ public class EnemySpawnerSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float delta) {
         var spawner = Components.get(entity, EnemySpawner.class);
+        var position = Components.get(entity, Position.class);
 
         spawner.spawnTimer += delta;
 
@@ -28,8 +30,8 @@ public class EnemySpawnerSystem extends IteratingSystem {
             spawner.spawnTimer -= spawner.spawnInterval;
 
             // Spawn enemy at random x position near spawner
-            float spawnX = spawner.x + MathUtils.random(-100f, 100f);
-            float spawnY = spawner.y;
+            float spawnX = position.x + MathUtils.random(-100f, 100f);
+            float spawnY = position.y;
             float velX = MathUtils.random(-20f, 20f);
             float velY = -10f;
 

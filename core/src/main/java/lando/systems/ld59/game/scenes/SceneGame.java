@@ -25,8 +25,6 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         var buttonY = BaseButton.SIZE - 10;
 
         var base = Factory.base(centerX, 0f);
-        var enemySpawner = Factory.createEntity();
-        enemySpawner.add(new EnemySpawner((int) centerX, (int) topY));
         var enemy1 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX + 150, topY, 10f, -10f);
         var enemy2 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX - 150, topY, -10f, -10f);
 
@@ -49,8 +47,15 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
             engine().addEntity(turret);
         }
 
+        for (int i = 0; i < 10; i++) {
+            var rotation = -rotationRange / 2f + deltaRotation * (i+1);
+            var x = centerX + MathUtils.sinDeg(rotation) * 600f;
+            var y = topY;
+            var spawner = Factory.enemySpawner(x, y);
+            engine().addEntity(spawner);
+        }
+
         engine().addEntity(base);
-        engine().addEntity(enemySpawner);
         engine().addEntity(enemy1);
         engine().addEntity(enemy2);
         engine().addEntity(redButton);

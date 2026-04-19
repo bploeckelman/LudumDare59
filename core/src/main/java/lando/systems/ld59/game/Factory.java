@@ -60,6 +60,15 @@ public class Factory {
         return entity;
     }
 
+    public static Entity enemySpawner(float x, float y) {
+        var entity = createEntity();
+        var position = new Position(x, y);
+        var spawner = new EnemySpawner();
+        entity.add(position);
+        entity.add(spawner);
+        return entity;
+    }
+
     public static Entity enemyShip(EnemyTag.EnemyType enemy, EnergyColor.Type energyColor, float posX, float posY, float velX, float velY) {
         var entity = createEntity();
         var tag = new EnemyTag();
