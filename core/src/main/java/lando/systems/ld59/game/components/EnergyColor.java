@@ -6,9 +6,9 @@ import com.badlogic.gdx.math.MathUtils;
 
 public class EnergyColor implements Component {
 
-    public static final Color RED = new Color(1, .3f, .3f, 1);
-    public static final Color GREEN = new Color(.3f, 1, .3f, 1);
-    public static final Color BLUE = new Color(.3f, .3f, 1, 1);
+    public static final Color RED = new Color(170/255f, 51/255f, 119/255f, 1);
+    public static final Color GREEN = new Color(35/255f, 136/255f, 51/255f, 1);
+    public static final Color BLUE = new Color(68/255f, 119/255f, 170/255f, 1);
 
     public enum Type {
         RED, GREEN, BLUE;
@@ -32,7 +32,7 @@ public class EnergyColor implements Component {
             case RED: return RED;
             case GREEN: return GREEN;
             case BLUE: return BLUE;
-            default: return Color.WHITE;
+            default: return Color.MAGENTA;
         }
     }
 }

@@ -154,15 +154,7 @@ public class Turret implements Component {
 
     public Color getCannonColor() {
         return Components.optional(cannon, EnergyColor.class)
-                .map(energy -> {
-                    var color = FramePool.color();
-                    switch (energy.type) {
-                        case RED: color.set(1, 0, 0, 1); break;
-                        case GREEN: color.set(0, 1, 0, 1); break;
-                        case BLUE: color.set(0, 0, 1, 1); break;
-                    }
-                    return color;
-                })
+                .map(EnergyColor::getColor)
                 .orElse(FramePool.color(1, 1, 1));
     }
 
