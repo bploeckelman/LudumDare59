@@ -47,8 +47,6 @@ public class SmokeEffect implements ParticleEffect {
                 var speed = MathUtils.random(100f, 150f);
                 var startSize = MathUtils.random(8f, 12f);
                 var ttl = MathUtils.random(0.5f, 1f);
-                Util.log("SmokeEffect", Stringf.format("angle: %f, speed: %f, startSize: %f, ttl: %f", angle, speed, startSize, ttl));
-
                 return ParticleData.initializer(pool.obtain())
                     .animation(AnimPet.ASUKA.get())
                     .startPos(params.target.x, params.target.y)
