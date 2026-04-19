@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Justify;
 import com.github.tommyettinger.textra.TypingLabel;
 
@@ -26,6 +27,8 @@ public class CreditsScreen extends BaseScreen {
     private Image novaImage;
     private Image cherryImage;
     private Image oshaImage;
+    private Font creditFont = FontType.ROBOTO.get();
+    private Font creditHeader = FontType.COUSINE.get();
 
     // TODO: in i18n strings...
     //  how to mix formatting placeholders: {0}, {1}, ..., with typing label placeholders like {GRADIENT},
@@ -39,11 +42,11 @@ public class CreditsScreen extends BaseScreen {
             padBottom(10);
             //setHeight(32 + 24 + 50); // font large + font default + padding
 
-            var title = new TypingLabel(assets.strings.get("credits.header.title"), FontType.ATKINSON_HYPERLEGIBLE.get());
-            var theme = new TypingLabel(assets.strings.get("credits.header.theme"), FontType.ROUNDABOUT.get());
+            var title = new TypingLabel(assets.strings.get("credits.header.title"), creditHeader);
+            var theme = new TypingLabel(assets.strings.get("credits.header.theme"), creditFont);
 
-            add(theme).expandX().padTop(20).row();
-            add(title).expand().padTop(20);
+            add(theme).expandX().padTop(10).row();
+            add(title).expand().padTop(10);
             //add(title).expand().padTop(10).padBottom(10).row();
             //add(theme).expandX();
         }
@@ -65,14 +68,14 @@ public class CreditsScreen extends BaseScreen {
             panelLeft.defaults().left().pad(10);
             panelRight.defaults().right().pad(10);
 
-            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.code-heading"), FontType.ROUNDABOUT.get())).row();
-            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.code-names"), FontType.ROBOTO.get())).row();
+            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.code-heading"), creditHeader)).row();
+            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.code-names"), creditFont)).row();
             panelLeft.row().height(50f);
-            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.pets-heading"), FontType.ROUNDABOUT.get())).row();
+            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.pets-heading"), creditHeader)).row();
 
             var petsTable = new VisTable();
             var petSprites = new VisTable();
-            petsTable.add(new TypingLabel(assets.strings.get("credits.body.left.pets-names"), FontType.COUSINE.get())).growY();
+            petsTable.add(new TypingLabel(assets.strings.get("credits.body.left.pets-names"), creditFont)).growY();
             petsTable.add(new VisLabel()).width(10f);
             asukaImage = new Image(AnimPet.ASUKA.get().getKeyFrame(accum));
             roxieImage = new Image(AnimPet.ROXIE.get().getKeyFrame(accum));
@@ -87,11 +90,11 @@ public class CreditsScreen extends BaseScreen {
             petsTable.add(petSprites);
             panelLeft.add(petsTable).row();
 
-            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.art-heading"), FontType.ROUNDABOUT.get())).row();
-            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.art-names"), FontType.ROBOTO.get())).row();
+            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.art-heading"), creditHeader)).row();
+            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.art-names"), creditFont)).row();
             panelRight.row().height(50f);
-            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.audio-heading"), FontType.ROUNDABOUT.get())).row();
-            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.audio-names"), FontType.COUSINE.get())).row();
+            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.audio-heading"), creditHeader)).row();
+            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.audio-names"), creditFont)).row();
 
             add(panelLeft).width(500f).growY().pad(10);
             add(panelRight).width(500f).growY().pad(10);
@@ -104,7 +107,7 @@ public class CreditsScreen extends BaseScreen {
             defaults().padBottom(10);
 
             var thanks = new TypingLabel(assets.strings.get("credits.footer.thanks"), FontType.ROBOTO_LARGE.get());
-            var madeWith = new TypingLabel(assets.strings.get("credits.footer.made-with"), FontType.ROBOTO.get());
+            var madeWith = new TypingLabel(assets.strings.get("credits.footer.made-with"), creditFont);
             var disclaimer = new TypingLabel(assets.strings.get("credits.footer.disclaimer"), FontType.ROBOTO_SMALL.get());
             var returnToTitleBtn = new VisTextButton("Return to title...", new ChangeListener() {
                 public void changed(ChangeListener.ChangeEvent event, Actor actor) {
