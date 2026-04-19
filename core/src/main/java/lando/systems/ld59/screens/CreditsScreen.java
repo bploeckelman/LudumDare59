@@ -5,7 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.github.tommyettinger.textra.Justify;
 import com.github.tommyettinger.textra.TypingLabel;
 
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -17,7 +19,7 @@ import lando.systems.ld59.assets.anims.AnimPet;
 
 public class CreditsScreen extends BaseScreen {
 
-    private static final Color BACKGROUND_COLOR = new Color(.0f, .0f, .2f, 1f);
+    private static final Color BACKGROUND_COLOR = new Color(0f, 0f, 0f, 0f);
     private float accum = 0f;
     private Image asukaImage;
     private Image roxieImage;
@@ -37,19 +39,21 @@ public class CreditsScreen extends BaseScreen {
             padBottom(10);
             //setHeight(32 + 24 + 50); // font large + font default + padding
 
-            var title = new TypingLabel(assets.strings.get("credits.header.title"), FontType.ROUNDABOUT_LARGE.get());
+            var title = new TypingLabel(assets.strings.get("credits.header.title"), FontType.ATKINSON_HYPERLEGIBLE.get());
             var theme = new TypingLabel(assets.strings.get("credits.header.theme"), FontType.ROUNDABOUT.get());
 
-            add(title).expand().padTop(20).padBottom(20).row();
-            add(theme).expandX();
+            add(theme).expandX().padTop(20).row();
+            add(title).expand().padTop(20);
+            //add(title).expand().padTop(10).padBottom(10).row();
+            //add(theme).expandX();
         }
     }
 
     private class Body extends VisTable {
         private Body() {
             //setDebug(true);
-            padTop(10);
-            padBottom(10);
+            padTop(20);
+            padBottom(20);
 
             var panelLeft = new VisTable();
             var panelRight = new VisTable();
@@ -63,7 +67,7 @@ public class CreditsScreen extends BaseScreen {
 
             panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.code-heading"), FontType.ROUNDABOUT.get())).row();
             panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.code-names"), FontType.ROBOTO.get())).row();
-            panelLeft.row().height(20f);
+            panelLeft.row().height(50f);
             panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.pets-heading"), FontType.ROUNDABOUT.get())).row();
 
             var petsTable = new VisTable();
@@ -72,25 +76,25 @@ public class CreditsScreen extends BaseScreen {
             petsTable.add(new VisLabel()).width(10f);
             asukaImage = new Image(AnimPet.ASUKA.get().getKeyFrame(accum));
             roxieImage = new Image(AnimPet.ROXIE.get().getKeyFrame(accum));
-            novaImage = new Image(AnimPet.ASUKA.get().getKeyFrame(accum));
+            novaImage = new Image(AnimPet.NOVA.get().getKeyFrame(accum));
             cherryImage = new Image(AnimPet.CHERRY.get().getKeyFrame(accum));
             oshaImage = new Image(AnimPet.OSHA.get().getKeyFrame(accum));
             petSprites.add(asukaImage).size(32f, 32f).row();
             petSprites.add(oshaImage).size(32f, 32f).row();
             petSprites.add(cherryImage).size(32f, 32f).row();
-            petSprites.add(roxieImage).size(32f, 32f).row();
-            petSprites.add(novaImage).size(32f, 32f);
+            petSprites.add(roxieImage).size(38f, 32f).row();
+            petSprites.add(novaImage).size(38f, 32f);
             petsTable.add(petSprites);
             panelLeft.add(petsTable).row();
 
             panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.art-heading"), FontType.ROUNDABOUT.get())).row();
             panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.art-names"), FontType.ROBOTO.get())).row();
-            panelRight.row().height(20f);
+            panelRight.row().height(50f);
             panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.audio-heading"), FontType.ROUNDABOUT.get())).row();
             panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.audio-names"), FontType.COUSINE.get())).row();
 
-            add(panelLeft).width(500f).growY().pad(40);
-            add(panelRight).width(500f).growY().pad(40);
+            add(panelLeft).width(500f).growY().pad(10);
+            add(panelRight).width(500f).growY().pad(10);
         }
     }
 
@@ -112,7 +116,8 @@ public class CreditsScreen extends BaseScreen {
 
             add(thanks).expand().row();
             add(madeWith).expandX().row();
-            add(returnToTitleBtn).growX().height(40).row();
+            //add(returnToTitleBtn).growX().height(40).row();
+            add(returnToTitleBtn).width(200).height(40).row();
             add(disclaimer).expandX().bottom();
         }
     }
