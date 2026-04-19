@@ -99,7 +99,7 @@ public class Factory {
         tag.type = EnemyTag.EnemyType.FLYER;
         var size = 32f;
         var animOrigin = new Vector2(size / 2f, size / 2f);
-        var collidesWith = new CollisionMask[] { CollisionMask.COCKPIT_SHIELD, CollisionMask.TURRET };
+        var collidesWith = new CollisionMask[] { CollisionMask.SHIELD, CollisionMask.TURRET, CollisionMask.PLAYER_PROJECTILE };
 
         var name = new Name(energyColor.name() + " " + enemy.name());
         var position = new Position(posX, posY);
@@ -141,36 +141,6 @@ public class Factory {
         return entity;
     }
 
-    public static Entity fromSpawner(TilemapObject.Spawner spawner) {
-        var objType = TilemapObjectType.Registry.get(spawner.type);
-
-//        if (objType instanceof TilemapObjectType.Enemies) {
-//            var enemyType = (TilemapObjectType.Enemies) objType;
-//            return CharFactory.enemy(enemyType, spawner);
-//        }
-//        else if (objType instanceof TilemapObjectType.Blocks) {
-//            var blockType = (TilemapObjectType.Blocks) objType;
-//            return MapFactory.block(blockType, spawner);
-//        }
-//        else if (objType instanceof TilemapObjectType.Pickups) {
-//            var pickupType = (TilemapObjectType.Pickups) objType;
-//            return MapFactory.pickup(pickupType, spawner);
-//        }
-        // TODO: ...
-//        else if (objType instanceof TilemapObjectType.Misc) {
-//            var miscType = (TilemapObjectType.Misc) objType;
-//            switch (miscType) {
-//                case TRIGGER: return MapFactory.trigger(miscType, spawner);
-//            }
-//        }
-//        else {
-//            // Default is to spawn a player - TODO: make explicit
-//            return CharFactory.player(spawner);
-//        }
-
-        throw new GdxRuntimeException("not yet implemented");
-    }
-
     public static Entity view(OrthographicCamera worldCamera) {
         var entity = createEntity();
 
@@ -181,24 +151,6 @@ public class Factory {
         entity.add(name);
         entity.add(viewer);
         entity.add(interp);
-
-        return entity;
-    }
-
-    public static Entity solid(String name, int x, int y, int w, int h) {
-        var entity = createEntity();
-
-        entity.add(new Name(name));
-        entity.add(new Position(x, y));
-
-        var image = new Image(Main.game.assets.pixelRegion);
-        image.size.set(w, h);
-        image.tint.set(Color.SALMON);
-        entity.add(image);
-
-        var colliderBounds = new Rectangle(0, 0, w, h);
-        var collidesWith   = new CollisionMask[] {};
-        entity.add(Collider.rect(CollisionMask.SOLID, colliderBounds, collidesWith));
 
         return entity;
     }

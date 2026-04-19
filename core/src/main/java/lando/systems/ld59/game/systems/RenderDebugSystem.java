@@ -60,7 +60,6 @@ public class RenderDebugSystem extends EntitySystem {
         drawAnimators(shapes);
         drawColliders(shapes);
         drawVelocities(shapes);
-        drawMapTriggers(shapes);
     }
 
     public void drawText(SpriteBatch batch) {
@@ -194,22 +193,6 @@ public class RenderDebugSystem extends EntitySystem {
 
             shapes.filledCircle(endpoint.x, endpoint.y, circleRadius, ColorType.LIGHT.get());
             shapes.filledCircle(endpoint.x, endpoint.y, circleRadius - lineWidth, ColorType.DARK_BORDER.get());
-        }
-        shapes.setColor(prevColor);
-    }
-
-    private void drawMapTriggers(ShapeDrawer shapes) {
-        if (!drawMapTriggers) return;
-
-        var prevColor = shapes.getPackedColor();
-        for (var entity : entities) {
-            var trigger = Components.get(entity, TilemapObject.Trigger.class);
-            if (trigger == null) continue;
-
-            var color = trigger.activated
-                ? FramePool.color(0, 1, 0, 0.5f)
-                : FramePool.color(1, 1, 0, 0.5f);
-            shapes.filledRectangle(trigger.bounds, color);
         }
         shapes.setColor(prevColor);
     }

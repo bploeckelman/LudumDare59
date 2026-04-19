@@ -14,7 +14,6 @@ public class Systems {
     public static ConnectionSystem       connections;
     public static CooldownSystem         cooldown;
     public static InterpSystem           interp;
-    public static MapTriggerSystem       mapTrigger;
     public static MovementSystem         movement;
     public static ParticleSystem         particles;
     public static ProjectileSystem       projectiles;
@@ -34,7 +33,6 @@ public class Systems {
         Systems.connections      = new ConnectionSystem();
         Systems.cooldown         = new CooldownSystem();
         Systems.interp           = new InterpSystem();
-        Systems.mapTrigger       = new MapTriggerSystem();
         Systems.movement         = new MovementSystem();
         Systems.particles        = new ParticleSystem();
         Systems.projectiles      = new ProjectileSystem();
@@ -53,7 +51,6 @@ public class Systems {
         engine.addSystem(connections);
         engine.addSystem(cooldown);
         engine.addSystem(interp);
-        engine.addSystem(mapTrigger);
         engine.addSystem(movement);
         engine.addSystem(particles);
         engine.addSystem(projectiles);

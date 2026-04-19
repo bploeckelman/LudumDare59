@@ -93,7 +93,7 @@ public class Turret implements Component {
         baseAnim.depth = 100;
         baseAnim.size.set(width, width);
 
-        var bulletCollider = Collider.circ(CollisionMask.TURRET, 0,  0, width/2f);
+        var bulletCollider = Collider.circ(CollisionMask.PLAYER_PROJECTILE, 0,  0, width/2f);
         bulletCollider.collidesWith(CollisionMask.ENEMY);
 
         var energyColor = cannon.getComponent(EnergyColor.class);

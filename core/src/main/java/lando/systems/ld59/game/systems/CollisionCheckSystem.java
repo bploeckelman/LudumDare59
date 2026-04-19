@@ -18,7 +18,6 @@ import java.util.Objects;
 public class CollisionCheckSystem extends IteratingSystem {
 
     private static final String TAG = CollisionCheckSystem.class.getSimpleName();
-    private static final List<CollisionMask> ONLY_SOLIDS = Collections.singletonList(CollisionMask.SOLID);
 
     public CollisionCheckSystem() {
         super(Family.all(Position.class, Collider.class).get());
@@ -34,17 +33,6 @@ public class CollisionCheckSystem extends IteratingSystem {
         }
     }
 
-    public boolean onGround(Entity entity) {
-        return onGround(entity, false);
-    }
-
-    public boolean onGround(Entity entity, boolean ignoreSolids) {
-        // NOTE(brian): 'ignore solids' is a workaround to make sure gravity is always applied
-        //  for objects which don't interact with the tilemap / solid colliders like characters
-        var collider = Components.get(entity, Collider.class);
-        if (collider == null || ignoreSolids) return false;
-        return check(entity, ONLY_SOLIDS, 0, -1);
-    }
 
     public boolean check(Entity entity, List<CollisionMask> collidesWith, int offsetX, int offsetY) {
         return !getOverlappingEntities(entity, collidesWith, offsetX, offsetY).isEmpty();

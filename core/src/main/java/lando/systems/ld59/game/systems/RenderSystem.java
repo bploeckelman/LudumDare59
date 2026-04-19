@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.Position;
-import lando.systems.ld59.game.components.TileLayer;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.game.components.renderable.Renderable;
@@ -20,7 +19,7 @@ import java.util.Map;
 public class RenderSystem extends SortedIteratingSystem {
 
     private static final Family RENDERABLES = Family
-        .one(Image.class, Animator.class, TileLayer.class).get();
+        .one(Image.class, Animator.class).get();
 
     private static final Comparator<Entity> comparator = (e1, e2) -> {
         var r1 = Renderable.getRenderable(e1);
@@ -56,7 +55,6 @@ public class RenderSystem extends SortedIteratingSystem {
             Components.optional(entity, Image.class).ifPresent(img -> img.render(batch, pos));
             Components.optional(entity, Animator.class).ifPresent(anim -> anim.render(batch, pos));
 
-            renderTileLayer(batch, entity);
         }
     }
 
@@ -66,20 +64,5 @@ public class RenderSystem extends SortedIteratingSystem {
     public void drawInWindowSpace(SpriteBatch batch, OrthographicCamera camera) {
     }
 
-    private void renderTileLayer(SpriteBatch batch, Entity entity) {
-        var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
-        var layer = Components.get(entity, TileLayer.class);
-        if (layer == null || layer.tilemap == null) return;
-
-        // Create map renderer if one doesn't already exist for the given map
-        var tilemap = layer.tilemap;
-        var renderer = mapRenderers.computeIfAbsent(entity, e -> tilemap.newRenderer(batch));
-        renderer.setView(tilemap.camera);
-
-        // Set position and invert y so the layer renders right side up
-        layer.tileLayer.setOffsetX(pos.x);
-        layer.tileLayer.setOffsetY(-pos.y);
-        renderer.renderTileLayer(layer.tileLayer);
-    }
 
 }

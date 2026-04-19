@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.Position;
-import lando.systems.ld59.game.components.TileLayer;
 import lando.systems.ld59.utils.FramePool;
 
 public abstract class Renderable {
@@ -39,7 +38,6 @@ public abstract class Renderable {
     public static Renderable getRenderable(Entity entity) {
         if (Components.has(entity, Image.class)) return Components.get(entity, Image.class);
         if (Components.has(entity, Animator.class)) return Components.get(entity, Animator.class);
-        if (Components.has(entity, TileLayer.class)) return Components.get(entity, TileLayer.class);
         return null;
     }
 }

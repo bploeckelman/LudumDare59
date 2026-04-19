@@ -97,6 +97,11 @@ public class Main extends Game {
     }
 
     public void update(float delta) {
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
+            Flag.DEBUG_RENDER.toggle();
+        }
+
         // update things that must update every tick
         Time.update();
         tween.update(Time.delta);

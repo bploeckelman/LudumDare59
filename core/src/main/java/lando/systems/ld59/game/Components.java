@@ -29,11 +29,9 @@ public class Components {
         entry(Particle.class,       ComponentMapper.getFor(Particle.class)),
         entry(PendingConnection.class, ComponentMapper.getFor(PendingConnection.class)),
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
-        entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
-        entry(TileLayer.class,      ComponentMapper.getFor(TileLayer.class)),
-        entry(Tilemap.class,        ComponentMapper.getFor(Tilemap.class)),
         entry(Velocity.class,       ComponentMapper.getFor(Velocity.class)),
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
+        entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
 
         // Renderables --------------------------------------------------------
         entry(Animator.class,       ComponentMapper.getFor(Animator.class)),
@@ -47,10 +45,7 @@ public class Components {
 
 
         // Map Objects --------------------------------------------------------
-        entry(EnemySpawner.class, ComponentMapper.getFor(EnemySpawner.class)),
-        entry(TilemapObject.Simple.class,  ComponentMapper.getFor(TilemapObject.Simple.class)),
-        entry(TilemapObject.Spawner.class, ComponentMapper.getFor(TilemapObject.Spawner.class)),
-        entry(TilemapObject.Trigger.class, ComponentMapper.getFor(TilemapObject.Trigger.class))
+        entry(EnemySpawner.class, ComponentMapper.getFor(EnemySpawner.class))
     );
 
     private Components() { /* don't allow instantiation */ }

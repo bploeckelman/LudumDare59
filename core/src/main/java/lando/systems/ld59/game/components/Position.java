@@ -52,10 +52,6 @@ public class Position extends PointI2 implements Component {
         this(p.xi(), p.yi());
     }
 
-    public Position(TilemapObject.Spawner spawner) {
-        this(spawner.x, spawner.y);
-    }
-
     public boolean equals(int x, int y) {
         return this.x == x && this.y == y;
     }
