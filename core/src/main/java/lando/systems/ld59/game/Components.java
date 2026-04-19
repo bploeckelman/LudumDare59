@@ -5,10 +5,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.game.components.*;
-import lando.systems.ld59.game.components.renderable.Animator;
-import lando.systems.ld59.game.components.renderable.FlatShape;
-import lando.systems.ld59.game.components.renderable.Image;
-import lando.systems.ld59.game.components.renderable.Outline;
+import lando.systems.ld59.game.components.renderable.*;
 
 import java.util.Map;
 import java.util.Optional;
@@ -41,6 +38,7 @@ public class Components {
         entry(Animator.class,       ComponentMapper.getFor(Animator.class)),
         entry(Image.class,          ComponentMapper.getFor(Image.class)),
         entry(FlatShape.class,      ComponentMapper.getFor(FlatShape.class)),
+        entry(ShieldShaderRenderable.class, ComponentMapper.getFor(ShieldShaderRenderable.class)),
 
         // Combat -------------------------------------------------------------
         entry(Turret.class,         ComponentMapper.getFor(Turret.class)),

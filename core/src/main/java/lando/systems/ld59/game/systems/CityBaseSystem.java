@@ -57,7 +57,12 @@ public class CityBaseSystem extends IteratingSystem {
         }
 
         // update shield behavior
-
+        var shieldHealth = Components.get(shield, Health.class);
+        if (shieldHealth.isDead()) {
+            shield.remove(Collider.class);
+        } else {
+            shield.add(base.shieldCollider);
+        }
 
         // set City animation
         var cityHealthPercent = cityHealth.currentHealth / cityHealth.maxHealth;

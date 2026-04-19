@@ -10,8 +10,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.ShaderType;
 import lando.systems.ld59.game.Components;
+import lando.systems.ld59.game.components.Health;
 import lando.systems.ld59.game.components.Position;
 import lando.systems.ld59.game.components.renderable.*;
 import lando.systems.ld59.utils.FramePool;
@@ -61,6 +63,32 @@ public class RenderSystem extends SortedIteratingSystem {
                         Components.optional(entity, FlatShape.class).ifPresent(shape -> shape.render(batch, pos));
                     }
             );
+        }
+
+        drawShieldShader(batch);
+    }
+
+    public void drawShieldShader(SpriteBatch batch) {
+        var engine = Main.game.engine;
+        batch.setColor(Color.WHITE);
+        var shields = engine.getEntitiesFor(Family.one(ShieldShaderRenderable.class).get());
+        for (Entity shield : shields) {
+            var pos = Components.optional(shield, Position.class).orElse(Position.ZERO);
+            var shieldShader = Components.get(shield, ShieldShaderRenderable.class);
+            var health = Components.get(shield, Health.class);
+            if (health.isDead()) continue;
+            var shader = shieldShader.shaderProgram;
+            var rect = shieldShader.rect(pos);
+            batch.setShader(shader);
+
+            shader.setUniformf("u_time", accum);
+            shader.setUniformf("u_health", health.currentHealth / health.maxHealth);
+            shieldShader.noiseTexture.bind(1);
+            shader.setUniformi("u_noise", 1);
+            shieldShader.texture.bind(0);
+
+            batch.draw(shieldShader.texture, rect.x, rect.y, rect.width, rect.height);
+            batch.setShader(null);
         }
     }
 

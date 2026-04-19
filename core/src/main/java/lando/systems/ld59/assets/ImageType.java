@@ -11,6 +11,8 @@ import java.util.EnumMap;
 public enum ImageType implements AssetType<Texture> {
     //@formatter:off
       GDX("libgdx.png")
+    , SHIELD("shield.png")
+    , NOISE("noise.png")
     ;
     //@formatter:on
 
@@ -33,8 +35,8 @@ public enum ImageType implements AssetType<Texture> {
         var texParamsRepeat = new TextureLoader.TextureParameter();
         texParamsRepeat.wrapU = Texture.TextureWrap.Repeat;
         texParamsRepeat.wrapV = Texture.TextureWrap.Repeat;
-        texParamsRepeat.minFilter = Texture.TextureFilter.Nearest;
-        texParamsRepeat.magFilter = Texture.TextureFilter.Nearest;
+        texParamsRepeat.minFilter = Texture.TextureFilter.Linear;
+        texParamsRepeat.magFilter = Texture.TextureFilter.Linear;
         texParamsRepeat.genMipMaps = false;
 
         var mgr = assets.mgr;
@@ -45,7 +47,7 @@ public enum ImageType implements AssetType<Texture> {
 //            var params = isBackground ? texParamsRepeat : texParamsNormal;
             mgr.load(type.textureName, Texture.class, texParamsNormal);
 
-            Util.log(TAG, Stringf.format("texture '%s' loaded for type '%s'", type.textureName, type.name()));
+//            Util.log(TAG, Stringf.format("texture '%s' loaded for type '%s'", type.textureName, type.name()));
         }
     }
 

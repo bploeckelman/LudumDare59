@@ -11,6 +11,7 @@ import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Outline;
+import lando.systems.ld59.game.components.renderable.ShieldShaderRenderable;
 
 import static lando.systems.ld59.game.Constants.*;
 
@@ -62,6 +63,7 @@ public class Base implements Component {
         shield.add(shieldCollider);
         shield.add(new Health(SHIELD_MAX_HEALTH));
         shield.add(new CityShield());
+        shield.add(new ShieldShaderRenderable());
 
         engine.addEntity(ground);
         engine.addEntity(city);
