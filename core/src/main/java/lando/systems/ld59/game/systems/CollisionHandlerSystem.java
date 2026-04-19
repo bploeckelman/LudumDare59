@@ -5,15 +5,23 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
+import lando.systems.ld59.Main;
+import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.game.Components;
+import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionResponse;
 import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.game.signals.CollisionEvent;
 import lando.systems.ld59.game.signals.EntityEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
+import lando.systems.ld59.particles.effects.SmokeEffect;
+import lando.systems.ld59.particles.effects.TestEffect;
 import lando.systems.ld59.utils.FramePool;
 import lando.systems.ld59.utils.Util;
 
@@ -67,7 +75,12 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 
             if (Components.has(other, Projectile.class)) {
                 // both bullets
-
+                var pos = Components.get(bullet, Position.class);
+                var effectPos = new Position(pos.x, pos.y);
+                var params = new SmokeEffect.Params(effectPos);
+                var emitter = Factory.emitter(EmitterType.SMOKE, params);
+                getEngine().addEntity(emitter);
+                AudioEvent.playSound(SoundType.BOARD_CLICK);
             }
 
             var health = Components.get(other, Health.class);
@@ -84,6 +97,12 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             var damageMultiplier = 1f;
             if (bulletColor != null && entityColor != null) {
                 damageMultiplier = bulletColor.type == entityColor.type ? 3f : 1.0f;
+                var pos = Components.get(bullet, Position.class);
+                var effectPos = new Position(pos.x, pos.y);
+                var params = new SmokeEffect.Params(effectPos);
+                var emitter = Factory.emitter(EmitterType.SMOKE, params);
+                getEngine().addEntity(emitter);
+                AudioEvent.playSound(SoundType.BOARD_CLICK);
             }
             health.getHit(other, bulletDamage.damage * damageMultiplier);
             bulletDamage.damage = 0f;

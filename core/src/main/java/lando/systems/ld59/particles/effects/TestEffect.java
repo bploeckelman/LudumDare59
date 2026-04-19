@@ -3,6 +3,7 @@ package lando.systems.ld59.particles.effects;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.assets.IconType;
+import lando.systems.ld59.assets.anims.AnimPet;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.components.Position;
 import lando.systems.ld59.particles.ParticleData;
@@ -54,7 +55,7 @@ public class TestEffect implements ParticleEffect {
 
         var pool = Systems.particles.pool;
         var p = ParticleData.initializer(pool.obtain())
-//            .keyframe(IconType.HEART.get())
+            .keyframe(AnimPet.ASUKA.get().getKeyFrame(0f))
             .startPos(params.target.x, params.target.y)
             .startRotation(angle)
             .endRotation(endRot)
