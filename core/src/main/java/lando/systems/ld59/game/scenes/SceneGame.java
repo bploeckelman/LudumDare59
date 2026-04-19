@@ -53,7 +53,7 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
             var rotation = -rotationRange / 2f + deltaRotation * (i+1);
             var x = centerX + MathUtils.sinDeg(rotation) * 600f;
             var y = topY;
-            var spawner = Factory.enemySpawner(x, y);
+            var spawner = Factory.enemySpawner(x, y, i);
             engine().addEntity(spawner);
         }
 
