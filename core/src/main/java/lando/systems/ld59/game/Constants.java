@@ -8,6 +8,7 @@ public class Constants {
     public static final float ENEMY_MAX_HEALTH = 6f;
     public static final float ENEMY_PROJECTILE_DAMAGE = 5f;
     public static final float PLAYER_PROJECTILE_DAMAGE = 5f;
+    public static final float ENEMY_RAMMING_DAMAGE = 10f;
 
 
     public static final int Z_DEPTH_BACKGROUND = -100;

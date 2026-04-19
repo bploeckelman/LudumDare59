@@ -17,6 +17,8 @@ import lando.systems.ld59.game.signals.SignalEvent;
 import lando.systems.ld59.utils.FramePool;
 import lando.systems.ld59.utils.Util;
 
+import static lando.systems.ld59.game.Constants.ENEMY_RAMMING_DAMAGE;
+
 public class CollisionHandlerSystem extends EntitySystem implements Listener<SignalEvent> {
 
     private static final String TAG = CollisionHandlerSystem.class.getSimpleName();
@@ -56,6 +58,10 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                    : Components.has(overlap.entityB(), TurretPart.class) ? overlap.entityB()
                    : null;
 
+        var shield = Components.has(overlap.entityA(), CityShield.class) ? overlap.entityA()
+                   : Components.has(overlap.entityB(), CityShield.class) ? overlap.entityB()
+                   : null;
+
         if (bullet != null) {
             var other = bullet == overlap.entityA() ? overlap.entityB() : overlap.entityA();
 
@@ -85,9 +91,13 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 
         } else if (turret != null && enemy != null) {
             // turret kamikazed
-            Components.get(enemy, Health.class).getHit(enemy, 1000f);
-            Components.get(turret, Health.class).getHit(turret, 10f);
+            Components.get(enemy, Health.class).getHit(enemy, 1000f); // kill the enemy
+            Components.get(turret, Health.class).getHit(turret, ENEMY_RAMMING_DAMAGE); // do damage to the turret
 
+        } else if (shield != null) {   // shield vs non bullets
+            var other = shield == overlap.entityA() ? overlap.entityB() : overlap.entityA();
+            Components.get(other, Health.class).getHit(other, 1000f);
+            Components.get(shield, Health.class).getHit(shield, ENEMY_RAMMING_DAMAGE);
         } else {
             Util.warn(TAG, "Overlap collision that wasn't handled between: \n\t" + Util.entityString(overlap.entityA()) + " and \n\t" + Util.entityString(overlap.entityB()) + ".");
             Components.get(overlap.entityA(), Health.class).getHit(overlap.entityA(), 100f);
