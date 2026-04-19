@@ -1,9 +1,11 @@
 package lando.systems.ld59.game.scenes;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
+import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.Systems;
@@ -12,13 +14,14 @@ import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.screens.GameScreen;
 import lando.systems.ld59.utils.FramePool;
 
-import java.util.List;
+import java.util.ArrayList;import java.util.List;
 
 public class SceneGame extends Scene<GameScreen> implements InputProcessor {
 
     private final Animator cityAnimator;
+    private final List<Entity> turrets = new ArrayList<>();
 
-    public SceneGame(GameScreen screen, int turrets) {
+    public SceneGame(GameScreen screen, int numTurrets) {
         super(screen);
         var sceneContainer = Factory.createEntity();
         sceneContainer.add(new SceneContainer(this));
@@ -48,13 +51,14 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         // @formatter:on
 
         float rotationRange = 120f;
-        float deltaRotation = rotationRange / (turrets+1);
-        for (int i = 0; i < turrets; i++) {
+        float deltaRotation = rotationRange / (numTurrets+1);
+        for (int i = 0; i < numTurrets; i++) {
             var rotation = 90 + -rotationRange / 2f + deltaRotation * (i + 1);
             var x = centerX + MathUtils.cosDeg(rotation) * 600f;
             var y = -410f + MathUtils.sinDeg(rotation) * 620f;
             var turret = Factory.turret(x, y, rotation);
             engine().addEntity(turret);
+            turrets.add(turret);
         }
 
         for (int i = 0; i < 5; i++) {
@@ -85,6 +89,15 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
     public void cityAnimTest() {
         var cityAnim = (AnimBaseCity) cityAnimator.type;
         cityAnimator.play(cityAnim.next());
+    }
+
+    public void turretAnimTest() {
+        for (var entity : turrets) {
+            var turret = Components.get(entity, Turret.class);
+            var animator = Components.get(turret.cannon, Animator.class);
+            var animType = (AnimBaseTurret) animator.type;
+            animator.play(animType.nextBarrel());
+        }
     }
 
     @Override

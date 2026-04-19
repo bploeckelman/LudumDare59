@@ -14,12 +14,14 @@ import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
 import lando.systems.ld59.assets.MusicType;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
+import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.assets.anims.AnimMisc;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.scenes.Scene;
 import lando.systems.ld59.game.scenes.SceneGame;
 import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.ui.SettingsUI;
+import lando.systems.ld59.utils.FramePool;
 
 public class GameScreen extends BaseScreen {
 
@@ -99,13 +101,18 @@ public class GameScreen extends BaseScreen {
             uiStage.addActor(screenName);
         }
 
+        var margin      = 10f;
+        var buttonSize  = 50f;
+        var buttonPosY  = windowCamera.viewportHeight - margin - buttonSize;
+        var settingsPos = FramePool.vec2(windowCamera.viewportWidth - margin - buttonSize, buttonPosY);
+        var cityPos     = FramePool.vec2(settingsPos.x - margin - buttonSize, buttonPosY);
+        var turretPos   = FramePool.vec2(cityPos.x - margin - buttonSize, buttonPosY);
+
         var gearRegion = AnimMisc.GEAR.get().getKeyFrame(0f);
         var gearDrawable = new TextureRegionDrawable(gearRegion);
         var settingsButton = new VisImageButton(gearDrawable, "Settings");
-        settingsButton.setSize(50, 50);
-        settingsButton.setPosition(
-                windowCamera.viewportWidth  - 10f - settingsButton.getWidth(),
-                windowCamera.viewportHeight - 10f - settingsButton.getHeight());
+        settingsButton.setSize(buttonSize, buttonSize);
+        settingsButton.setPosition(settingsPos.x, settingsPos.y);
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -116,10 +123,8 @@ public class GameScreen extends BaseScreen {
         var cityRegion = AnimBaseCity.IDLE.get().getKeyFrame(0f);
         var cityDrawable = new TextureRegionDrawable(cityRegion);
         var cityTestButton = new VisImageButton(cityDrawable, "City Anim Test");
-        cityTestButton.setSize(50, 50);
-        cityTestButton.setPosition(
-                windowCamera.viewportWidth  - 10f - settingsButton.getWidth() - 10f - cityTestButton.getWidth(),
-                windowCamera.viewportHeight - 10f - cityTestButton.getHeight());
+        cityTestButton.setSize(buttonSize, buttonSize);
+        cityTestButton.setPosition(cityPos.x, cityPos.y);
         cityTestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -127,7 +132,20 @@ public class GameScreen extends BaseScreen {
             }
         });
 
+        var turretRegion = AnimBaseTurret.BARREL_ICON.get().getKeyFrame(0f);
+        var turretDrawable = new TextureRegionDrawable(turretRegion);
+        var turretTestButton = new VisImageButton(turretDrawable, "Turret Barrel Anim Test");
+        turretTestButton.setSize(buttonSize, buttonSize);
+        turretTestButton.setPosition(turretPos.x, turretPos.y);
+        turretTestButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                scene.turretAnimTest();
+            }
+        });
+
         uiStage.addActor(settingsButton);
         uiStage.addActor(cityTestButton);
+        uiStage.addActor(turretTestButton);
     }
 }
