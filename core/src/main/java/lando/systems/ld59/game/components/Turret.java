@@ -18,6 +18,8 @@ import lando.systems.ld59.utils.FramePool;
 
 public class Turret implements Component {
 
+    public static final float size = 200f;
+
     public static final float ANIM_DEPTH = Base.ANIM_DEPTH + 10;
 
     public final float rotation;
@@ -36,12 +38,12 @@ public class Turret implements Component {
         this.base = Factory.createEntity();
         this.cannon = Factory.createEntity();
 
-        var width = 200;
-        var height = 200;
+        var width = size;
+        var height = size;
         var baseAnim = new Animator(AnimBase.TURRET_BASE, new Vector2(0, width / 2f));
         var cannonAnim = new Animator(AnimBase.TURRET_CANNON, new Vector2(0, width / 2f));
         var baseCollider = Collider.circ(CollisionMask.TURRET, 0, 10, 80);
-        var cannonCollider = Collider.circ(CollisionMask.TURRET, 0,  96, 23);
+        var cannonCollider = Collider.circ(CollisionMask.TURRET, 96,  0, 23);
 
         baseAnim.depth = ANIM_DEPTH + 1;
         cannonAnim.depth = ANIM_DEPTH + 2;
@@ -91,6 +93,8 @@ public class Turret implements Component {
         baseAnim.depth = 100;
         baseAnim.size.set(width, width);
 
+        var bulletCollider = Collider.circ(CollisionMask.TURRET, 0,  0, width/2f);
+        bulletCollider.collidesWith(CollisionMask.ENEMY);
 
         var energyColor = cannon.getComponent(EnergyColor.class);
 
@@ -98,6 +102,7 @@ public class Turret implements Component {
         bullet.add(baseAnim);
         bullet.add(vel);
         bullet.add(new Projectile(4));
+        bullet.add(bulletCollider);
         if (energyColor != null) {
             bullet.add(energyColor);
         }

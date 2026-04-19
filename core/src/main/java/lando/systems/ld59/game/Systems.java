@@ -13,11 +13,11 @@ public class Systems {
     public static CollisionHandlerSystem collisionHandler;
     public static ConnectionSystem       connections;
     public static CooldownSystem         cooldown;
-    public static InputSystem            input;
     public static InterpSystem           interp;
     public static MapTriggerSystem       mapTrigger;
     public static MovementSystem         movement;
     public static ParticleSystem         particles;
+    public static ProjectileSystem       projectiles;
     public static RenderDebugSystem      renderDebug;
     public static RenderSystem           render;
     public static ViewSystem             view;
@@ -33,11 +33,11 @@ public class Systems {
         Systems.collisionHandler = new CollisionHandlerSystem();
         Systems.connections      = new ConnectionSystem();
         Systems.cooldown         = new CooldownSystem();
-        Systems.input            = new InputSystem();
         Systems.interp           = new InterpSystem();
         Systems.mapTrigger       = new MapTriggerSystem();
         Systems.movement         = new MovementSystem();
         Systems.particles        = new ParticleSystem();
+        Systems.projectiles      = new ProjectileSystem();
         Systems.renderDebug      = new RenderDebugSystem();
         Systems.render           = new RenderSystem();
         Systems.view             = new ViewSystem();
@@ -52,11 +52,11 @@ public class Systems {
         engine.addSystem(collisionHandler);
         engine.addSystem(connections);
         engine.addSystem(cooldown);
-        engine.addSystem(input);
         engine.addSystem(interp);
         engine.addSystem(mapTrigger);
         engine.addSystem(movement);
         engine.addSystem(particles);
+        engine.addSystem(projectiles);
         engine.addSystem(renderDebug);
         engine.addSystem(render);
         engine.addSystem(view);

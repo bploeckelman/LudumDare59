@@ -59,7 +59,6 @@ public class RenderDebugSystem extends EntitySystem {
         drawPositions(shapes);
         drawAnimators(shapes);
         drawColliders(shapes);
-        drawGravities(shapes);
         drawVelocities(shapes);
         drawMapTriggers(shapes);
     }
@@ -149,42 +148,6 @@ public class RenderDebugSystem extends EntitySystem {
                     }
                 }
             }
-        }
-        shapes.setColor(prevColor);
-    }
-
-    private void drawGravities(ShapeDrawer shapes) {
-        if (!drawGravities) return;
-
-        var gravityLength = 10f;
-        var endpoint = FramePool.vec2();
-        var triangleOffset = FramePool.vec2(4f, 8f);
-
-        var prevColor = shapes.getPackedColor();
-        for (var entity : entities) {
-            var grav = Components.get(entity, Gravity.class);
-            if (grav == null) continue;
-
-            var pos = Components.get(entity, Position.class);
-            if (pos == null) continue;
-
-            endpoint.set(
-                pos.x + gravityLength * GRAVITY_DIR.x,
-                pos.y + gravityLength * GRAVITY_DIR.y);
-
-            shapes.line(pos.x, pos.y, endpoint.x, endpoint.y);
-
-            shapes.filledTriangle(
-                endpoint.x, endpoint.y,
-                endpoint.x - triangleOffset.x, endpoint.y - triangleOffset.y,
-                endpoint.x + triangleOffset.x, endpoint.y - triangleOffset.y,
-                ColorType.DARK.get());
-
-            shapes.triangle(
-                endpoint.x, endpoint.y,
-                endpoint.x - triangleOffset.x, endpoint.y - triangleOffset.y,
-                endpoint.x + triangleOffset.x, endpoint.y - triangleOffset.y,
-                1f, JoinType.SMOOTH, ColorType.DARK_BORDER.get().toFloatBits());
         }
         shapes.setColor(prevColor);
     }

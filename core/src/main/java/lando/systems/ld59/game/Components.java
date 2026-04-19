@@ -23,16 +23,11 @@ public class Components {
         entry(Emitter.class,        ComponentMapper.getFor(Emitter.class)),
         entry(EnemyTag.class,       ComponentMapper.getFor(EnemyTag.class)),
         entry(EnergyColor.class,    ComponentMapper.getFor(EnergyColor.class)),
-        entry(Friction.class,       ComponentMapper.getFor(Friction.class)),
-        entry(Gravity.class,        ComponentMapper.getFor(Gravity.class)),
         entry(Id.class,             ComponentMapper.getFor(Id.class)),
-        entry(Input.class,          ComponentMapper.getFor(Input.class)),
         entry(Interp.class,         ComponentMapper.getFor(Interp.class)),
         entry(Name.class,           ComponentMapper.getFor(Name.class)),
         entry(Particle.class,       ComponentMapper.getFor(Particle.class)),
         entry(PendingConnection.class, ComponentMapper.getFor(PendingConnection.class)),
-        entry(Pickup.class,         ComponentMapper.getFor(Pickup.class)),
-        entry(Player.class,         ComponentMapper.getFor(Player.class)),
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
         entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
         entry(TileLayer.class,      ComponentMapper.getFor(TileLayer.class)),
@@ -48,6 +43,7 @@ public class Components {
         entry(Turret.class,         ComponentMapper.getFor(Turret.class)),
         entry(TurretPattern.class,  ComponentMapper.getFor(TurretPattern.class)),
         entry(Projectile.class,     ComponentMapper.getFor(Projectile.class)),
+        entry(Health.class,         ComponentMapper.getFor(Health.class)),
 
 
         // Map Objects --------------------------------------------------------

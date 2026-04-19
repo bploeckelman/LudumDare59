@@ -1,12 +1,10 @@
 package lando.systems.ld59.game.signals;
 
-import lando.systems.ld59.game.components.Pickup;
 import lando.systems.ld59.game.components.TilemapObject;
 
 public interface TriggerEvent extends SignalEvent {
 
     static void dialog(TilemapObject.Trigger trigger) { signal.dispatch(new Dialog(trigger)); }
-    static void collect(Pickup.Type type)             { signal.dispatch(new Collect(type)); }
 
     class Dialog implements TriggerEvent {
         public final String key;
@@ -16,10 +14,4 @@ public interface TriggerEvent extends SignalEvent {
         }
     }
 
-    class Collect implements TriggerEvent {
-        public final Pickup.Type pickupType;
-        private Collect(Pickup.Type pickupType) {
-            this.pickupType = pickupType;
-        }
-    }
 }

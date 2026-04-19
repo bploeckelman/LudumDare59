@@ -72,8 +72,8 @@ public class MovementSystem extends IteratingSystem {
                 var hitEntity = collisionCheckSystem.getFirstOverlappingEntity(entity, sign, 0);
                 if (hitEntity != null) {
                     var collisionEvent = CollisionEvent.move(entity, hitEntity, sign, 0);
-                    if (collisionEvent.response().stopVelocity()) velocity.stopX();
-                    if (collisionEvent.response().stopMovement()) break;
+//                    if (collisionEvent.response().stopVelocity()) velocity.stopX();
+//                    if (collisionEvent.response().stopMovement()) break;
                 }
 
                 movePixelsX -= sign;
@@ -92,8 +92,8 @@ public class MovementSystem extends IteratingSystem {
                 var hitEntity = collisionCheckSystem.getFirstOverlappingEntity(entity, 0, sign);
                 if (hitEntity != null) {
                     var collisionEvent = CollisionEvent.move(entity, hitEntity, 0, sign);
-                    if (collisionEvent.response().stopVelocity()) velocity.stopY();
-                    if (collisionEvent.response().stopMovement()) break;
+//                    if (collisionEvent.response().stopVelocity()) velocity.stopY();
+//                    if (collisionEvent.response().stopMovement()) break;
                 }
 
                 movePixelsY -= sign;

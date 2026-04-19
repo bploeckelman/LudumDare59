@@ -101,6 +101,7 @@ public class Factory {
         var velocity = new Velocity(velX, velY);
         var animator = new Animator(animType, new Vector2(size, size), animOrigin);
         var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, size / 2f, collidesWith);
+        var health = new Health(5);
 
         entity.add(name);
         entity.add(tag);
@@ -108,6 +109,7 @@ public class Factory {
         entity.add(velocity);
         entity.add(animator);
         entity.add(collider);
+        entity.add(health);
         return entity;
     }
 

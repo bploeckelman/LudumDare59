@@ -96,9 +96,9 @@ public abstract class Scene<ScreenType extends BaseScreen> implements Listener<S
             .map(TilemapObject.Spawner::get)
             .forEach(spawner -> {
                 var entity = spawnEntity(spawner);
-                if (Components.has(entity, Player.class)) {
-                    player = entity;
-                }
+//                if (Components.has(entity, Player.class)) {
+//                    player = entity;
+//                }
             });
     }
 }
