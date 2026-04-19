@@ -33,13 +33,4 @@ public class EnemyTag implements Component {
         alive = true;
     }
 
-
-    @SuppressWarnings("unchecked")
-    public static <E extends EnemyTag> E getEnemyComponent(Entity entity) {
-        var enemy = Components.get(entity, EnemyTag.class);
-        if (enemy != null) {
-            return (E) enemy;
-        }
-        return null;
-    }
 }

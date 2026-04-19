@@ -17,8 +17,7 @@ public class EnemySystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float delta) {
-        var enemy = EnemyTag.getEnemyComponent(entity);
-        if (enemy == null) return;
+        var enemy = Components.get(entity, EnemyTag.class);
 
         if      (EnemyTag.State.MOVE == enemy.state) move(entity, enemy, delta);
         else if (EnemyTag.State.SHOOT == enemy.state) shoot(entity, enemy, delta);

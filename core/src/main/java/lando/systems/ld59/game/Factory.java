@@ -83,17 +83,15 @@ public class Factory {
         }
         tag.state = EnemyTag.State.MOVE;
         tag.type = EnemyTag.EnemyType.FLYER;
-        var width = animType.get().getKeyFrame(0).getRegionWidth();
-        var height = animType.get().getKeyFrame(0).getRegionHeight();
-        Util.log("Factory", "Creating enemy ship with anim type: " + animType + " width: " + width + " height: " + height);
-        var animOrigin = new Vector2(width / 2f, height / 2f);
+        var size = 32f;
+        var animOrigin = new Vector2(size / 2f, size / 2f);
         var collidesWith = new CollisionMask[] { CollisionMask.COCKPIT_SHIELD, CollisionMask.TURRET };
 
         var name = new Name(energyColor.name() + " " + enemy.name());
         var position = new Position(posX, posY);
         var velocity = new Velocity(velX, velY);
-        var animator = new Animator(animType, animOrigin);
-        var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, width/2f, collidesWith);
+        var animator = new Animator(animType, new Vector2(size, size), animOrigin);
+        var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, size / 2f, collidesWith);
 
         entity.add(name);
         entity.add(tag);

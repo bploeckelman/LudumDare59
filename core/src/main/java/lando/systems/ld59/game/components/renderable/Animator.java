@@ -34,6 +34,11 @@ public class Animator extends Renderable implements Component {
         this.rotationOrigin.set(origin);
     }
 
+    public Animator(AnimType type, Vector2 size, Vector2 origin) {
+        this(type, origin);
+        this.size.set(size);
+    }
+
     public Animator(Animation<TextureRegion> animation) {
         this(animation.getKeyFrame(0));
         this.animation = animation;
