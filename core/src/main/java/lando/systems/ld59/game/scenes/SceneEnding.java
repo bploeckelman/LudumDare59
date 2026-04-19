@@ -8,10 +8,6 @@ public class SceneEnding extends Scene<GameScreen> {
     public SceneEnding(GameScreen screen) {
         super(screen);
 
-        createView(640, 360);
-        createMap("maps/finale.tmx");
 
-        // Follow the player
-        screen.engine.getSystem(ViewSystem.class).target(player);
     }
 }

@@ -26,7 +26,6 @@ public class EnemySystem extends IteratingSystem {
                 continue;
             }
             processEntity(entity, dt);
-
         }
     }
 
