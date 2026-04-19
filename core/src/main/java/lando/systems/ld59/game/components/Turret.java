@@ -85,6 +85,10 @@ public class Turret implements Component {
         var bullet = Factory.createEntity();
         var cannonPos = cannon.getComponent(Position.class);
         var energyColor = cannon.getComponent(EnergyColor.class);
+        if (energyColor == null) {
+            // no energy, no bullet
+            return;
+        }
 
         var pos = new Position(cannonPos.x + 100, cannonPos.y );
         Vector2 tempVec = FramePool.vec2();

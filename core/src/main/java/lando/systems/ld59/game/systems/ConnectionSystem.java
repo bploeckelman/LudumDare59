@@ -95,16 +95,12 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
             // Create a pending connection if there isn't one...
             if (pendingConnection == null) {
                 var entity = Factory.createEntity();
-                entity.add(Connection.createPending(entity, baseButton));
+                var pConn = Connection.createPending(entity, baseButton);
+                entity.add(pConn);
                 getEngine().addEntity(entity);
 
                 // remove the connection in the basebutton
-//                var conn = getConnectionEntityWithBaseButton(baseButton);
-//                if (conn != null) {
-//                    var connection = Components.get(conn, Connection.class);
-//                    connection.removeConnection();
-//                    EntityEvent.remove(conn);
-//                }
+                cleanUpReplacedConnections(pConn);
             }
             // ...otherwise update the existing pending connection...
             else {
@@ -180,7 +176,13 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                     }
                 }
             }
-
+        } else if (pendingConnection.hasBaseButton()){
+            var baseButtonConnections = getConnectionEntityWithBaseButton(pendingConnection.getBaseButton());
+            for (int i = 0; i < baseButtonConnections.size; i++) {
+                var connection  = Components.get(baseButtonConnections.get(i), Connection.class);
+                connection.removeConnection();
+                EntityEvent.remove(baseButtonConnections.get(i));
+            }
         } else {
             // shouldn't be calling this when it isn't about to replace a connection
         }
