@@ -20,9 +20,6 @@ public class Velocity implements Component {
     public final Vector2 value = new Vector2();
     public final Vector2 remainder = new Vector2();
 
-    public float maxFallSpeed = Constants.MOVE_SPEED_MAX_FALL;
-    public float maxHorizontalSpeedAir = Constants.MOVE_SPEED_MAX_AIR;
-    public float maxHorizontalSpeedGround = Constants.MOVE_SPEED_MAX_GROUND;
 
     public Velocity() {
         this(0, 0);
@@ -34,9 +31,6 @@ public class Velocity implements Component {
 
     public Velocity(Velocity velocity) {
         this(velocity.value.x, velocity.value.y, velocity.remainder.x, velocity.remainder.y);
-        this.maxFallSpeed = velocity.maxFallSpeed;
-        this.maxHorizontalSpeedAir = velocity.maxHorizontalSpeedAir;
-        this.maxHorizontalSpeedGround = velocity.maxHorizontalSpeedGround;
     }
 
     private Velocity(float x, float y, float xRemainder, float yRemainder) {

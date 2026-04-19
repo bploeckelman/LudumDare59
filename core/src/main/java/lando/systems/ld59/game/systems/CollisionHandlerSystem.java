@@ -57,8 +57,14 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
         if (bullet != null) {
             var other = bullet == overlap.entityA() ? overlap.entityB() : overlap.entityA();
 
+            if (Components.has(other, Projectile.class)) {
+                // both bullets
+
+            }
+
             var health = Components.get(other, Health.class);
             var bulletDamage = Components.get(bullet, Projectile.class);
+            var bulletHealth = Components.get(bullet, Health.class);
 
             if (health.isDead() || bulletDamage.damage <= 0) {
                 // don't let dead things interact
@@ -72,10 +78,11 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 damageMultiplier = bulletColor.type == entityColor.type ? 3f : 1.0f;
             }
             health.getHit(other, bulletDamage.damage * damageMultiplier);
-            bulletDamage.damage = 0;
+            bulletDamage.damage = 0f;
+            bulletHealth.getHit(bullet, 2f);
 
         } else {
-            Util.warn(TAG, "Overlap collision that wasn't handled between: " + overlap.entityA() + " and " + overlap.entityB() + ".");
+            Util.warn(TAG, "Overlap collision that wasn't handled between: \n\t" + Util.entityString(overlap.entityA()) + " and \n\t" + Util.entityString(overlap.entityB()) + ".");
             Components.get(overlap.entityA(), Health.class).getHit(overlap.entityA(), 100f);
             Components.get(overlap.entityB(), Health.class).getHit(overlap.entityB(), 100f);
         }

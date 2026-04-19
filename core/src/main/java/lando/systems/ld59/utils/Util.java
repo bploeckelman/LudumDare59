@@ -49,6 +49,12 @@ public class Util {
         return Optional.ofNullable(Util.findScene(engine)).map(Scene::player);
     }
 
+    public static String entityString(Entity entity) {
+        StringBuilder sb = new StringBuilder();
+        entity.getComponents().forEach(c -> sb.append(c.getClass().getSimpleName()).append(", "));
+        return sb.toString();
+    }
+
     // ------------------------------------------------------------------------
     // Collection / Stream related
     // ------------------------------------------------------------------------

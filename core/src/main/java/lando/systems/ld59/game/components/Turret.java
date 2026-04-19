@@ -50,8 +50,8 @@ public class Turret implements Component {
         this.rotation = rot;
         this.base = Factory.createEntity();
         this.cannon = Factory.createEntity();
-        this.baseOutline = new Outline(Color.MAGENTA, Color.CLEAR_WHITE, 2f);
-        this.cannonOutline = new Outline(Color.MAGENTA, Color.CLEAR_WHITE, 4f);
+        this.baseOutline = new Outline(Color.MAGENTA, Color.CLEAR_WHITE, 1f);
+        this.cannonOutline = new Outline(Color.MAGENTA, Color.CLEAR_WHITE, 2f);
 
         var width = size;
         var height = size;
@@ -141,6 +141,7 @@ public class Turret implements Component {
         bullet.add(vel);
         bullet.add(new Projectile(4));
         bullet.add(bulletCollider);
+        bullet.add(new Health(1));
         if (energyColor != null) {
             bullet.add(energyColor);
         }

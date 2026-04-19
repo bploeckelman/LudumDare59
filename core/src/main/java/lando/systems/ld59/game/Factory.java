@@ -17,6 +17,8 @@ import lando.systems.ld59.particles.ParticleEffectParams;
 
 import java.util.List;
 
+import static lando.systems.ld59.game.Constants.TURRET_MAX_HEALTH;
+
 public class Factory {
 
     /**
@@ -52,7 +54,7 @@ public class Factory {
 
         var position = new Position(x, y);
 
-        var health = new Health(100);
+        var health = new Health(TURRET_MAX_HEALTH);
         var turret = new Turret(Main.game.engine, entity, position, rotation,  health);
 
         entity.add(position);

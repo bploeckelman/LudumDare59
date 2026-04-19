@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import lando.systems.ld59.game.Components;
-import lando.systems.ld59.game.components.EnemyTag;
 import lando.systems.ld59.game.components.Health;
 import lando.systems.ld59.game.components.Projectile;
 
@@ -18,8 +17,8 @@ public class ProjectileSystem  extends IteratingSystem  {
     public void update (float dt) {
         for (int i = getEntities().size() - 1; i>= 0;  i--) {
             var entity = getEntities().get(i);
-            var projectile = Components.get(entity, Projectile.class);
-            if (projectile.damage <= 0) {
+            var health = Components.get(entity, Health.class);
+            if (health.isDead()) {
                 getEngine().removeEntity(entity);
                 continue;
             }

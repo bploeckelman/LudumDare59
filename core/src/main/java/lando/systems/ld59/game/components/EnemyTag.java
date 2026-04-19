@@ -56,6 +56,7 @@ public class EnemyTag implements Component {
         bullet.add(new Velocity(0, -100));
         bullet.add(new Projectile(4));
         bullet.add(bulletCollider);
+        bullet.add(new Health(1));
         if (energyColor != null) {
             bullet.add(energyColor);
         }
