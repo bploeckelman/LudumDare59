@@ -36,7 +36,7 @@ gwt {
   compiler.optimize = 9
   compiler.strict = true
   //// The next line can be useful to uncomment if you want output that hasn't been obfuscated.
-//  compiler.style = "DETAILED"
+  compiler.style = "DETAILED"
 
   sourceLevel = '1.11'
 

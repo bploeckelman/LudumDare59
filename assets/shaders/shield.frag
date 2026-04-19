@@ -12,7 +12,7 @@ vec4 getTexture(vec2 offset) {
 }
 
 float edge(vec4 original) {
-    float edge = 0;
+    float edge = 0.;
     if (original.r > 0.) {
         float pix = 1./1000;
         edge += 1. - getTexture(vec2(0, pix)).r;

@@ -111,10 +111,10 @@ public class Turret implements Component {
         var bullet = Factory.createEntity();
         var cannonPos = cannon.getComponent(Position.class);
         var energyColor = cannon.getComponent(EnergyColor.class);
-        if (energyColor == null) {
-            // no energy, no bullet
-            return;
-        }
+//        if (energyColor == null) {
+//            // no energy, no bullet
+//            return;
+//        }
 
         var pos = new Position(cannonPos.x + 100, cannonPos.y );
         var tempVec = FramePool.vec2(60, 0).rotateDeg(cannonRotation.floatValue());
@@ -129,7 +129,11 @@ public class Turret implements Component {
         var baseAnim = new Animator(Main.game.assets.pixelRegion);
         baseAnim.depth = 100;
         baseAnim.size.set(width, width);
-        baseAnim.tint.set(energyColor.getColor());
+        if (energyColor != null) {
+            baseAnim.tint.set(energyColor.getColor());
+        } else {
+            baseAnim.tint.set(1f, 1f, 1f, 1f);
+        }
         baseAnim.origin.set(width / 2f, width / 2f);
 
         var collidesWith = new CollisionMask[] { CollisionMask.ENEMY, CollisionMask.ENEMY_PROJECTILE };
