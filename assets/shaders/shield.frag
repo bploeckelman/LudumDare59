@@ -14,7 +14,7 @@ vec4 getTexture(vec2 offset) {
 float edge(vec4 original) {
     float edge = 0.;
     if (original.r > 0.) {
-        float pix = 1./1000;
+        float pix = 1./1000.;
         edge += 1. - getTexture(vec2(0, pix)).r;
         edge += 1. - getTexture(vec2(pix, pix)).r;
         edge += 1. - getTexture(vec2(pix, 0)).r;
@@ -50,5 +50,5 @@ void main() {
     vec4 finalColor = vec4(texColor.r * shieldColor, texColor.b * mainStength);
 //    gl_FragColor = vec4(edge(texColor));
     finalColor = mix(finalColor, vec4(backColor, 1.), edge(texColor));
-    gl_FragColor = finalColor;
+    gl_FragColor = finalColor * v_color;
 }
