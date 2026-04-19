@@ -10,9 +10,10 @@ import lando.systems.ld59.game.components.collision.CollisionCirc;import lando.s
 
 public class TurretSystem extends IteratingSystem {
 
-
+    public float shotInterval = 0.125f;
     public float shootDelay = 0.5f;
     public boolean shootThisFrame = false;
+    public int shotCount = 0;
 
     public TurretSystem() {
         super(Family.one(Turret.class).get());
@@ -22,9 +23,10 @@ public class TurretSystem extends IteratingSystem {
     public void update (float dt) {
         shootDelay -=dt;
         shootThisFrame = false;
-        if (shootDelay <= 0 ) {
+        while (shootDelay <= 0 ) {
             shootThisFrame = true;
-            shootDelay += .5f;
+            shootDelay += shotInterval;
+            shotCount++;
         }
         for (int i = 0; i < getEntities().size(); ++i) {
             processEntity(getEntities().get(i), dt);
@@ -41,7 +43,7 @@ public class TurretSystem extends IteratingSystem {
         var gunAnim = Components.get(turret.cannon, Animator.class);
         var interp = Components.optional(turret.cannon, Interp.class);
         var turretPattern = Components.optional(turret.cannon, TurretPattern.class);
-        float targetRotation = 90;
+        float targetRotation = turret.rotation;
         if (interp.isPresent() && turretPattern.isPresent()) {
             float extents = turretPattern.get().angleExtents();
              targetRotation = turret.rotation + interp.get().apply(-extents, extents);
@@ -70,9 +72,14 @@ public class TurretSystem extends IteratingSystem {
         if (interp.isEmpty() || turretPattern.isEmpty()) {
             // we need to attach something
             canShoot = false;
+            return;
         }
 
-            if (shootThisFrame && canShoot)  {
+        if (shotCount % turretPattern.get().getShotMod() != 0) {
+            canShoot = false;
+        }
+
+        if (shootThisFrame && canShoot)  {
             turret.shoot();
         }
 

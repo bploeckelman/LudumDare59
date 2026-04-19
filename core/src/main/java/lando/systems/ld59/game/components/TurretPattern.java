@@ -33,4 +33,13 @@ public class TurretPattern implements Component {
             default: return 0;
         }
     }
+
+    public int getShotMod() {
+        switch (type) {
+            case LINE: return 2;
+            case FAN: return 1;
+            case SWEEP: return 3;
+            default: return 1;
+        }
+    }
 }

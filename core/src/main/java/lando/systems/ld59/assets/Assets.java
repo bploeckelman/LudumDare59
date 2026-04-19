@@ -32,6 +32,7 @@ public class Assets implements Disposable {
 
     public final Texture pixel;
     public TextureRegion pixelRegion;
+    public Animation<TextureRegion> pixelAnimation;
 
     public NinePatch plainNine;
     public NinePatch dimNine;
@@ -59,6 +60,8 @@ public class Assets implements Disposable {
 
             pixel = new Texture(pixmap);
             pixelRegion = new TextureRegion(pixel);
+
+            pixelAnimation = new Animation<>(0.1f, pixelRegion);
         }
         disposables.add(pixmap);
         disposables.add(pixel);

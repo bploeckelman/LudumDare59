@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.anims.AnimBase;
 import lando.systems.ld59.assets.anims.AnimBaseButton;
 import lando.systems.ld59.game.Components;
@@ -83,6 +84,8 @@ public class Turret implements Component {
 
         var bullet = Factory.createEntity();
         var cannonPos = cannon.getComponent(Position.class);
+        var energyColor = cannon.getComponent(EnergyColor.class);
+
         var pos = new Position(cannonPos.x + 100, cannonPos.y );
         Vector2 tempVec = FramePool.vec2();
         tempVec.set(60, 0);
@@ -93,14 +96,15 @@ public class Turret implements Component {
         float totalRotation = cannonRotation;
         var vel = new Velocity(MathUtils.cosDeg(totalRotation) * 100, MathUtils.sinDeg(totalRotation) * 100);
 
-        var baseAnim = new Animator(AnimBaseButton.BLUE_ON, new Vector2(width / 2f, width / 2f));
+        var baseAnim = new Animator(Main.game.assets.pixelRegion);
         baseAnim.depth = 100;
         baseAnim.size.set(width, width);
+        baseAnim.tint.set(energyColor.getColor());
+        baseAnim.origin.set(width / 2f, width / 2f);
 
         var bulletCollider = Collider.circ(CollisionMask.PLAYER_PROJECTILE, 0,  0, width/2f);
         bulletCollider.collidesWith(CollisionMask.ENEMY);
 
-        var energyColor = cannon.getComponent(EnergyColor.class);
 
         bullet.add(pos);
         bullet.add(baseAnim);
