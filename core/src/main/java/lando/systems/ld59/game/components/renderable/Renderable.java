@@ -38,6 +38,7 @@ public abstract class Renderable {
     public static Renderable getRenderable(Entity entity) {
         if (Components.has(entity, Image.class)) return Components.get(entity, Image.class);
         if (Components.has(entity, Animator.class)) return Components.get(entity, Animator.class);
+        if (Components.has(entity, FlatShape.class)) return Components.get(entity, FlatShape.class);
         return null;
     }
 }

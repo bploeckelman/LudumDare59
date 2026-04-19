@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -18,7 +17,6 @@ import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.particles.ParticleEffectParams;
-import lando.systems.ld59.utils.Util;
 
 public class Factory {
 
@@ -53,7 +51,7 @@ public class Factory {
         var entity = createEntity();
 
         var position = new Position(x, y);
-        var turret = new Turret(Main.game.engine, position, rotation);
+        var turret = new Turret(Main.game.engine, entity, position, rotation);
         entity.add(position);
         entity.add(turret);
 

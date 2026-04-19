@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.Position;
 import lando.systems.ld59.game.components.renderable.Animator;
+import lando.systems.ld59.game.components.renderable.FlatShape;
 import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.game.components.renderable.Renderable;
 
@@ -19,7 +20,7 @@ import java.util.Map;
 public class RenderSystem extends SortedIteratingSystem {
 
     private static final Family RENDERABLES = Family
-        .one(Image.class, Animator.class).get();
+        .one(Image.class, Animator.class, FlatShape.class).get();
 
     private static final Comparator<Entity> comparator = (e1, e2) -> {
         var r1 = Renderable.getRenderable(e1);
@@ -54,6 +55,7 @@ public class RenderSystem extends SortedIteratingSystem {
             // Draw simple renderables
             Components.optional(entity, Image.class).ifPresent(img -> img.render(batch, pos));
             Components.optional(entity, Animator.class).ifPresent(anim -> anim.render(batch, pos));
+            Components.optional(entity, FlatShape.class).ifPresent(shape -> shape.render(batch, pos));
 
         }
     }

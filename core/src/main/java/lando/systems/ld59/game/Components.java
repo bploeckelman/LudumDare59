@@ -5,7 +5,9 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.game.components.*;
-import lando.systems.ld59.game.components.renderable.*;
+import lando.systems.ld59.game.components.renderable.Animator;
+import lando.systems.ld59.game.components.renderable.FlatShape;
+import lando.systems.ld59.game.components.renderable.Image;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +21,7 @@ public class Components {
         entry(BaseButton.class,     ComponentMapper.getFor(BaseButton.class)),
         entry(Bounds.class,         ComponentMapper.getFor(Bounds.class)),
         entry(Collider.class,       ComponentMapper.getFor(Collider.class)),
+        entry(Connection.class,     ComponentMapper.getFor(Connection.class)),
         entry(Cooldowns.class,      ComponentMapper.getFor(Cooldowns.class)),
         entry(Emitter.class,        ComponentMapper.getFor(Emitter.class)),
         entry(EnemyTag.class,       ComponentMapper.getFor(EnemyTag.class)),
@@ -27,7 +30,6 @@ public class Components {
         entry(Interp.class,         ComponentMapper.getFor(Interp.class)),
         entry(Name.class,           ComponentMapper.getFor(Name.class)),
         entry(Particle.class,       ComponentMapper.getFor(Particle.class)),
-        entry(PendingConnection.class, ComponentMapper.getFor(PendingConnection.class)),
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
         entry(Velocity.class,       ComponentMapper.getFor(Velocity.class)),
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
@@ -36,13 +38,13 @@ public class Components {
         // Renderables --------------------------------------------------------
         entry(Animator.class,       ComponentMapper.getFor(Animator.class)),
         entry(Image.class,          ComponentMapper.getFor(Image.class)),
+        entry(FlatShape.class,      ComponentMapper.getFor(FlatShape.class)),
 
         // Combat -------------------------------------------------------------
         entry(Turret.class,         ComponentMapper.getFor(Turret.class)),
         entry(TurretPattern.class,  ComponentMapper.getFor(TurretPattern.class)),
         entry(Projectile.class,     ComponentMapper.getFor(Projectile.class)),
         entry(Health.class,         ComponentMapper.getFor(Health.class)),
-
 
         // Map Objects --------------------------------------------------------
         entry(EnemySpawner.class, ComponentMapper.getFor(EnemySpawner.class))

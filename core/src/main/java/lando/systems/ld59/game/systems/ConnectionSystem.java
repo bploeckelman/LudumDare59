@@ -7,40 +7,23 @@ import com.badlogic.ashley.signals.Signal;
 import com.badlogic.ashley.systems.IteratingSystem;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
-import lando.systems.ld59.game.components.PendingConnection;
+import lando.systems.ld59.game.components.Connection;
 import lando.systems.ld59.game.signals.ConnectionEvent;
 import lando.systems.ld59.game.signals.EntityEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
-import lando.systems.ld59.utils.Util;
 
 public class ConnectionSystem extends IteratingSystem implements Listener<SignalEvent> {
 
-    private static final String TAG = ConnectionSystem.class.getSimpleName();
-
     public ConnectionSystem() {
-        super(Family.one(PendingConnection.class).get());
+        super(Family.one(Connection.class).get());
         SignalEvent.addListener(this);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        var pendingConnection = Components.get(entity, PendingConnection.class);
-        if (pendingConnection.isComplete()) {
-            var turret = pendingConnection.turret;
-            var baseButton = pendingConnection.baseButton;
-
-            if (baseButton.isEnergy()) {
-                var energyColor = baseButton.getEnergyColor();
-                turret.connectEnergy(energyColor);
-                Util.log(TAG, "Connected: energy '" + energyColor.type + "' to turret");
-                EntityEvent.remove(entity);
-            }
-            else if (baseButton.isPattern()) {
-                var turretPattern = baseButton.getTurretPattern();
-                Util.log(TAG, "Connected: pattern '" + turretPattern.type + "' to turret");
-                turret.connectPattern(turretPattern);
-                EntityEvent.remove(entity);
-            }
+        var connection = Components.get(entity, Connection.class);
+        if (connection.isPending() && connection.hasBothEndpoints()) {
+            connection.complete();
         }
     }
 
@@ -49,13 +32,18 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
         var isConnectionEvent = event instanceof ConnectionEvent;
         if (!isConnectionEvent) return;
 
-        var pendingConnection = (PendingConnection) null;
 
         // Should only be one PendingConnection at any given time, get it if there is one
         var entities = getEntities();
-        if (entities.size() > 0) {
-            var entity = entities.get(0);
-            pendingConnection = Components.get(entity, PendingConnection.class);
+        var pendingConnection = (Connection) null;
+        for (int i = 0; i < entities.size(); i++) {
+            var entity = entities.get(i);
+
+            var connection = Components.get(entity, Connection.class);
+            if (connection.isPending()) {
+                pendingConnection = connection;
+                break;
+            }
         }
 
         if (event instanceof ConnectionEvent.TouchedTurret) {
@@ -64,23 +52,26 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
             // Create a pending connection if there isn't one...
             if (pendingConnection == null) {
                 var entity = Factory.createEntity();
-                entity.add(new PendingConnection(entity, turret));
+                entity.add(Connection.createPending(entity, turret));
                 getEngine().addEntity(entity);
             }
             // ...otherwise update the existing pending connection...
             else {
                 if (pendingConnection.hasTurret()) {
                     // ...by switching if we're already connected to a different turret
-                    if (pendingConnection.turret != turret) {
-                        pendingConnection.turret = turret;
+                    if (pendingConnection.getTurret() != turret) {
+                        pendingConnection.setTurret(turret);
                     }
                     // ...or by disconnecting if we touched the same turret, i.e. removing the now empty pending connection
                     else {
-                        pendingConnection.turret = null;
+                        pendingConnection.setTurret(null);
                         EntityEvent.remove(pendingConnection.entity);
                     }
-                } else {
-                    Util.warn(TAG, "Had a pending connection that should have had a turret but didn't");
+                }
+                // ...by attaching the turret to complete a connection!
+                else {
+                    pendingConnection.setTurret(turret);
+                    // ...and allowing the next processEntity call to finalize the connection
                 }
             }
         }
@@ -90,23 +81,26 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
             // Create a pending connection if there isn't one...
             if (pendingConnection == null) {
                 var entity = Factory.createEntity();
-                entity.add(new PendingConnection(entity, baseButton));
+                entity.add(Connection.createPending(entity, baseButton));
                 getEngine().addEntity(entity);
             }
             // ...otherwise update the existing pending connection...
             else {
                 if (pendingConnection.hasBaseButton()) {
                     // ...by switching if we're already connected to a different button
-                    if (pendingConnection.baseButton != baseButton) {
-                        pendingConnection.baseButton = baseButton;
+                    if (pendingConnection.getBaseButton() != baseButton) {
+                        pendingConnection.setBaseButton(baseButton);
                     }
                     // ...or by disconnecting if we touched the same button, i.e. removing the now empty pending connection
                     else {
-                        pendingConnection.baseButton = null;
+                        pendingConnection.setBaseButton(null);
                         EntityEvent.remove(pendingConnection.entity);
                     }
-                } else {
-                    Util.warn(TAG, "Had a pending connection that should have had a baseButton but didn't");
+                }
+                // ...by attaching the button to complete a connection!
+                else {
+                    pendingConnection.setBaseButton(baseButton);
+                    // ...and allowing the next processEntity call to finalize the connection
                 }
             }
         }
