@@ -3,6 +3,7 @@ package lando.systems.ld59.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -72,12 +73,17 @@ public class RenderSystem extends SortedIteratingSystem {
         var engine = Main.game.engine;
         batch.setColor(Color.WHITE);
         var shields = engine.getEntitiesFor(Family.one(ShieldShaderRenderable.class).get());
+        batch.flush();
         for (Entity shield : shields) {
             var pos = Components.optional(shield, Position.class).orElse(Position.ZERO);
             var shieldShader = Components.get(shield, ShieldShaderRenderable.class);
             var health = Components.get(shield, Health.class);
             if (health.isDead()) continue;
             var shader = shieldShader.shaderProgram;
+            if (!shader.isCompiled()) {
+                Gdx.app.error("ShieldShader", "Compile failed: " + shader.getLog());
+                continue; // skip drawing this one instead of crashing
+            }
             var rect = shieldShader.rect(pos);
             batch.setShader(shader);
 

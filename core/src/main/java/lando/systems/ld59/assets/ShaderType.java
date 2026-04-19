@@ -29,6 +29,7 @@ public enum ShaderType implements AssetType<ShaderProgram> {
         this(new ShaderProgramParameter() {{
             vertexFile = vertexShaderPath;
             fragmentFile = fragmentShaderPath;
+            logOnCompileFailure = true;
         }});
     }
 

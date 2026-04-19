@@ -1,3 +1,6 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
 
 uniform sampler2D u_texture;
 uniform sampler2D u_noise;
@@ -23,7 +26,7 @@ float edge(vec4 original) {
         edge += 1. - getTexture(vec2(-pix, -pix)).r;
         edge += 1. - getTexture(vec2(-pix, 0)).r;
         edge += 1. - getTexture(vec2(-pix, pix)).r;
-        edge = clamp(edge, 0, 1.);
+        edge = clamp(edge, 0., 1.);
     }
     return edge;
 }
