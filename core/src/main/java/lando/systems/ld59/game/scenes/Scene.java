@@ -8,7 +8,6 @@ import com.badlogic.ashley.signals.Signal;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.*;
-import lando.systems.ld59.game.factories.MapFactory;
 import lando.systems.ld59.game.signals.EntityEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
 import lando.systems.ld59.screens.BaseScreen;
@@ -67,7 +66,6 @@ public abstract class Scene<ScreenType extends BaseScreen> implements Listener<S
     }
 
     protected void createMap(String mapPath) {
-        map = MapFactory.map(mapPath, screen.worldCamera);
         screen.engine.addEntity(map);
 
         var tilemap = Components.get(map, Tilemap.class);
