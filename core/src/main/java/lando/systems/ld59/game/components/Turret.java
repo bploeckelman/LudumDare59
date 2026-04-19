@@ -26,6 +26,7 @@ public class Turret implements Component {
 
     public final float rotation;
     public float cannonRotation;
+    public float repairTimer;
 
     private Engine engine;
 
@@ -37,8 +38,10 @@ public class Turret implements Component {
 
     private final Outline baseOutline;
     private final Outline cannonOutline;
+    public final Collider baseCollider;
+    public final Collider cannonCollider;
 
-    public Turret(Engine engine, Entity entity, Position pos, float rot) {
+    public Turret(Engine engine, Entity entity, Position pos, float rot, Health turretHealth) {
         this.engine = engine;
         this.entity = entity;
         this.pos = pos;
@@ -51,6 +54,12 @@ public class Turret implements Component {
         var width = size;
         var height = size;
 
+        var collidesWith = new CollisionMask[] { CollisionMask.ENEMY, CollisionMask.ENEMY_PROJECTILE };
+
+
+        baseCollider = Collider.circ(CollisionMask.TURRET, 0, 10, 80, collidesWith);
+        cannonCollider = Collider.circ(CollisionMask.TURRET, 96,  0, 23, collidesWith);
+
         var baseAnim = new Animator(AnimBase.TURRET_BASE, new Vector2(0, width / 2f));
         baseAnim.depth = ANIM_DEPTH + 1;
         baseAnim.size.set(width, height);
@@ -62,13 +71,23 @@ public class Turret implements Component {
         cannonAnim.rotationOrigin.set(width / 2f, height / 2f);
 
         base.add(baseAnim);
+
         base.add(baseOutline);
         base.add(new Position(pos.x, pos.y));
         base.add(Collider.circ(CollisionMask.TURRET, 0, 10, 80));
 
+        base.add(baseCollider);
+        base.add(turretHealth);
+
+
         cannon.add(cannonAnim);
+
         cannon.add(cannonOutline);
         cannon.add(new Position(pos.x -96 + MathUtils.cosDeg(rot) * 96, pos.y + MathUtils.sinDeg(rot) * 96 ));
+
+        cannon.add(turretHealth);
+        cannon.add(cannonCollider);
+
         cannon.add(new Interp(1f, Interpolation.linear, Interp.Repeat.PINGPONG));
         cannon.add(Collider.circ(CollisionMask.TURRET, 96,  0, 23));
 
@@ -111,9 +130,9 @@ public class Turret implements Component {
         baseAnim.tint.set(energyColor.getColor());
         baseAnim.origin.set(width / 2f, width / 2f);
 
-        var bulletCollider = Collider.circ(CollisionMask.PLAYER_PROJECTILE, 0,  0, width/2f);
-        bulletCollider.collidesWith(CollisionMask.ENEMY);
 
+        var collidesWith = new CollisionMask[] { CollisionMask.ENEMY, CollisionMask.ENEMY_PROJECTILE };
+        var bulletCollider = Collider.circ(CollisionMask.PLAYER_PROJECTILE, 0,  0, width/2f, collidesWith);
 
         bullet.add(pos);
         bullet.add(baseAnim);
@@ -169,14 +188,14 @@ public class Turret implements Component {
     }
 
     public Circle getBaseCollisionCircle() {
-        var collider = Components.get(base, Collider.class);
+        var collider = baseCollider;
         var pos = Components.get(base, Position.class);
         var shape = collider.shape(CollisionCirc.class);
         return shape.circle(pos);
     }
 
     public Circle getCannonCollisionCircle() {
-        var collider = Components.get(cannon, Collider.class);
+        var collider = cannonCollider;
         var pos = Components.get(cannon, Position.class);
         var shape = collider.shape(CollisionCirc.class);
         return shape.circle(pos);

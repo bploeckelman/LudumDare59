@@ -57,7 +57,7 @@ public class CollisionCirc implements CollisionShape {
     }
 
     private boolean overlapsCirc(Circle thisCirc, CollisionCirc circ, Position thatPos) {
-        return Intersector.overlaps(thisCirc, circle(thatPos));
+        return Intersector.overlaps(thisCirc, circ.circle(thatPos));
     }
 
     private boolean overlapsRect(Circle thisCirc, CollisionRect rect, Position thatPos) {

@@ -39,8 +39,36 @@ public class TurretSystem extends IteratingSystem {
 
         boolean canShoot = false;
 
-        // update gun rotation from iterp
+        var health = Components.get(entity, Health.class);
         var gunAnim = Components.get(turret.cannon, Animator.class);
+
+        health.update(dt);
+        if (health.isDead()) {
+            turret.base.remove(Collider.class);
+            turret.cannon.remove(Collider.class);
+
+            if (turret.repairTimer < 0) {
+                turret.repairTimer = 10f;
+            }
+
+            turret.repairTimer -= dt;
+            if (turret.repairTimer <= 0) {
+                // repair complete
+                health.currentHealth = health.maxHealth;
+                turret.base.add(turret.baseCollider);
+                turret.cannon.add(turret.cannonCollider);
+            }
+
+            if (health.lastHit % .5f < .1f) {
+                gunAnim.tint.set(.6f, 0f, 0f, 1f);
+            } else {
+                gunAnim.tint.set(.6f, .6f, .6f, 1f);
+            }
+
+            // don't update anything else
+            return;
+        }
+
         var interp = Components.optional(turret.cannon, Interp.class);
         var turretPattern = Components.optional(turret.cannon, TurretPattern.class);
         float targetRotation = turret.rotation;
@@ -68,10 +96,15 @@ public class TurretSystem extends IteratingSystem {
         }
 
         gunAnim.rotation = turret.cannonRotation;
+        if (health.lastHit < .1f) {
+            gunAnim.tint.set(.8f, 0f, 0f, 1f);
+        } else {
+            gunAnim.tint.set(1f, 1f, 1f, 1f);
+        }
+
 
         if (interp.isEmpty() || turretPattern.isEmpty()) {
             // we need to attach something
-            canShoot = false;
             return;
         }
 

@@ -46,8 +46,8 @@ public class EnemyTag implements Component {
         baseAnim.tint.set(energyColor.getColor());
         baseAnim.origin.set(width / 2f, width / 2f);
 
-        var bulletCollider = Collider.circ(CollisionMask.ENEMY_PROJECTILE, 0,  0, 2f);
-        bulletCollider.collidesWith(CollisionMask.TURRET);
+        var collidesWith = new CollisionMask[] { CollisionMask.TURRET, CollisionMask.CITY, CollisionMask.SHIELD };
+        var bulletCollider = Collider.circ(CollisionMask.ENEMY_PROJECTILE, 0,  0, 2f, collidesWith);
 
         var pos = entity.getComponent(Position.class);
 

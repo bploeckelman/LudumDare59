@@ -16,6 +16,7 @@ public class Health implements Component {
     public Health(float maxHealth) {
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;
+        this.lastHit = 3f;
     }
 
     public boolean isDead() {
@@ -23,7 +24,7 @@ public class Health implements Component {
     }
 
     public void update(float dt) {
-        lastHit -= dt;
+        lastHit += dt;
     }
 
     public void heal(float amount) {
@@ -35,7 +36,7 @@ public class Health implements Component {
     }
 
     public void getHit(Entity entity, float damage) {
-        lastHit = .1f;
+        lastHit = 0f;
         damage(damage);
 
         var energyColor = Components.get(entity, EnergyColor.class);

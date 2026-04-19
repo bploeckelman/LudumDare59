@@ -36,7 +36,7 @@ public class EnemySystem extends IteratingSystem {
         var health = Components.get(entity, Health.class);
         health.update(delta);
         var anim = Components.get(entity, Animator.class);
-        if (health.lastHit > 0) {
+        if (health.lastHit < .1f) {
             anim.tint.set(.8f, 0f, 0f, 1f);
         } else {
             anim.tint.set(1f, 1f, 1f, 1f);

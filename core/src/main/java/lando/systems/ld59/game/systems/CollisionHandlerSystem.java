@@ -75,9 +75,9 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             bulletDamage.damage = 0;
 
         } else {
-            Util.warn(TAG, "Overlap collision that wasn't handled");
-            EntityEvent.remove(overlap.entityA());
-            EntityEvent.remove(overlap.entityB());
+            Util.warn(TAG, "Overlap collision that wasn't handled between: " + overlap.entityA() + " and " + overlap.entityB() + ".");
+            Components.get(overlap.entityA(), Health.class).getHit(overlap.entityA(), 100f);
+            Components.get(overlap.entityB(), Health.class).getHit(overlap.entityB(), 100f);
         }
     }
 }

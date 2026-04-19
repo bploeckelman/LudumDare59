@@ -51,11 +51,13 @@ public class Factory {
         var entity = createEntity();
 
         var position = new Position(x, y);
-        var turret = new Turret(Main.game.engine, entity, position, rotation);
+
+        var health = new Health(100);
+        var turret = new Turret(Main.game.engine, entity, position, rotation,  health);
 
         entity.add(position);
         entity.add(turret);
-        entity.add(new Health(100));
+        entity.add(health);
 
         return entity;
     }
@@ -93,7 +95,7 @@ public class Factory {
         tag.type = enemy;
         var size = 32f;
         var animOrigin = new Vector2(size / 2f, size / 2f);
-        var collidesWith = new CollisionMask[] { CollisionMask.SHIELD, CollisionMask.TURRET, CollisionMask.PLAYER_PROJECTILE };
+        var collidesWith = new CollisionMask[] { CollisionMask.SHIELD, CollisionMask.TURRET, CollisionMask.PLAYER_PROJECTILE, CollisionMask.CITY };
 
         var name = new Name(energyColor.name() + " " + enemy.name());
         var position = new Position(posX, posY);
