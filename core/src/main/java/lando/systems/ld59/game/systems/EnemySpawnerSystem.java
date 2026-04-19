@@ -18,21 +18,15 @@ public class EnemySpawnerSystem extends IteratingSystem {
     private static final float SPAWN_INTERVAL = 15f;
 
     private float spawnTimer = 0f;
-    private boolean massSpawn = false;
 
     public EnemySpawnerSystem() {
         super(Family.all(EnemySpawner.class).get());
+        spawnTimer = MathUtils.random(0, 5);
     }
 
     @Override
     public void update(float delta) {
         spawnTimer += delta;
-        massSpawn = false;
-        if (spawnTimer >= SPAWN_INTERVAL) {
-            spawnTimer -= SPAWN_INTERVAL;
-            massSpawn = true;
-            Util.log("mass spawn");
-        }
         super.update(delta);
     }
 
@@ -41,33 +35,19 @@ public class EnemySpawnerSystem extends IteratingSystem {
         var spawner = Components.get(entity, EnemySpawner.class);
         var position = Components.get(entity, Position.class);
 
-        boolean shouldSpawn = massSpawn;
+        float spawnX = position.x + MathUtils.random(-100f, 100f);
+        float spawnY = position.y;
 
-        if (!massSpawn) {
-            spawner.spawnTimer += delta;
-            if (spawner.spawnTimer >= spawner.spawnInterval) {
-                spawner.spawnTimer -= spawner.spawnInterval;
-                shouldSpawn = true;
-            }
-        }
-
-        if (shouldSpawn) {
-            var massSpawnColor = EnergyColor.Type.getRandom();
-            int spawnCount = massSpawn ? 2 : 1;
-            for (int i = 0; i < spawnCount; i++) {
-                float spawnX = position.x + MathUtils.random(-100f, 100f);
-                float spawnY = position.y;
-
-                var enemy = Factory.enemyShip(spawner.enemyType.get(spawner.enemyType.size() - 1),
-                    massSpawn ? massSpawnColor : EnergyColor.Type.getRandom(),
-                    spawnX,
-                    spawnY,
-                    0,
-                    0
-                );
-
-                getEngine().addEntity(enemy);
-            }
-        }
+        spawnTimer += delta;
+        if (spawnTimer < SPAWN_INTERVAL) return;
+        var enemy = Factory.enemyShip(spawner.enemyType.get(spawner.enemyType.size() - 1),
+            EnergyColor.Type.getRandom(),
+            spawnX,
+            spawnY,
+            0,
+            0
+        );
+        getEngine().addEntity(enemy);
+        spawnTimer = 0f;
     }
 }

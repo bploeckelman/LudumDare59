@@ -57,7 +57,12 @@ public class EnemySystem extends IteratingSystem {
         var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
 
-        vel.set(0f, 0f);
+        enemy.floatTimer += delta;
+        float bobSpeed = (float) Math.sin(enemy.floatTimer * 2f) * 15f;
+        float driftSpeed = (float) Math.sin(enemy.floatTimer * 1.5f) * 10f;
+
+        vel.set(driftSpeed, bobSpeed);
+
         if (enemy.fireTimer > enemy.FIRE_RATE) {
             enemy.shoot();
             enemy.fireTimer = 0f;

@@ -16,6 +16,7 @@ public class EnemyTag implements Component {
     private Engine engine;
     public float FIRE_RATE = 2f;
     public float fireTimer = 0f;
+    public float floatTimer = 0f;
 
     public enum EnemyType {
         FLYER,

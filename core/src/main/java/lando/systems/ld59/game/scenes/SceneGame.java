@@ -57,15 +57,15 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
             engine().addEntity(turret);
         }
 
-        for (int i = 0; i < 6; i++) {
-            var x = Config.window_width / 8f * i + Config.window_width / 8f;
+        for (int i = 0; i < 5; i++) {
+            var x = Config.window_width / 8f * i + (Config.window_width / 4f);
             var y = topY;
             var spawner = Factory.enemySpawner(x, y, List.of(EnemyTag.EnemyType.SUICIDER));
             engine().addEntity(spawner);
         }
 
-        for (int i = 0; i < 6; i++) {
-            var x = Config.window_width / 8f * i + Config.window_width / 8f;
+        for (int i = 0; i < 5; i++) {
+            var x = Config.window_width / 8f * i + Config.window_width / 4f;
             var y = customY;
             var spawner = Factory.enemySpawner(x, y, List.of(EnemyTag.EnemyType.FLYER));
             engine().addEntity(spawner);
