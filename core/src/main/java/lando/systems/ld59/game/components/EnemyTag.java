@@ -3,9 +3,6 @@ package lando.systems.ld59.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
-import lando.systems.ld59.assets.SoundType;
-import lando.systems.ld59.game.Components;
-import lando.systems.ld59.game.signals.AudioEvent;
 
 public class EnemyTag implements Component {
     public final Entity entity;
@@ -35,6 +32,4 @@ public class EnemyTag implements Component {
     public EnemyTag(Entity entity) {
         this.entity = entity;
     }
-
-
 }

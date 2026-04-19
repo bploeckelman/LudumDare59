@@ -1,6 +1,7 @@
 package lando.systems.ld59.assets;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.MathUtils;
 import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld59.utils.Util;
 
@@ -68,5 +69,20 @@ public enum SoundType implements AssetType<Sound> {
             }
             container.put(type, sound);
         }
+    }
+
+    public static SoundType getRandomSineSound() {
+        SoundType[] sineSounds = {SINE_C1, SINE_D, SINE_E, SINE_F, SINE_G, SINE_A, SINE_B, SINE_C2};
+        return sineSounds[MathUtils.random(0, sineSounds.length - 1)];
+    }
+
+    public static SoundType getRandomSawSound() {
+        SoundType[] sawSounds = {SAW_C1, SAW_D, SAW_E, SAW_F, SAW_G, SAW_A, SAW_B, SAW_C2};
+        return sawSounds[MathUtils.random(0, sawSounds.length - 1)];
+    }
+
+    public static SoundType getRandomSquareSound() {
+        SoundType[] squareSounds = {SQUARE_C1, SQUARE_D, SQUARE_E, SQUARE_F, SQUARE_G, SQUARE_A, SQUARE_B, SQUARE_C2};
+        return squareSounds[MathUtils.random(0, squareSounds.length - 1)];
     }
 }
