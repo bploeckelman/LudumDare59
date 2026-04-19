@@ -22,6 +22,7 @@ public class Systems {
     public static ViewSystem             view;
     public static TurretSystem           turret;
     public static EnemySystem            enemy;
+    public static EnemySpawnerSystem     enemySpawner;
 
     public static void init(Engine engine) {
         Systems.animation        = new AnimationSystem();
@@ -40,6 +41,7 @@ public class Systems {
         Systems.view             = new ViewSystem();
         Systems.turret           = new TurretSystem();
         Systems.enemy            = new EnemySystem();
+        Systems.enemySpawner     = new EnemySpawnerSystem();
 
         engine.addSystem(animation);
         engine.addSystem(audio);
@@ -57,5 +59,6 @@ public class Systems {
         engine.addSystem(view);
         engine.addSystem(turret);
         engine.addSystem(enemy);
+        engine.addSystem(enemySpawner);
     }
 }

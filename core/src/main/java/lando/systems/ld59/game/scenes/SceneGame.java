@@ -5,10 +5,8 @@ import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.Systems;
-import lando.systems.ld59.game.components.BaseButton;
-import lando.systems.ld59.game.components.EnemyTag;
-import lando.systems.ld59.game.components.EnergyColor;
-import lando.systems.ld59.game.components.SceneContainer;
+import lando.systems.ld59.game.components.*;
+import lando.systems.ld59.game.components.EnemySpawner;
 import lando.systems.ld59.screens.GameScreen;
 import lando.systems.ld59.utils.FramePool;
 
@@ -27,6 +25,8 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         var buttonY = BaseButton.SIZE - 10;
 
         var base = Factory.base(centerX, 0f);
+        var enemySpawner = Factory.createEntity();
+        enemySpawner.add(new EnemySpawner((int) centerX, (int) topY));
         var enemy1 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX + 150, topY, 10f, -10f);
         var enemy2 = Factory.enemyShip(EnemyTag.EnemyType.getRandom(), EnergyColor.Type.getRandom(), centerX - 150, topY, -10f, -10f);
 
@@ -50,6 +50,7 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         }
 
         engine().addEntity(base);
+        engine().addEntity(enemySpawner);
         engine().addEntity(enemy1);
         engine().addEntity(enemy2);
         engine().addEntity(redButton);

@@ -49,6 +49,7 @@ public class Components {
 
 
         // Map Objects --------------------------------------------------------
+        entry(EnemySpawner.class, ComponentMapper.getFor(EnemySpawner.class)),
         entry(TilemapObject.Simple.class,  ComponentMapper.getFor(TilemapObject.Simple.class)),
         entry(TilemapObject.Spawner.class, ComponentMapper.getFor(TilemapObject.Spawner.class)),
         entry(TilemapObject.Trigger.class, ComponentMapper.getFor(TilemapObject.Trigger.class))
