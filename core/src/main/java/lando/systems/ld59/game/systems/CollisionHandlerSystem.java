@@ -110,6 +110,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             if (Components.has(other, EnemyTag.class)) {
                 // bullet collided with enemy ship
                 var pos = Components.get(bullet, Position.class);
+
                 var effectPos = new Position(pos.x, pos.y);
                 var params = new SmokeEffect.Params(effectPos);
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);

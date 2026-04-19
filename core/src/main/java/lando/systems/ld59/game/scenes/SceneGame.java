@@ -38,9 +38,6 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         var baseComp = Components.get(base, Base.class);
         this.cityAnimator = Components.get(baseComp.city, Animator.class);
 
-        var enemy1 = Factory.enemyShip(EnemyTag.EnemyType.SUICIDER, EnergyColor.Type.getRandom(), centerX + 150, topY, 10f, -10f, 32f);
-        var enemy2 = Factory.enemyShip(EnemyTag.EnemyType.FLYER, EnergyColor.Type.getRandom(), centerX - 150, customY, -10f, -10f, 32f);
-
         // @formatter:off
         var redButton      = Factory.baseButton(BaseButton.Type.RED,      centerX - 125,           buttonY);
         var greenButton    = Factory.baseButton(BaseButton.Type.GREEN,    centerX - 125 - 80,      buttonY);
@@ -61,23 +58,7 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
             turrets.add(turret);
         }
 
-        for (int i = 0; i < 5; i++) {
-            var x = Config.window_width / 8f * i + (Config.window_width / 4f);
-            var y = topY;
-            var spawner = Factory.enemySpawner(x, y, List.of(EnemyTag.EnemyType.SUICIDER, EnemyTag.EnemyType.SPLITTER));
-            engine().addEntity(spawner);
-        }
-
-        for (int i = 0; i < 5; i++) {
-            var x = Config.window_width / 8f * i + Config.window_width / 4f;
-            var y = customY;
-            var spawner = Factory.enemySpawner(x, y, List.of(EnemyTag.EnemyType.FLYER));
-            engine().addEntity(spawner);
-        }
-
         engine().addEntity(base);
-        engine().addEntity(enemy1);
-        engine().addEntity(enemy2);
         engine().addEntity(redButton);
         engine().addEntity(greenButton);
         engine().addEntity(blueButton);

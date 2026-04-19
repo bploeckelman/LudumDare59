@@ -6,6 +6,7 @@ import java.util.List;
 
 public class EnemySpawner implements Component {
 
+    public boolean fireOnce = true;
     public float spawnInterval;
     public float spawnTimer;
     public List<EnemyTag.EnemyType> enemyType;

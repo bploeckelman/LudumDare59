@@ -24,6 +24,7 @@ public class Systems {
     public static TurretSystem           turret;
     public static EnemySystem            enemy;
     public static EnemySpawnerSystem     enemySpawner;
+    public static WaveScheduleSystem     waveSchedule;
 
     public static void init(Engine engine) {
         Systems.animation        = new AnimationSystem();
@@ -44,6 +45,7 @@ public class Systems {
         Systems.turret           = new TurretSystem();
         Systems.enemy            = new EnemySystem();
         Systems.enemySpawner     = new EnemySpawnerSystem();
+        Systems.waveSchedule     = new WaveScheduleSystem();
 
         engine.addSystem(animation);
         engine.addSystem(audio);
@@ -63,5 +65,6 @@ public class Systems {
         engine.addSystem(turret);
         engine.addSystem(enemy);
         engine.addSystem(enemySpawner);
+        engine.addSystem(waveSchedule);
     }
 }

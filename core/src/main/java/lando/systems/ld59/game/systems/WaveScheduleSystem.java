@@ -1,0 +1,113 @@
+package lando.systems.ld59.game.systems;
+
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
+import lando.systems.ld59.Config;
+import lando.systems.ld59.game.Factory;
+import lando.systems.ld59.game.components.EnemyTag;
+import lando.systems.ld59.game.components.SceneContainer;
+import lando.systems.ld59.utils.Util;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class WaveScheduleSystem extends IteratingSystem {
+
+    public static class WaveEvent {
+        public float time;
+        public Runnable action;
+
+        public WaveEvent(float time, Runnable action) {
+            this.time = time;
+            this.action = action;
+        }
+    }
+
+    private float elapsedTime = 0f;
+    private int currentWaveIndex = 0;
+    private List<WaveEvent> waves = new ArrayList<>();
+
+    public WaveScheduleSystem() {
+        super(Family.all(SceneContainer.class).get());
+        setupWaves();
+    }
+
+    private void setupWaves() {
+        var centerX = Config.window_width / 2f;
+        var topY = Config.window_height;
+        var customY = 3 * topY / 4f;
+
+        // Wave 1 (1 second in)
+        waves.add(new WaveEvent(1f, () -> {
+            var spawner = Factory.enemySpawner(centerX, customY, List.of(EnemyTag.EnemyType.FLYER));
+            getEngine().addEntity(spawner);
+        }));
+
+        // Wave 2 (10 seconds)
+        waves.add(new WaveEvent(10f, () -> {
+            for (int i = 0; i < 3; i++) {
+                var x = Config.window_width / 4f * (i + 1);
+                var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.SUICIDER));
+                getEngine().addEntity(spawner);
+            }
+        }));
+
+        // Wave 3 (15 seconds)
+        waves.add(new WaveEvent(15f, () -> {
+            for (int i = 0; i < 6; i++) {
+                var x = Config.window_width / 7f * (i + 1);
+                var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.SUICIDER));
+                getEngine().addEntity(spawner);
+            }
+        }));
+
+        // Wave 4 (20 seconds)
+        waves.add(new WaveEvent(20f, () -> {
+            for (int i = 0; i < 5; i++) {
+                var x = Config.window_width / 6f * (i + 1);
+                var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.SPLITTER));
+                getEngine().addEntity(spawner);
+            }
+        }));
+
+        // Wave 5 (30 seconds)
+        waves.add(new WaveEvent(30f, () -> {
+            for (int i = 0; i < 7; i++) {
+                var x = Config.window_width / 8f * i + (Config.window_width / 4f);
+                var spawner = Factory.enemySpawner(x, topY, List.of(
+                    EnemyTag.EnemyType.SUICIDER,
+                    EnemyTag.EnemyType.SPLITTER,
+                    EnemyTag.EnemyType.FLYER
+                ));
+                getEngine().addEntity(spawner);
+            }
+        }));
+
+    }
+
+    @Override
+    public void update(float delta) {
+        elapsedTime += delta;
+
+        // Process all waves that should have triggered by now
+        while (currentWaveIndex < waves.size() &&
+               elapsedTime >= waves.get(currentWaveIndex).time) {
+            waves.get(currentWaveIndex).action.run();
+            currentWaveIndex++;
+        }
+
+        super.update(delta);
+    }
+
+    @Override
+    protected void processEntity(Entity entity, float delta) {
+        // No per-entity processing needed
+    }
+
+    // Optional: Reset the wave schedule (useful for restarting the game)
+    public void reset() {
+        elapsedTime = 0f;
+        currentWaveIndex = 0;
+    }
+}

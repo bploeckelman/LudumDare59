@@ -15,19 +15,9 @@ import lando.systems.ld59.utils.Util;
 public class EnemySpawnerSystem extends IteratingSystem {
 
     private static final String TAG = EnemySpawnerSystem.class.getSimpleName();
-    private static final float SPAWN_INTERVAL = 15f;
-
-    private float spawnTimer = 0f;
 
     public EnemySpawnerSystem() {
         super(Family.all(EnemySpawner.class).get());
-        spawnTimer = MathUtils.random(0, 5);
-    }
-
-    @Override
-    public void update(float delta) {
-        spawnTimer += delta;
-        super.update(delta);
     }
 
     @Override
@@ -35,11 +25,11 @@ public class EnemySpawnerSystem extends IteratingSystem {
         var spawner = Components.get(entity, EnemySpawner.class);
         var position = Components.get(entity, Position.class);
 
-        float spawnX = position.x + MathUtils.random(-100f, 100f);
+        float spawnX = position.x;
         float spawnY = position.y;
 
-        spawnTimer += delta;
-        if (spawnTimer < SPAWN_INTERVAL) return;
+        spawner.spawnTimer -= delta;
+        if (spawner.spawnTimer > 0) return;
         var enemy = Factory.enemyShip(spawner.enemyType.get(MathUtils.random(spawner.enemyType.size() - 1)),
             EnergyColor.Type.getRandom(),
             spawnX,
@@ -49,6 +39,9 @@ public class EnemySpawnerSystem extends IteratingSystem {
             32f
         );
         getEngine().addEntity(enemy);
-        spawnTimer = 0f;
+        spawner.spawnTimer = spawner.spawnInterval;
+        if (spawner.fireOnce) {
+            getEngine().removeEntity(entity);
+        }
     }
 }
