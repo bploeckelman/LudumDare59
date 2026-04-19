@@ -7,7 +7,9 @@ import com.badlogic.ashley.signals.Signal;
 import com.badlogic.ashley.systems.IteratingSystem;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
+import lando.systems.ld59.game.components.BaseButton;
 import lando.systems.ld59.game.components.Connection;
+import lando.systems.ld59.game.components.Turret;
 import lando.systems.ld59.game.signals.ConnectionEvent;
 import lando.systems.ld59.game.signals.EntityEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
@@ -54,6 +56,14 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                 var entity = Factory.createEntity();
                 entity.add(Connection.createPending(entity, turret));
                 getEngine().addEntity(entity);
+
+                // remove the connection in the turret
+                var conn = getConnectionEntityWithTurret(turret);
+                if (conn != null) {
+                    var connection = Components.get(conn, Connection.class);
+                    connection.removeConnection();
+                    EntityEvent.remove(conn);
+                }
             }
             // ...otherwise update the existing pending connection...
             else {
@@ -70,6 +80,14 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                 }
                 // ...by attaching the turret to complete a connection!
                 else {
+                    // remove other connection to basebutton if exists
+                    var conn = getConnectionEntityWithTurret(turret);
+                    if (conn != null) {
+                        var connection = Components.get(conn, Connection.class);
+                        connection.removeConnection();
+                        EntityEvent.remove(conn);
+                    }
+
                     pendingConnection.setTurret(turret);
                     // ...and allowing the next processEntity call to finalize the connection
                 }
@@ -83,6 +101,14 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                 var entity = Factory.createEntity();
                 entity.add(Connection.createPending(entity, baseButton));
                 getEngine().addEntity(entity);
+
+                // remove the connection in the basebutton
+                var conn = getConnectionEntityWithBaseButton(baseButton);
+                if (conn != null) {
+                    var connection = Components.get(conn, Connection.class);
+                    connection.removeConnection();
+                    EntityEvent.remove(conn);
+                }
             }
             // ...otherwise update the existing pending connection...
             else {
@@ -99,10 +125,40 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                 }
                 // ...by attaching the button to complete a connection!
                 else {
+                    // remove other connection to turret if exists
+                    var conn = getConnectionEntityWithBaseButton(baseButton);
+                    if (conn != null) {
+                        var connection = Components.get(conn, Connection.class);
+                        connection.removeConnection();
+                        EntityEvent.remove(conn);
+                    }
+
                     pendingConnection.setBaseButton(baseButton);
                     // ...and allowing the next processEntity call to finalize the connection
                 }
             }
         }
+    }
+
+    public Entity getConnectionEntityWithTurret(Turret turret) {
+        var entities = getEntities();
+        for (int i = 0; i < entities.size(); i++) {
+            var connection = Components.get(entities.get(i), Connection.class);
+            if (connection.isConnected() && connection.getTurret() == turret) {
+                return entities.get(i);
+            }
+        }
+        return null;
+    }
+
+    public Entity getConnectionEntityWithBaseButton(BaseButton baseButton) {
+        var entities = getEntities();
+        for (int i = 0; i < entities.size(); i++) {
+            var connection = Components.get(entities.get(i), Connection.class);
+            if (connection.isConnected() && connection.getBaseButton() == baseButton) {
+                return entities.get(i);
+            }
+        }
+        return null;
     }
 }

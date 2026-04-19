@@ -2,8 +2,10 @@ package lando.systems.ld59.game.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import lando.systems.ld59.Main;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.renderable.FlatShape;
+import lando.systems.ld59.game.signals.EntityEvent;
 import lando.systems.ld59.utils.Util;
 
 public class Connection implements Component {
@@ -70,4 +72,17 @@ public class Connection implements Component {
 
     public void setTurret(Turret turret) { this.turret = turret; }
     public void setBaseButton(BaseButton baseButton) { this.baseButton = baseButton; }
+
+    public void removeConnection() {
+        if (baseButton != null && turret != null) {
+            if (baseButton.isEnergy()) {
+                turret.connectEnergy(null);
+            } else if (baseButton.isPattern()) {
+                turret.connectPattern(null);
+            }
+            flatShape = null;
+            EntityEvent.remove(entity);
+        }
+
+    }
 }
