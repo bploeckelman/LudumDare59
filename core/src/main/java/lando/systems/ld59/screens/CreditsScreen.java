@@ -52,8 +52,8 @@ public class CreditsScreen extends BaseScreen {
     private class Body extends VisTable {
         private Body() {
             //setDebug(true);
-            padTop(20);
-            padBottom(20);
+            padTop(10);
+            padBottom(10);
 
             var panelLeft = new VisTable();
             var panelRight = new VisTable();
