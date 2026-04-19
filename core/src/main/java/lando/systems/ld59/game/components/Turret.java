@@ -77,18 +77,18 @@ public class Turret implements Component {
         base.add(baseOutline);
         base.add(new Position(pos.x, pos.y));
         base.add(Collider.circ(CollisionMask.TURRET, 0, 10, 80));
-
         base.add(baseCollider);
         base.add(turretHealth);
+        base.add(new TurretPart());
 
 
         cannon.add(cannonAnim);
 
         cannon.add(cannonOutline);
         cannon.add(new Position(pos.x -96 + MathUtils.cosDeg(rot) * 96, pos.y + MathUtils.sinDeg(rot) * 96 ));
-
         cannon.add(turretHealth);
         cannon.add(cannonCollider);
+        cannon.add(new TurretPart());
 
         cannon.add(new Interp(1f, Interpolation.linear, Interp.Repeat.PINGPONG));
         cannon.add(Collider.circ(CollisionMask.TURRET, 96,  0, 23));

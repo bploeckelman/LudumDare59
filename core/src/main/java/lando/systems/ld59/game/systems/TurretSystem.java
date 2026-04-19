@@ -3,6 +3,7 @@ package lando.systems.ld59.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.*;
@@ -71,6 +72,7 @@ public class TurretSystem extends IteratingSystem {
             // don't update anything else
             return;
         }
+        baseAnim.tint.set(Color.WHITE);
 
         var interp = Components.optional(turret.cannon, Interp.class);
         var turretPattern = Components.optional(turret.cannon, TurretPattern.class);

@@ -6,9 +6,11 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
+import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionResponse;
+import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.game.signals.CollisionEvent;
 import lando.systems.ld59.game.signals.EntityEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
@@ -50,8 +52,8 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                    : Components.has(overlap.entityB(), EnemyTag.class) ? overlap.entityB()
                    : null;
 
-        var turret = Components.has(overlap.entityA(), Turret.class) ? overlap.entityA()
-                   : Components.has(overlap.entityB(), Turret.class) ? overlap.entityB()
+        var turret = Components.has(overlap.entityA(), TurretPart.class) ? overlap.entityA()
+                   : Components.has(overlap.entityB(), TurretPart.class) ? overlap.entityB()
                    : null;
 
         if (bullet != null) {
@@ -80,6 +82,11 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             health.getHit(other, bulletDamage.damage * damageMultiplier);
             bulletDamage.damage = 0f;
             bulletHealth.getHit(bullet, 2f);
+
+        } else if (turret != null && enemy != null) {
+            // turret kamikazed
+            Components.get(enemy, Health.class).getHit(enemy, 1000f);
+            Components.get(turret, Health.class).getHit(turret, 10f);
 
         } else {
             Util.warn(TAG, "Overlap collision that wasn't handled between: \n\t" + Util.entityString(overlap.entityA()) + " and \n\t" + Util.entityString(overlap.entityB()) + ".");
