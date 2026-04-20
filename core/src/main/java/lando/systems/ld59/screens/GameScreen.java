@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import com.badlogic.ashley.core.Family;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
@@ -17,6 +18,8 @@ import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.assets.anims.AnimMisc;
 import lando.systems.ld59.game.Systems;
+import lando.systems.ld59.game.components.EnemyTag;
+import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.game.scenes.Scene;
 import lando.systems.ld59.game.scenes.SceneGame;
 import lando.systems.ld59.game.signals.AudioEvent;
@@ -29,6 +32,10 @@ public class GameScreen extends BaseScreen {
 
     private final SceneGame scene;
     private final SettingsUI settingsUI = new SettingsUI();
+
+    private VisLabel redEnemyCountLabel;
+    private VisLabel greenEnemyCountLabel;
+    private VisLabel blueEnemyCountLabel;
 
     public GameScreen() {
         this.scene = new SceneGame(this, 5);
@@ -65,8 +72,37 @@ public class GameScreen extends BaseScreen {
                 return;
             }
         }
-
+        updateEnemyCounts();
         engine.update(delta);
+    }
+
+    private void updateEnemyCounts() {
+        var enemies = engine.getEntitiesFor(Family.all(EnemyTag.class, EnergyColor.class).get());
+
+        int redCount = 0;
+        int greenCount = 0;
+        int blueCount = 0;
+
+        for (var entity : enemies) {
+            var energyColor = entity.getComponent(EnergyColor.class);
+            if (energyColor != null) {
+                switch (energyColor.type) {
+                    case RED:
+                        redCount++;
+                        break;
+                    case GREEN:
+                        greenCount++;
+                        break;
+                    case BLUE:
+                        blueCount++;
+                        break;
+                }
+            }
+        }
+
+        redEnemyCountLabel.setText("Red: " + redCount);
+        greenEnemyCountLabel.setText("Green: " + greenCount);
+        blueEnemyCountLabel.setText("Blue: " + blueCount);
     }
 
     @Override
@@ -101,7 +137,26 @@ public class GameScreen extends BaseScreen {
             uiStage.addActor(screenName);
         }
 
-        var margin      = 10f;
+        // Add enemy count labels
+        redEnemyCountLabel = new VisLabel("Red: 0");
+        redEnemyCountLabel.setColor(EnergyColor.RED);
+        greenEnemyCountLabel = new VisLabel("Green: 0");
+        greenEnemyCountLabel.setColor(EnergyColor.GREEN);
+        blueEnemyCountLabel = new VisLabel("Blue: 0");
+        blueEnemyCountLabel.setColor(EnergyColor.BLUE);
+
+        var margin = 10f;
+        var labelStartX = margin;
+        var labelY = windowCamera.viewportHeight - margin - 20f;
+
+        redEnemyCountLabel.setPosition(labelStartX, labelY);
+        greenEnemyCountLabel.setPosition(labelStartX + 90f, labelY);
+        blueEnemyCountLabel.setPosition(labelStartX + 200f, labelY);
+
+        uiStage.addActor(redEnemyCountLabel);
+        uiStage.addActor(greenEnemyCountLabel);
+        uiStage.addActor(blueEnemyCountLabel);
+
         var buttonSize  = 50f;
         var buttonPosY  = windowCamera.viewportHeight - margin - buttonSize;
         var settingsPos = FramePool.vec2(windowCamera.viewportWidth - margin - buttonSize, buttonPosY);
