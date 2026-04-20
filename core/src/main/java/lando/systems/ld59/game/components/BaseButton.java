@@ -12,7 +12,9 @@ public class BaseButton implements Component {
     public enum Type { BLUE, GREEN, RED, CIRCLE, SQUARE, TRIANGLE }
     private enum State { IDLE, PRESSED, ACTIVE, DISABLED }
 
-    public static final float SIZE = 72f;
+    // NOTE: actual size 72x72, slight shrink to fit in the button board slots better
+//    public static final float SIZE = 72f;
+    public static final float SIZE = 70f;
 
     public final Entity entity;
     public final Type type;

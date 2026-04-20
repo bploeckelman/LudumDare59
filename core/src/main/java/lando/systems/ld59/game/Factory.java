@@ -6,9 +6,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.AnimDepths;import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.ImageType;
+import lando.systems.ld59.assets.anims.AnimBaseButton;
 import lando.systems.ld59.assets.anims.AnimEnemy;
 import lando.systems.ld59.assets.anims.AnimMisc;
 import lando.systems.ld59.game.components.*;
@@ -17,7 +19,6 @@ import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.particles.ParticleEffectParams;
 import lando.systems.ld59.utils.Callbacks;
-import lando.systems.ld59.utils.Util;
 import lando.systems.ld59.utils.accessors.ColorAccessor;
 
 import java.util.List;
@@ -175,6 +176,31 @@ public class Factory {
         entity.add(new Health(ENEMY_MAX_HEALTH));
         entity.add(new EnergyColor(energyColorType));
         entity.add(new Name(energyColorType.name() + " " + enemyType.name()));
+
+        return entity;
+    }
+
+    public static Entity baseButtonBoard(AnimBaseButton animType, float leftOrRightEdge, float yCenter) {
+        var entity = createEntity();
+
+        var isRight = animType == AnimBaseButton.BOARD_RIGHT;
+        var isLeft = animType == AnimBaseButton.BOARD_LEFT;
+        if (!isLeft && !isRight) {
+            throw new GdxRuntimeException("Button board animation must be AnimBaseButton.[BOARD_LEFT|BOARD_RIGHT], got: " + animType.name());
+        }
+
+        var keyframe = animType.get().getKeyFrame(0f);
+        var width = keyframe.getRegionWidth();
+        var height = keyframe.getRegionHeight();
+        var x = leftOrRightEdge + (isRight ? -width : 0);
+        var y = yCenter - height / 2f;
+
+        var position = new Position(x, y);
+        var animator = new Animator(animType, new Vector2(0, 0));
+        animator.depth = AnimDepths.BUTTONS - 10;
+
+        entity.add(position);
+        entity.add(animator);
 
         return entity;
     }

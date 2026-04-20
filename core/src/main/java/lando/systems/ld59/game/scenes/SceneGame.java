@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.assets.ImageType;
-import lando.systems.ld59.assets.SoundType;
+import lando.systems.ld59.assets.anims.AnimBaseButton;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.assets.EmitterType;
@@ -15,7 +15,6 @@ import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.components.*;
-import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.game.signals.ScreenShakeEvent;
 import lando.systems.ld59.particles.effects.PetConfettiEffect;
 import lando.systems.ld59.particles.effects.ExplosionEffect;
@@ -40,30 +39,38 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
 
         createView(Config.framebuffer_width, Config.framebuffer_height);
 
-        var centerX = screen.worldCamera.viewportWidth / 2f;
-        var buttonY = BaseButton.SIZE - 10;
+        var worldCamWidth = screen.worldCamera.viewportWidth;
+        var worldCamHeight = screen.worldCamera.viewportHeight;
+        var centerX = worldCamWidth / 2f;
+        var centerY = worldCamHeight / 2f;
 
+        var background = Factory.background(ImageType.BACKGROUND, new Vector2(0, 0), new Vector2(worldCamWidth, worldCamHeight));
         var base = Factory.base(centerX, 0f);
         var baseComp = Components.get(base, Base.class);
         this.cityAnimator = Components.get(baseComp.city, Animator.class);
 
+        // Buttons -----------------------------------------------------------------------------------------------------
+        var baseButtonBoardLeft = Factory.baseButtonBoard(AnimBaseButton.BOARD_LEFT, 0, centerY);
+        var baseButtonBoardRight = Factory.baseButtonBoard(AnimBaseButton.BOARD_RIGHT, worldCamWidth, centerY);
+
+        var baseButtonBoardPosition = Components.get(baseButtonBoardLeft, Position.class);
+        var baseButtonBoardAnimator = Components.get(baseButtonBoardLeft, Animator.class);
+        var baseButtonBoardTop = baseButtonBoardPosition.y + baseButtonBoardAnimator.size.y;
+
+        var buttonDistY = 80f;
+        var boardCenterX = 48f;
+        var boardCenterYTopSlot = baseButtonBoardTop - 40f;
+
         // @formatter:off
-        // Horizontal - bottom layout
-//        var redButton      = Factory.baseButton(BaseButton.Type.RED,      centerX - 125,           buttonY);
-//        var greenButton    = Factory.baseButton(BaseButton.Type.GREEN,    centerX - 125 - 80,      buttonY);
-//        var blueButton     = Factory.baseButton(BaseButton.Type.BLUE,     centerX - 125 - 80 - 80, buttonY);
-//        var circleButton   = Factory.baseButton(BaseButton.Type.CIRCLE,   centerX + 125,           buttonY);
-//        var squareButton   = Factory.baseButton(BaseButton.Type.SQUARE,   centerX + 125 + 80,      buttonY);
-//        var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, centerX + 125 + 80 + 80, buttonY);
-        // Vertical - side layout
-        var redButton      = Factory.baseButton(BaseButton.Type.RED,      40, buttonY + 150);
-        var greenButton    = Factory.baseButton(BaseButton.Type.GREEN,    40, buttonY + 150 + 80);
-        var blueButton     = Factory.baseButton(BaseButton.Type.BLUE,     40, buttonY + 150 + 80 + 80);
-        var circleButton   = Factory.baseButton(BaseButton.Type.CIRCLE,   screen.worldCamera.viewportWidth - 40, buttonY + 150);
-        var squareButton   = Factory.baseButton(BaseButton.Type.SQUARE,   screen.worldCamera.viewportWidth - 40, buttonY + 150 + 80);
-        var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, screen.worldCamera.viewportWidth - 40, buttonY + 150 + 80 + 80);
+        var redButton      = Factory.baseButton(BaseButton.Type.RED,      boardCenterX, boardCenterYTopSlot);
+        var greenButton    = Factory.baseButton(BaseButton.Type.GREEN,    boardCenterX, boardCenterYTopSlot - buttonDistY);
+        var blueButton     = Factory.baseButton(BaseButton.Type.BLUE,     boardCenterX, boardCenterYTopSlot - buttonDistY - buttonDistY);
+        var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, worldCamWidth - boardCenterX, boardCenterYTopSlot);
+        var squareButton   = Factory.baseButton(BaseButton.Type.SQUARE,   worldCamWidth - boardCenterX, boardCenterYTopSlot - buttonDistY);
+        var circleButton   = Factory.baseButton(BaseButton.Type.CIRCLE,   worldCamWidth - boardCenterX, boardCenterYTopSlot - buttonDistY - buttonDistY);
         // @formatter:on
 
+        // Turrets------------------------------------------------------------------------------------------------------
         // Place turrets on the planet, layout follows planet curve
         // - planet center is offscreen downward
         var center = FramePool.vec2(centerX, -410f);
@@ -81,11 +88,10 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
             turrets.add(turret);
         }
 
-        var worldW = screen.worldCamera.viewportWidth;
-        var worldH = screen.worldCamera.viewportHeight;
-        engine().addEntity(Factory.background(ImageType.BACKGROUND, new Vector2(0, 0), new Vector2(worldW, worldH)));
-
+        engine().addEntity(background);
         engine().addEntity(base);
+        engine().addEntity(baseButtonBoardLeft);
+        engine().addEntity(baseButtonBoardRight);
         engine().addEntity(redButton);
         engine().addEntity(greenButton);
         engine().addEntity(blueButton);

@@ -7,8 +7,13 @@ import lando.systems.ld59.assets.AnimType;
 import java.util.EnumMap;
 
 public enum AnimBaseButton implements AnimType {
+      BOARD_LEFT
+    , BOARD_RIGHT
+    , BLANK_HIT
+    , BLANK_IDLE
+    , BLANK_ON
     // Color Energy button animations -----------------------------------------
-      BLUE_HIT
+    , BLUE_HIT
     , BLUE_IDLE
     , BLUE_ON(0.3f, Animation.PlayMode.LOOP)
     , GREEN_HIT
