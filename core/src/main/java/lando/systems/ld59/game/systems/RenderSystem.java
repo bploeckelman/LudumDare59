@@ -149,7 +149,7 @@ public class RenderSystem extends SortedIteratingSystem implements Listener<Sign
             }
             var rect = shieldShader.rect(pos);
             batch.setShader(shader);
-
+            batch.setColor(Color.WHITE);
             shader.setUniformf("u_time", accum);
             shader.setUniformf("u_health", health.currentHealth / health.maxHealth);
             shieldShader.noiseTexture.bind(1);

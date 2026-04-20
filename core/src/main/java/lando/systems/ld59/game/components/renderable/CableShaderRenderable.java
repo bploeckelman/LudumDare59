@@ -40,7 +40,7 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
         points = path.positions;
         this.path = path;
         this.shaderProgram = ShaderType.CABLE.get();
-        color = Color.WHITE;
+        color = new Color(Color.WHITE);
 
         this.mesh = new Mesh(false, MAX_NUM_VERTICES, 0,
             new VertexAttribute(VertexAttributes.Usage.Position,           NUM_COMPONENTS_POSITION, "a_position"),
@@ -55,10 +55,15 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
 
     public void render() {
 
-        this.color = connection.getColor();
+        this.color.set(connection.getColor());
         var turrent = connection.getTurret();
         if (turrent != null) {
             flowing = turrent.hasPattern();
+            if (turrent.repairTimer > 0) {
+                flowing = false;
+                color.mul(.6f);
+                color.a = 1f;
+            }
         }
 
         populateVertexArray();

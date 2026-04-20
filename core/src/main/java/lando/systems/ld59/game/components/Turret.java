@@ -135,7 +135,7 @@ public class Turret implements Component {
         //
 
         var doorAnim = new Animator(AnimBaseTurret.DOOR_CLOSE, new Vector2(0, height / 2f));
-        doorAnim.depth = AnimDepths.TURRETS + 3;
+        doorAnim.depth = AnimDepths.TURRETS + 4;
         doorAnim.size.set(width, height);
         doorAnim.rotation = rotation;
         doorAnim.stateTime = doorAnim.animation.getAnimationDuration();

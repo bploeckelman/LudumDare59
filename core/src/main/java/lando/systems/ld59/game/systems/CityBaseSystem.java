@@ -60,6 +60,13 @@ public class CityBaseSystem extends IteratingSystem {
             var sheildHealth = Components.get(shield, Health.class);
             sheildHealth.currentHealth = sheildHealth.maxHealth;
 
+            // Remove all connections
+            var connectionEntities = engine.getEntitiesFor(Family.all(Connection.class).get());
+            for (Entity connectionEntity : connectionEntities) {
+                var connection = Components.get(connectionEntity, Connection.class);
+                connection.removeConnection();
+            }
+
             // Fix Turrets
             var turrets = engine.getEntitiesFor(Family.all(Turret.class).get());
             for (int i = turrets.size() -1; i>= 0; i--) {
