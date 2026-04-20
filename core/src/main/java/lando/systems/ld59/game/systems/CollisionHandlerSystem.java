@@ -28,6 +28,7 @@ import lando.systems.ld59.utils.FramePool;
 import lando.systems.ld59.utils.Util;
 
 import static lando.systems.ld59.game.Constants.ENEMY_RAMMING_DAMAGE;
+import static lando.systems.ld59.game.Constants.MATCHING_COLOR_DAMAGE_MULTIPLIER;
 
 public class CollisionHandlerSystem extends EntitySystem implements Listener<SignalEvent> {
 
@@ -117,7 +118,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             var entityColor = Components.get(other, EnergyColor.class);
             var damageMultiplier = 1f;
             if (bulletColor != null && entityColor != null) {
-                damageMultiplier = bulletColor.type == entityColor.type ? 3f : 1.0f;
+                damageMultiplier = bulletColor.type == entityColor.type ? MATCHING_COLOR_DAMAGE_MULTIPLIER : 1.0f;
             }
 
 
