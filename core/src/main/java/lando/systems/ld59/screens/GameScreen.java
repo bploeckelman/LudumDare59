@@ -1,5 +1,6 @@
 package lando.systems.ld59.screens;
 
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -10,27 +11,23 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.tommyettinger.digital.Stringf;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
-import com.badlogic.ashley.core.Family;
 import com.kotcrab.vis.ui.widget.VisTable;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
 import lando.systems.ld59.assets.MusicType;
-import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.assets.anims.AnimMisc;
-import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.Stats;
+import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.components.EnemyTag;
 import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.game.scenes.Scene;
 import lando.systems.ld59.game.scenes.SceneGame;
 import lando.systems.ld59.game.signals.AudioEvent;
-import lando.systems.ld59.game.systems.AudioSystem;
 import lando.systems.ld59.ui.SettingsUI;
 import lando.systems.ld59.utils.FramePool;
-import lando.systems.ld59.utils.Util;
 
 public class GameScreen extends BaseScreen {
 
@@ -183,11 +180,11 @@ public class GameScreen extends BaseScreen {
         liveEnemyCountTable = new VisTable();
 
         redEnemyCountLabel = new VisLabel("Red: 0");
-        redEnemyCountLabel.setColor(EnergyColor.RED);
+        redEnemyCountLabel.setColor(EnergyColor.COLOR_RED);
         greenEnemyCountLabel = new VisLabel("Green: 0");
-        greenEnemyCountLabel.setColor(EnergyColor.GREEN);
+        greenEnemyCountLabel.setColor(EnergyColor.COLOR_GREEN);
         blueEnemyCountLabel = new VisLabel("Blue: 0");
-        blueEnemyCountLabel.setColor(EnergyColor.BLUE);
+        blueEnemyCountLabel.setColor(EnergyColor.COLOR_BLUE);
 
         var margin = 10f;
         var labelStartX = margin;

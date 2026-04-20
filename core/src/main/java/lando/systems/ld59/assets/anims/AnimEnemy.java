@@ -26,14 +26,6 @@ public enum AnimEnemy implements AnimType {
             e -> new AnimType.Data(e.frameDuration, e.playMode)
     );
 
-    public static AnimEnemy getRandomDeadAlien() {
-        switch (MathUtils.random(2)) {
-            case 0: return ALIEN_DEAD_A;
-            case 1: return ALIEN_DEAD_B;
-            case 2: default: return ALIEN_DEAD_C;
-        }
-    }
-
     public final String folderPrefix;
     public final float frameDuration;
     public final Animation.PlayMode playMode;
@@ -69,12 +61,20 @@ public enum AnimEnemy implements AnimType {
     public AnimEnemy getLightOverlay() {
         var anim = SHIP_A_LIGHT_OVERLAY;
         switch (this) {
-            case SHIP_A: anim = SHIP_A_LIGHT_OVERLAY;
-            case SHIP_B: anim = SHIP_B_LIGHT_OVERLAY;
-            case SHIP_C: anim = SHIP_C_LIGHT_OVERLAY;
+            case SHIP_A: anim = SHIP_A_LIGHT_OVERLAY; break;
+            case SHIP_B: anim = SHIP_B_LIGHT_OVERLAY; break;
+            case SHIP_C: anim = SHIP_C_LIGHT_OVERLAY; break;
             default: Util.warn(getClass().getSimpleName(), "No light overlay anim matching: " + name());
         }
         return anim;
+    }
+
+    public static AnimEnemy getRandomDeadAlien() {
+        switch (MathUtils.random(2)) {
+            case 0: return ALIEN_DEAD_A;
+            case 1: return ALIEN_DEAD_B;
+            case 2: default: return ALIEN_DEAD_C;
+        }
     }
 
     @Override

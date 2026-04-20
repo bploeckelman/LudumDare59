@@ -156,22 +156,29 @@ public class Factory {
         return entity;
     }
 
+    public static Entity enemyShip(EnemyTag.EnemyType enemyType, EnergyColor.Type energyColorType, float posX, float posY, float velX, float velY) {
+        var animEnemy = AnimEnemy.of(energyColorType);
+        // NOTE: all AnimEnemy ship types have the same size / dimensions 80x80
+        var size = animEnemy.get().getKeyFrame(0f).getRegionWidth();
+        return enemyShip(enemyType, energyColorType, posX, posY, velX, velY, size);
+    }
+
     public static Entity enemyShip(EnemyTag.EnemyType enemyType, EnergyColor.Type energyColorType, float posX, float posY, float velX, float velY, float size) {
         var entity = createEntity();
 
-        var enemyTag = new EnemyTag(Main.game.engine, entity, enemyType, energyColorType);
-
+        var position = new Position(posX, posY);
         var animator = new Animator(AnimEnemy.of(energyColorType), new Vector2(size, size), new Vector2(size / 2f, size / 2f));
         animator.scale.set(0.3f, 0.3f);
         animator.tint.a = 0f;
-
         var collidesWith = new CollisionMask[] { CollisionMask.SHIELD, CollisionMask.TURRET, CollisionMask.PLAYER_PROJECTILE, CollisionMask.CITY };
         var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, size / 2f, collidesWith);
+
+        var enemyTag = new EnemyTag(Main.game.engine, entity, position, animator, enemyType, energyColorType);
 
         entity.add(enemyTag);
         entity.add(animator);
         entity.add(collider);
-        entity.add(new Position(posX, posY));
+        entity.add(position);
         entity.add(new Velocity(velX, velY));
         entity.add(new Health(ENEMY_MAX_HEALTH));
         entity.add(new EnergyColor(energyColorType));

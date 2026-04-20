@@ -10,7 +10,6 @@ import lando.systems.ld59.game.components.EnemySpawner;
 import lando.systems.ld59.game.components.EnemyTag;
 import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.game.components.Position;
-import lando.systems.ld59.utils.Util;
 
 public class EnemySpawnerSystem extends IteratingSystem {
 
@@ -34,14 +33,10 @@ public class EnemySpawnerSystem extends IteratingSystem {
 
         float actualSpawnY = (enemyType == EnemyTag.EnemyType.FLYER) ? spawnY - 80f : spawnY;
 
-        var enemy = Factory.enemyShip(enemyType,
-            EnergyColor.Type.getRandom(),
-            spawnX,
-            actualSpawnY,
-            0,
-            -10f,
-            32f
-        );
+        var velX = 0f;
+        var velY = -10f;
+
+        var enemy = Factory.enemyShip(enemyType, EnergyColor.Type.getRandom(), spawnX, actualSpawnY, velX, velY);
         getEngine().addEntity(enemy);
         spawner.spawnsLeft--;
         spawner.spawnTimer = spawner.spawnInterval;

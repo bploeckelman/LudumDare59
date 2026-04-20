@@ -6,14 +6,22 @@ import com.badlogic.gdx.math.MathUtils;
 
 public class EnergyColor implements Component {
 
-    public static final Color RED = new Color(170/255f, 51/255f, 119/255f, 1);
-    public static final Color GREEN = new Color(35/255f, 136/255f, 51/255f, 1);
-    public static final Color BLUE = new Color(68/255f, 119/255f, 170/255f, 1);
+    public static final Color COLOR_RED   = new Color(170/255f,  51/255f, 119/255f, 1);
+    public static final Color COLOR_GREEN = new Color( 35/255f, 136/255f,  51/255f, 1);
+    public static final Color COLOR_BLUE  = new Color( 68/255f, 119/255f, 170/255f, 1);
 
     public enum Type {
         RED, GREEN, BLUE;
         public static Type getRandom() {
             return values()[MathUtils.random(values().length - 1)];
+        }
+        public Color getColor() {
+            switch (this) {
+                case RED: return COLOR_RED;
+                case GREEN: return COLOR_GREEN;
+                case BLUE: return COLOR_BLUE;
+                default: return Color.MAGENTA;
+            }
         }
     }
 
@@ -28,11 +36,6 @@ public class EnergyColor implements Component {
     }
 
     public Color getColor() {
-        switch (type) {
-            case RED: return RED;
-            case GREEN: return GREEN;
-            case BLUE: return BLUE;
-            default: return Color.MAGENTA;
-        }
+        return type.getColor();
     }
 }
