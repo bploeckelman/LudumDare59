@@ -11,6 +11,7 @@ import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.game.Components;
+import lando.systems.ld59.game.Stats;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.signals.AudioEvent;
@@ -61,7 +62,7 @@ public class CityBaseSystem extends IteratingSystem {
                 turret.cannon.add(turret.cannonCollider);
                 turretHealth.currentHealth = turretHealth.maxHealth;
             }
-
+            Stats.instance().cityLost++;
 
             // Let the user know what happened
             //TODO: we need some modal or something here

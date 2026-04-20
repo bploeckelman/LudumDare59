@@ -77,6 +77,7 @@ public class GameScreen extends BaseScreen {
             transitioning = true;
             game.setScreen(new EndingScreen(), EffectType.DREAMY);
         }
+        Stats.instance().update(delta);
 
 //        if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
 ////            AudioEvent.playSound(SoundType.SHATTER, 0.5f);

@@ -11,6 +11,7 @@ public class Stats {
     public int goodKills;
     public int badKills;
     public int neutralKills;
+    public int cityLost;
 
     private Stats() {
         reset();
