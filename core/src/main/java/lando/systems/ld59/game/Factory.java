@@ -173,7 +173,7 @@ public class Factory {
         animator.scale.set(0.3f, 0.3f);
         animator.tint.a = 0f;
         var collidesWith = new CollisionMask[] { CollisionMask.SHIELD, CollisionMask.TURRET, CollisionMask.PLAYER_PROJECTILE, CollisionMask.CITY };
-        var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, size / 2f, collidesWith);
+        var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, size / 3f, collidesWith);
 
         var enemyTag = new EnemyTag(Main.game.engine, entity, position, animator, enemyType, energyColorType);
 

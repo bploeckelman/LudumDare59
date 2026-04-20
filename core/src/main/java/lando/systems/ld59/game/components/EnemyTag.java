@@ -10,7 +10,7 @@ import lando.systems.ld59.game.components.renderable.Animator;
 
 public class EnemyTag implements Component {
 
-    public enum EnemyType { FLYER, KAMIKAZE, SPLITTER, MUNCHER, SUCKER }
+    public enum EnemyType { FLYER, KAMIKAZE, SPLITTER }
 
     private final Engine engine;
 
