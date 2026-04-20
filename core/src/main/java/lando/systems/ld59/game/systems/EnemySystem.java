@@ -106,7 +106,6 @@ public class EnemySystem extends IteratingSystem {
 
             var splitEntity = Factory.enemyShip(
                     EnemyTag.EnemyType.SPLITTER,
-                    energyColor.type,
                     pos.x + offsetX,
                     pos.y + offsetY,
                     velX, velY, size);

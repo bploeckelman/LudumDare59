@@ -36,7 +36,7 @@ public class EnemySpawnerSystem extends IteratingSystem {
         var velX = 0f;
         var velY = -10f;
 
-        var enemy = Factory.enemyShip(enemyType, EnergyColor.Type.getRandom(), spawnX, actualSpawnY, velX, velY);
+        var enemy = Factory.enemyShip(enemyType, spawnX, actualSpawnY, velX, velY);
         getEngine().addEntity(enemy);
         spawner.spawnsLeft--;
         spawner.spawnTimer = spawner.spawnInterval;

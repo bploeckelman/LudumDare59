@@ -25,15 +25,15 @@ public class EnemyTag implements Component {
     public int split = 0;
     public int MAX_SPLIT = 1;
 
-    public EnemyTag(Engine engine, Entity entity, Position pos, Animator anim, EnemyType enemyType, EnergyColor.Type energyColorType) {
+    public EnemyTag(Engine engine, Entity entity, Position pos, Animator anim, EnemyType enemyType) {
         this.engine = engine;
         this.entity = entity;
         this.enemyType = enemyType;
-        this.energyColorType = energyColorType;
+        this.energyColorType = EnergyColor.of(enemyType);
 
         this.lightOverlay = Factory.createEntity();
         var energyColor = energyColorType.getColor();
-        var lightAnimType = AnimEnemy.of(energyColorType).getLightOverlay();
+        var lightAnimType = AnimEnemy.of(enemyType).getLightOverlay();
         var lightAnimator = new Animator(lightAnimType, new Vector2(anim.size), new Vector2(anim.origin));
         lightAnimator.scale.set(anim.scale);
         lightAnimator.tint.set(energyColor.r, energyColor.g, energyColor.b, anim.tint.a);

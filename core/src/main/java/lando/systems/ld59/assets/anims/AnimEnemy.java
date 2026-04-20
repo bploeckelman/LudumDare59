@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.assets.AnimType;
+import lando.systems.ld59.game.components.EnemyTag;
 import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.utils.Util;
 
@@ -48,12 +49,12 @@ public enum AnimEnemy implements AnimType {
         this.playMode = playMode;
     }
 
-    public static AnimEnemy of(EnergyColor.Type energyColorType) {
+    public static AnimEnemy of(EnemyTag.EnemyType enemyType) {
         var anim = AnimEnemy.SHIP_A;
-        switch (energyColorType) {
-            case RED: anim = AnimEnemy.SHIP_A; break;
-            case GREEN: anim = AnimEnemy.SHIP_B; break;
-            case BLUE: anim = AnimEnemy.SHIP_C; break;
+        switch (enemyType) {
+            case FLYER: anim = AnimEnemy.SHIP_A; break;
+            case KAMIKAZE: anim = AnimEnemy.SHIP_B; break;
+            case SPLITTER: anim = AnimEnemy.SHIP_C; break;
         }
         return anim;
     }

@@ -3,6 +3,7 @@ package lando.systems.ld59.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import lando.systems.ld59.assets.anims.AnimEnemy;
 
 public class EnergyColor implements Component {
 
@@ -37,5 +38,15 @@ public class EnergyColor implements Component {
 
     public Color getColor() {
         return type.getColor();
+    }
+
+    public static EnergyColor.Type of(EnemyTag.EnemyType enemyType) {
+        var energyColorType = EnergyColor.Type.RED;
+        switch (enemyType) {
+            case FLYER: energyColorType = EnergyColor.Type.RED; break;
+            case KAMIKAZE: energyColorType = EnergyColor.Type.BLUE; break;
+            case SPLITTER: energyColorType = EnergyColor.Type.GREEN; break;
+        }
+        return energyColorType;
     }
 }
