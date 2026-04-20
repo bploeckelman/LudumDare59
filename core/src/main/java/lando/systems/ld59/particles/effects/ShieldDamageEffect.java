@@ -1,5 +1,6 @@
 package lando.systems.ld59.particles.effects;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.assets.anims.AnimEffect;
 import lando.systems.ld59.game.Systems;
@@ -42,6 +43,7 @@ public class ShieldDamageEffect implements ParticleEffect {
                 var ttl = MathUtils.random(0.3f, 0.6f);
                 return ParticleData.initializer(pool.obtain())
                     .keyframe(AnimEffect.FLARE.get().getKeyFrame(0f))
+                    .interpolation(Interpolation.bounceOut)
                     .startPos(params.target.x, params.target.y)
                     .startSize(140f, 40f)
                     .endSize(0f, 40f)

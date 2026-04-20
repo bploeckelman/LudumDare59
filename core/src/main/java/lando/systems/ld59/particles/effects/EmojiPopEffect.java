@@ -51,18 +51,18 @@ public class EmojiPopEffect implements ParticleEffect {
                 float angle = MathUtils.random(60f, 120f);
                 float speed = MathUtils.random(10f, 25f);
                 float startSize = MathUtils.random(32f, 48f);
-                float ttl = 3f;
+                float ttl = 2f;
 
                 return ParticleData.initializer(pool.obtain())
                     .animation(params.emoji.get())
-                    .interpolation(Interpolation.bounceOut)
+                    .interpolation(Interpolation.linear)
                     .startPos(params.target.x, params.target.y)
                     .velocityDirection(angle, speed)
-                    .acceleration(0f, 150f)
+                    .acceleration(0f, 50f)
                     .startSize(startSize)
                     .endSize(0.5f)
                     .startAlpha(1f)
-                    .endAlpha(0.5f)
+                    .endAlpha(0.25f)
                     .timeToLive(ttl)
                     .init();
             })
