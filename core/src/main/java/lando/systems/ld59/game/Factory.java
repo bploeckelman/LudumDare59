@@ -56,7 +56,7 @@ public class Factory {
         var position = new Position(x, y);
 
         var health = new Health(TURRET_MAX_HEALTH);
-        var turret = new Turret(Main.game.engine, entity, position, rotation,  health);
+        var turret = new Turret(Main.game.engine, entity, position, rotation, health);
 
         entity.add(position);
         entity.add(turret);

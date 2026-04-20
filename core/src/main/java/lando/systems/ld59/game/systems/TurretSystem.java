@@ -6,10 +6,12 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Main;
+import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
-import lando.systems.ld59.game.signals.ConnectionEvent;import lando.systems.ld59.utils.FramePool;
+import lando.systems.ld59.game.signals.ConnectionEvent;
+import lando.systems.ld59.utils.FramePool;
 
 public class TurretSystem extends IteratingSystem {
 
@@ -50,6 +52,8 @@ public class TurretSystem extends IteratingSystem {
 
         health.update(dt);
         if (health.isDead()) {
+            baseAnim.start(AnimBaseTurret.BASE_DAMAGED);
+
             turret.base.remove(Collider.class);
             turret.cannon.remove(Collider.class);
 
@@ -60,6 +64,7 @@ public class TurretSystem extends IteratingSystem {
             turret.repairTimer -= dt;
             if (turret.repairTimer <= 0) {
                 // repair complete
+                baseAnim.start(AnimBaseTurret.BASE_IDLE);
                 health.currentHealth = health.maxHealth;
                 turret.base.add(turret.baseCollider);
                 turret.cannon.add(turret.cannonCollider);

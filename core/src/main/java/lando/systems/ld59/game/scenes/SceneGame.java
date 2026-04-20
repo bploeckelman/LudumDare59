@@ -53,12 +53,18 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, centerX + 125 + 80 + 80, buttonY);
         // @formatter:on
 
-        float rotationRange = 120f;
-        float deltaRotation = rotationRange / (numTurrets+1);
+        // Place turrets on the planet, layout follows planet curve
+        // - planet center is offscreen downward
+        var center = FramePool.vec2(centerX, -410f);
+        // - planet isn't perfect circle, bends slightly more on one axis than the other
+        var distFromCenter = FramePool.vec2(580f, 600);
+        // - starting on the right, create a turret every 'rotatationStep' degrees along planet curve
+        float rotationRange = 100f;
+        float rotationStep = rotationRange / (numTurrets+1);
         for (int i = 0; i < numTurrets; i++) {
-            var rotation = 90 + -rotationRange / 2f + deltaRotation * (i + 1);
-            var x = centerX + MathUtils.cosDeg(rotation) * 600f;
-            var y = -410f + MathUtils.sinDeg(rotation) * 620f;
+            var rotation = 90 - (rotationRange / 2f) + rotationStep * (i + 1);
+            var x = center.x + MathUtils.cosDeg(rotation) * distFromCenter.x;
+            var y = center.y + MathUtils.sinDeg(rotation) * distFromCenter.y;
             var turret = Factory.turret(x, y, rotation);
             engine().addEntity(turret);
             turrets.add(turret);

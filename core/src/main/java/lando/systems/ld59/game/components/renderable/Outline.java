@@ -25,7 +25,7 @@ public class Outline implements Component {
     public Color outlineColor() { return outlineColor; }
     public float outlineThickness() { return outlineThickness; }
 
-    public void fillColor(Color fillColor) { this.fillColor = fillColor; }
-    public void outlineColor(Color outlineColor) { this.outlineColor = outlineColor; }
+    public void fillColor(Color fillColor) { this.fillColor.set(fillColor); }
+    public void outlineColor(Color outlineColor) { this.outlineColor.set(outlineColor); }
     public void outlineThickness(float outlineThickness) { this.outlineThickness = outlineThickness; }
 }

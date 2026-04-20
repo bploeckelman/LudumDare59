@@ -15,7 +15,8 @@ import lando.systems.ld59.Config;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
-import lando.systems.ld59.assets.anims.AnimMisc;import lando.systems.ld59.game.Components;
+import lando.systems.ld59.assets.anims.AnimMisc;
+import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.collision.CollisionCirc;
 import lando.systems.ld59.game.components.collision.CollisionMask;
@@ -24,15 +25,16 @@ import lando.systems.ld59.game.components.renderable.Outline;
 import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.utils.FramePool;
 
+import java.util.Optional;
+
 import static lando.systems.ld59.game.Constants.PLAYER_PROJECTILE_DAMAGE;
 
 public class Turret implements Component {
 
-    public static final float size = 200f;
     public static final float WIDTH = 160f;
     public static final float HEIGHT = 128f;
-
     public static final float ANIM_DEPTH = Base.ANIM_DEPTH + 10;
+    public static final float ANIM_DEPTH_BULLET = 100f;
     public static final CollisionMask[] COLLIDES_WITH = new CollisionMask[] {
             CollisionMask.ENEMY, CollisionMask.ENEMY_PROJECTILE
     };
@@ -72,29 +74,37 @@ public class Turret implements Component {
         this.rockOverlay = Factory.createEntity();
         this.portArrowOverlay = Factory.createEntity();
         this.portLightOverlay = Factory.createEntity();
-        this.baseOutline    = new Outline(Color.CLEAR_WHITE, Color.CLEAR_WHITE, 3f);
+
+        this.baseOutline    = new Outline(Color.CLEAR_WHITE, Color.CLEAR_WHITE, 1f);
         this.cannonOutline  = new Outline(Color.CLEAR_WHITE, Color.CLEAR_WHITE, 2f);
-        this.baseCollider   = Collider.circ(CollisionMask.TURRET, 0, 10, 80, COLLIDES_WITH);
-        this.cannonCollider = Collider.circ(CollisionMask.TURRET, 96,  0, 23, COLLIDES_WITH);
+
+        var baseCollRotX = MathUtils.cosDeg(rotation) * 60f;
+        var baseCollRotY = MathUtils.sinDeg(rotation) * 60f;
+        this.baseCollider   = Collider.circ(CollisionMask.TURRET, baseCollRotX, baseCollRotY, 40, COLLIDES_WITH);
+        this.cannonCollider = Collider.circ(CollisionMask.TURRET, 10, 2, 22, COLLIDES_WITH);
 
         var width = WIDTH;
         var height = HEIGHT;
 
+        //
         // Cannon sits 'behind' base so that it can retract...
+        //
 
-        var cannonAnim = new Animator(AnimBaseTurret.CANNON_BARREL_A, new Vector2(0, height / 2f));
-        cannonAnim.depth = ANIM_DEPTH + 3; // TODO(TEMP): revert to ANIM_DEPTH + 1
+        var cannonAnim = new Animator(AnimBaseTurret.CANNON_BARREL_A, new Vector2(width / 2f, height / 2f));
+        cannonAnim.depth = ANIM_DEPTH + 1;
         cannonAnim.size.set(width, height);
         // NOTE: smaller turret anim means the cannon origin moved from halfway mark in source image
 //        cannonAnim.rotationOrigin.set(width / 2f, height / 2f);
         cannonAnim.rotationOrigin.set(width * 0.5625f, height / 2f);
 
-        var baseAnim = new Animator(AnimBaseTurret.BASE_IDLE, new Vector2(-10, height / 2f));
+        var baseAnim = new Animator(AnimBaseTurret.BASE_IDLE, new Vector2(0, height / 2f));
         baseAnim.depth = ANIM_DEPTH + 2;
         baseAnim.size.set(width, height);
         baseAnim.rotation = rotation;
 
+        //
         // Door anim, port and rock overlays sit on top of base
+        //
 
         var doorAnim = new Animator(AnimBaseTurret.DOOR_OPEN, new Vector2(0, height / 2f));
         doorAnim.depth = ANIM_DEPTH + 3;
@@ -103,31 +113,28 @@ public class Turret implements Component {
 
         // Overlays are at the same anim depth
         var overlayDepth = ANIM_DEPTH + 4;
-
         var rockAnim = new Animator(AnimBaseTurret.ROCK_OVERLAY, new Vector2(0, height / 2f));
         rockAnim.depth = overlayDepth;
         rockAnim.size.set(width, height);
         rockAnim.rotation = rotation;
-
         var portArrowAnim = new Animator(AnimBaseTurret.PORT_ARROW_LIGHT_OVERLAY, new Vector2(0, height / 2f));
         portArrowAnim.depth = overlayDepth;
         portArrowAnim.size.set(width, height);
         portArrowAnim.rotation = rotation;
-
         var portLightAnim = new Animator(AnimBaseTurret.PORT_ARROW_LIGHT_OVERLAY, new Vector2(0, height / 2f));
         portLightAnim.depth = overlayDepth;
         portLightAnim.size.set(width, height);
         portLightAnim.rotation = rotation;
 
-        var cannonOffset = 96f;
+        var cannonOffset = 92f;
         cannon.add(turretHealth);
         cannon.add(cannonAnim);
         cannon.add(cannonOutline);
         cannon.add(cannonCollider);
         cannon.add(new TurretPart());
         cannon.add(new Position(
-                pos.x + MathUtils.cosDeg(rot) * cannonOffset - cannonOffset,
-                pos.y + MathUtils.sinDeg(rot) * cannonOffset));
+                pos.x + MathUtils.cosDeg(rotation) * cannonOffset - 10f,
+                pos.y + MathUtils.sinDeg(rotation) * cannonOffset));
         cannon.add(new Interp(1f, Interpolation.linear, Interp.Repeat.PINGPONG));
 
         base.add(turretHealth);
@@ -222,42 +229,41 @@ public class Turret implements Component {
     }
 
     private void createBullet(float rotationOffset) {
-        float width = 20f;
+        float diameter = 20f;
+        float radius = diameter / 2f;
+        float cannonRot = cannonRotation.floatValue();
 
         var bullet = Factory.createEntity();
         var cannonPos = cannon.getComponent(Position.class);
         var energyColor = cannon.getComponent(EnergyColor.class);
         var turretPattern = cannon.getComponent(TurretPattern.class);
 
+        var barrelTipOffset = 50f;
+        var position = new Position(
+                cannonPos.x + MathUtils.cosDeg(cannonRot) * barrelTipOffset + radius,
+                cannonPos.y + MathUtils.sinDeg(cannonRot) * barrelTipOffset);
 
-        var pos = new Position(cannonPos.x + 100, cannonPos.y );
-        var tempVec = FramePool.vec2(60, 0).rotateDeg(cannonRotation.floatValue());
-        pos.add((int) tempVec.x, (int)tempVec.y);
-
+        var totalRotation = cannonRot + rotationOffset;
         var speed = turretPattern.bulletSpeed();
-        var totalRotation = cannonRotation.floatValue() + rotationOffset;
-        var vel = new Velocity(
+        var velocity = new Velocity(
             MathUtils.cosDeg(totalRotation) * speed,
             MathUtils.sinDeg(totalRotation) * speed);
 
-        var baseAnim = new Animator(AnimMisc.PROJECTILE);
-        baseAnim.depth = 100;
-        baseAnim.size.set(width, width);
-        if (energyColor != null) {
-            baseAnim.tint.set(energyColor.getColor());
-        } else {
-            baseAnim.tint.set(1f, 1f, 1f, 1f);
-        }
-        baseAnim.origin.set(width / 2f, width / 2f);
+        var animator = new Animator(AnimMisc.PROJECTILE);
+        animator.depth = ANIM_DEPTH_BULLET;
+        animator.size.set(diameter, diameter);
+        animator.origin.set(radius, radius);
+        animator.tint.set(Optional.ofNullable(energyColor)
+                .map(EnergyColor::getColor).orElse(FramePool.color(1f, 1f, 1f, 1f)));
 
         var collidesWith = new CollisionMask[] { CollisionMask.ENEMY, CollisionMask.ENEMY_PROJECTILE };
-        var bulletCollider = Collider.circ(CollisionMask.PLAYER_PROJECTILE, 0,  0, width/2f, collidesWith);
+        var bulletCollider = Collider.circ(CollisionMask.PLAYER_PROJECTILE, 0,  0, diameter/2f, collidesWith);
 
-        bullet.add(pos);
-        bullet.add(baseAnim);
-        bullet.add(vel);
-        bullet.add(new Projectile(PLAYER_PROJECTILE_DAMAGE));
+        bullet.add(position);
+        bullet.add(animator);
+        bullet.add(velocity);
         bullet.add(bulletCollider);
+        bullet.add(new Projectile(PLAYER_PROJECTILE_DAMAGE));
         bullet.add(new Health(1));
         if (energyColor != null) {
             bullet.add(energyColor);
