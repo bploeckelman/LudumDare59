@@ -59,6 +59,16 @@ public class BaseButton implements Component {
         }
     }
 
+    public void setCurrentAnim(Connection connection) {
+        if (connection == null) {
+            state = State.IDLE;;
+        } else if (connection.isPending()){
+            state = State.PRESSED;
+        } else {
+            state = State.ACTIVE;
+        }
+    }
+
     public AnimType getCurrentAnim() {
         AnimType currentAnim = null;
         switch (state) {
