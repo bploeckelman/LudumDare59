@@ -142,4 +142,10 @@ public class Boss implements Component {
         }
         return allDead;
     }
+
+    public boolean isGameOver() {
+        if (finalGem == null) return false;
+        var finalGemHealth = finalGem.getComponent(Health.class);
+        return finalGemHealth.isDead();
+    }
 }
