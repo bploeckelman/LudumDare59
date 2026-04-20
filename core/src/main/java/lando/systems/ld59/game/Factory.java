@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld59.AnimDepths;import lando.systems.ld59.Main;
@@ -109,6 +110,7 @@ public class Factory {
         };
 
         entity.add(new Position(x, y));
+        entity.add(new Velocity(MathUtils.random(-10f, 10f), MathUtils.random(-10f, 10f)));
         entity.add(animator);
         entity.add(timer);
 
@@ -228,8 +230,8 @@ public class Factory {
         animator.depth = AnimDepths.BUTTONS;
         animator.size.set(size, size);
         animator.rotationOrigin.set(size / 2f, size / 2f);
-        if      (type.isColor()) animator.rotation = 90f;
-        else if (type.isShape()) animator.rotation = -90f;
+        if      (type.isColor()) animator.rotation = -90f;
+        else if (type.isShape()) animator.rotation = 90f;
 
         entity.add(position);
         entity.add(animator);

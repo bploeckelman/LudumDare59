@@ -10,27 +10,27 @@ public enum AnimBaseButton implements AnimType {
       BOARD_LEFT
     , BOARD_RIGHT
     , BLANK_HIT
-    , BLANK_IDLE
+    , BLANK_IDLE(0.025f)
     , BLANK_ON
     // Color Energy button animations -----------------------------------------
     , BLUE_HIT
-    , BLUE_IDLE
+    , BLUE_IDLE(0.025f)
     , BLUE_ON(0.3f, Animation.PlayMode.LOOP)
     , GREEN_HIT
-    , GREEN_IDLE
+    , GREEN_IDLE(0.025f)
     , GREEN_ON(0.3f, Animation.PlayMode.LOOP)
     , RED_HIT
-    , RED_IDLE
+    , RED_IDLE(0.025f)
     , RED_ON(0.3f, Animation.PlayMode.LOOP)
     // Shape button animations ------------------------------------------------
     , CIRCLE_HIT
-    , CIRCLE_IDLE
+    , CIRCLE_IDLE(0.025f)
     , CIRCLE_ON(0.3f, Animation.PlayMode.LOOP)
     , SQUARE_HIT
-    , SQUARE_IDLE
+    , SQUARE_IDLE(0.025f)
     , SQUARE_ON(0.3f, Animation.PlayMode.LOOP)
     , TRIANGLE_HIT
-    , TRIANGLE_IDLE
+    , TRIANGLE_IDLE(0.025f)
     , TRIANGLE_ON(0.3f, Animation.PlayMode.LOOP)
     ;
 
@@ -48,6 +48,10 @@ public enum AnimBaseButton implements AnimType {
 
     AnimBaseButton() {
         this(0.1f, Animation.PlayMode.NORMAL);
+    }
+
+    AnimBaseButton(float frameDuration) {
+        this(frameDuration, Animation.PlayMode.NORMAL);
     }
 
     AnimBaseButton(float frameDuration, Animation.PlayMode playMode) {
