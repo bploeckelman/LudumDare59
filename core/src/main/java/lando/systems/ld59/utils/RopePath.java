@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.game.components.SceneContainer;
+import lando.systems.ld59.utils.screenshake.SimplexNoise;
 
 public class RopePath {
 
@@ -64,10 +65,12 @@ public class RopePath {
         jostle(defaultStrength);
     }
 
+    private final SimplexNoise jostleNoise = new SimplexNoise(8, 0.5f, 2);
+    private float jostleSeed = 0f;
+
     public void jostle(float strength) {
         if (positions.size < 3) return;
 
-        // Get the rope's main axis for perpendicular displacement
         var start = positions.get(0);
         var end = positions.get(positions.size - 1);
         float ax = end.x - start.x;
@@ -75,17 +78,21 @@ public class RopePath {
         float len = (float) Math.sqrt(ax * ax + ay * ay);
         if (len < 0.001f) return;
 
-        // Perpendicular direction
         float px = -ay / len;
-        float py =  ax / len;
+        float py = ax / len;
+
+        jostleSeed += MathUtils.random(10f, 30f); // advance noise sample each jostle
 
         for (int i = 1; i < positions.size - 1; i++) {
             if (pinned[i]) continue;
-            // Parabolic falloff: max in middle, zero at endpoints
+
             float t = (float) i / (positions.size - 1);
             float falloff = 4f * t * (1f - t);
 
-            float offset = MathUtils.random(-strength, strength) * falloff;
+            // Sample noise along rope: i * 0.3f spreads it out
+            float noiseVal = (float) jostleNoise.getNoise(jostleSeed, i * 0.3f);
+            float offset = noiseVal * strength * falloff;
+
             positions.get(i).add(px * offset, py * offset);
         }
     }

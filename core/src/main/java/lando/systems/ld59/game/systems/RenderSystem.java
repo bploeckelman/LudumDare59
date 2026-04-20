@@ -246,7 +246,7 @@ public class RenderSystem extends SortedIteratingSystem implements Listener<Sign
         var scenes = getEngine().getEntitiesFor(Family.one(SceneContainer.class).get());
         for (Entity sceneEntity : scenes) {
             var scene = sceneEntity.getComponent(SceneContainer.class).scene;
-            scene.screen.shaker.addDamage(screenShake.amount());
+            scene.screen.shaker.addTrauma(screenShake.amount());
         }
     }
 }

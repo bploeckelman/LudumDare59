@@ -121,11 +121,11 @@ public abstract class BaseScreen implements Screen {
         windowCamera.update();
         if (worldCamera != null) {
             worldCamera.update();
+            shaker.update(delta);
         }
         // TODO: add a global input processor to toggle flags at runtime
         uiRoot.setDebug(Flag.DEBUG_UI.isEnabled());
         uiStage.act(Math.min(delta, 1 / 30f));
-        shaker.update(delta);
     }
 
     public void renderOffscreenBuffers(SpriteBatch batch) {}

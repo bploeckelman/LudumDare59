@@ -10,20 +10,33 @@ import com.badlogic.gdx.math.Matrix4;
 
 public class ScreenShakeCameraController {
 
-    public float maxXOffset = 20;
-    public float maxYOffset = 20;
-    public float maxAngleDegrees = 1;
-
-    public float xOffsetSpeed = 3f;
-    public float yOffsetSpeed = 3f;
-    public float rotationSpeed = 2f;
+    public float maxXOffset = 20f;
+    public float maxYOffset = 20f;
+    public float maxAngleDegrees = 3f;
+    public float maxZoomOffset = 0.1f; //  zoom punch
 
 
-    private OrthographicCamera worldCamera;
-    private OrthographicCamera viewCamera;
-    private SimplexNoise noise;
+    public float xOffsetFreq = 25f; // higher = faster shake
+    public float yOffsetFreq = 28f;
+    public float rotationFreq = 15f;
+    public float zoomFreq = 20f;
+
+    public float traumaDecayRate = .9f; // seconds to decay from 1 to 0
+    public float traumaPower = 3f; // 2 = squared, 3 = cubed. Higher = snappier
+
+    private final OrthographicCamera worldCamera;
+    private final OrthographicCamera viewCamera;
+    private final SimplexNoise noise;
     private float trauma;
-    private float accumTime;
+    private float time;
+
+    // Use different seeds so x/y/rot aren't correlated
+    private static final float SEED_X = 1.3f;
+    private static final float SEED_Y = 7.9f;
+    private static final float SEED_ROT = 15.2f;
+    private static final float SEED_ZOOM = 23.7f;
+
+    // Optional debug
     private Texture debugTexture;
     private NinePatch outlineNinePatch;
     private Texture pixelTex;
@@ -33,22 +46,9 @@ public class ScreenShakeCameraController {
     public ScreenShakeCameraController(OrthographicCamera worldCamera){
         this.worldCamera = worldCamera;
         viewCamera = new OrthographicCamera(worldCamera.viewportWidth, worldCamera.viewportHeight);
-        noise = new SimplexNoise(16, .8f, 2);
+        noise = new SimplexNoise(16, .5f, 2);
         trauma = 0;
-//        pixelTex = new Texture("white-pixel.png");
-//        Texture outLineTexture = new Texture("outline.png");
-//        outlineNinePatch = new NinePatch(outLineTexture, 4, 4, 4, 4);
-
-//        Pixmap pixmap = new Pixmap(128, 128, Pixmap.Format.RGBA8888);
-//        for (int x = 0; x < 128; x++){
-//            for (int y = 0; y < 128; y++){
-//                float noiseValue = (float)((noise.getNoise(x, y) + 1f)/2f);
-//                int color = Color.rgba8888(noiseValue, noiseValue, noiseValue, 1f);
-//                pixmap.drawPixel(x, y, color);
-//            }
-//        }
-//        debugTexture = new Texture(pixmap);
-//        pixmap.dispose();
+        time = 0;
     }
 
 
@@ -57,49 +57,86 @@ public class ScreenShakeCameraController {
      * This will update the shake camera
      * @param dt frame delta
      */
-    public void update(float dt){
-        accumTime += dt;
+    public void update(float dt) {
+        time += dt;
 
-        // reset view camera
+        // Copy world camera state
         viewCamera.position.set(worldCamera.position);
         viewCamera.up.set(worldCamera.up);
         viewCamera.zoom = worldCamera.zoom;
 
-        trauma = MathUtils.clamp(trauma, 0f, 1f);
-        float shake = getShakeAmount();
-        float offsetX = maxXOffset * shake * worldCamera.zoom * (float)noise.getNoise(1, accumTime * xOffsetSpeed);
-        float offsetY = maxYOffset * shake * worldCamera.zoom * (float)noise.getNoise(20, accumTime * yOffsetSpeed);
-        float angle = maxAngleDegrees * shake * (float)noise.getNoise(30, accumTime * rotationSpeed);
+        // Early out if no trauma
+        if (trauma <= 0.001f) {
+            trauma = 0f;
+            viewCamera.update();
+            return;
+        }
+
+        // Eased shake amount — pow curve feels way better than linear
+        float shake = (float) Math.pow(trauma, traumaPower);
+
+
+
+        // Different noise sample per axis so it doesn't move in circles
+        float offsetX = maxXOffset * shake * worldCamera.zoom *
+            (float) noise.getNoise(SEED_X, time * xOffsetFreq);
+        float offsetY = maxYOffset * shake * worldCamera.zoom *
+            (float) noise.getNoise(SEED_Y, time * yOffsetFreq);
+        float angle = maxAngleDegrees * shake *
+            (float) noise.getNoise(SEED_ROT, time * rotationFreq);
+        float zoomOffset = maxZoomOffset * shake *
+            (float) noise.getNoise(SEED_ZOOM, time * zoomFreq);
+
+        // Add raw randomness on top of noise for true chaos at high trauma
+        if (shake > 0.7f) {
+            float wildness = (shake - 0.7f) / 0.3f; // 0-1 when trauma is 0.7-1.0
+            offsetX += MathUtils.random(-8f, 8f) * wildness;
+            offsetY += MathUtils.random(-8f, 8f) * wildness;
+            angle += MathUtils.random(-1f, 1f) * wildness;
+        }
 
         viewCamera.position.add(offsetX, offsetY, 0);
         viewCamera.rotate(angle);
-//        viewCamera.rotateAround(new Vector3(viewCamera.position), viewCamera.direction, angle);
+        viewCamera.zoom += zoomOffset;
         viewCamera.update();
 
-        trauma = MathUtils.clamp(trauma - (dt/2f), 0f, 1f);
-
+        // Exponential decay feels more natural than linear
+        trauma = MathUtils.clamp(trauma - dt * traumaDecayRate, 0f, 1f);
     }
+
 
 
     /**
-     * Adds damage to the screen shake amount, values between .1 and .5 work best
-     * Max combined damage trauma is 1f
-     * @param damage between 0 and 1
+     * Add trauma. Values between 0.2-0.6 feel good. Stacks additively.
+     * @param amount 0-1, clamped. 0.3 = light hit, 0.6 = explosion, 1.0 = screen nuke
      */
-    public void addDamage(float damage){
-        trauma += damage;
+    public void addTrauma(float amount) {
+        trauma = MathUtils.clamp(trauma + amount, 0f, 1f);
     }
-
-    private float getShakeAmount(){
-        return trauma * trauma;
-    }
-
 
     /**
-     * Use this instead of the normal cameras projection Matrix
-     * @return the shaken camera matrix
+     * Set trauma directly, overriding current. Use for screen-wide effects.
      */
-    public Matrix4 getCombinedMatrix(){
+    public void setTrauma(float amount) {
+        trauma = MathUtils.clamp(amount, 0f, 1f);
+    }
+
+    /**
+     * Instantly stop all shake
+     */
+    public void stop() {
+        trauma = 0f;
+    }
+
+    public float getTrauma() {
+        return trauma;
+    }
+
+    public boolean isShaking() {
+        return trauma > 0.001f;
+    }
+
+    public Matrix4 getCombinedMatrix() {
         return viewCamera.combined;
     }
 
@@ -107,7 +144,9 @@ public class ScreenShakeCameraController {
         return viewCamera;
     }
 
-    public void renderDebug(SpriteBatch batch, OrthographicCamera screenCamera){
+    public void renderDebug(SpriteBatch batch, OrthographicCamera screenCamera) {
+        if (debugTexture == null) return; // skip if not initialized
+
         batch.setColor(Color.WHITE);
         batch.draw(debugTexture, screenCamera.viewportWidth - 148, 20);
         float height = screenCamera.viewportHeight - 40;
@@ -118,5 +157,9 @@ public class ScreenShakeCameraController {
         batch.setColor(Color.WHITE);
         outlineNinePatch.draw(batch, 20, 20, 20, height);
         outlineNinePatch.draw(batch, 45, 20, 20, height);
+    }
+
+    private float getShakeAmount() {
+        return (float) Math.pow(trauma, traumaPower);
     }
 }
