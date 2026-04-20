@@ -90,7 +90,7 @@ public class GameScreen extends BaseScreen {
                 ||  Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
         if (!transitioning && TEMP_CLICK_TO_TRANSITION){
             transitioning = true;
-            game.setScreen(new EndingScreen(), EffectType.DREAMY);
+            game.setScreen(new EndStoryScreen(), EffectType.DREAMY);
         }
         Stats.instance().update(delta);
 

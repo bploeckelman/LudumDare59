@@ -219,7 +219,7 @@ public class Turret implements Component {
         }
         var energyColor = Components.get(cannon, EnergyColor.class);
         boolean useFancySounds = energyColor != null;
-        float squareVolume = 0.5f;
+        float squareVolume = 0.25f;
         float sawVolume = 1f;
         float sineVolume = .8f;
         float panValue = MathUtils.map(

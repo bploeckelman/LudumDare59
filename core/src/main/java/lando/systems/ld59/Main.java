@@ -86,7 +86,10 @@ public class Main extends Game {
 
         var showLaunchScreen = (Gdx.app.getType() == Application.ApplicationType.WebGL || Flag.LAUNCH_SCREEN.isEnabled());
         var startScreen = showLaunchScreen ? new LaunchScreen()
-                : Flag.GAME_SCREEN.isEnabled() ? new GameScreen()
+//                : Flag.GAME_SCREEN.isEnabled() ? new GameScreen()
+//                : Flag.GAME_SCREEN.isEnabled() ? new CreditsScreen()
+                : Flag.GAME_SCREEN.isEnabled() ? new IntroScreen()
+//                : Flag.GAME_SCREEN.isEnabled() ? new EndStoryScreen()
                   : new TitleScreen();
 
         setScreen(startScreen);

@@ -119,8 +119,8 @@ public class EndStoryScreen extends BaseScreen {
             defaults().padBottom(100);
             defaults().padTop(50);
 
-            var thanks = new TypingLabel(assets.strings.get("credits.footer.thanks"), creditFont);
-            var madeWith = new TypingLabel(assets.strings.get("credits.footer.made-with"), creditFont);
+//            var thanks = new TypingLabel(assets.strings.get("credits.footer.thanks"), creditFont);
+//            var madeWith = new TypingLabel(assets.strings.get("credits.footer.made-with"), creditFont);
             var disclaimer = new TypingLabel(assets.strings.get("endstory.footer.disclaimer"), creditFont);
             var returnToTitleBtn = new VisTextButton("Return to title...", new ChangeListener() {
                 public void changed(ChangeEvent event, Actor actor) {
@@ -132,7 +132,7 @@ public class EndStoryScreen extends BaseScreen {
 
 //            add(thanks).expand().row();
 //            add(madeWith).expandX().row();
-            //add(returnToTitleBtn).growX().height(40).row();
+//            add(returnToTitleBtn).growX().height(40).row();
 //            add(returnToTitleBtn).width(200).height(40).row();
             add(disclaimer).expandX().bottom();
         }

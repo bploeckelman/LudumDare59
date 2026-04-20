@@ -15,6 +15,7 @@ import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.particles.effects.ShipExplodeEffect;
+import lando.systems.ld59.screens.EndStoryScreen;
 import lando.systems.ld59.screens.EndingScreen;
 
 public class EnemySystem extends IteratingSystem {
@@ -303,7 +304,8 @@ public class EnemySystem extends IteratingSystem {
 
         if (boss.isGameOver()) {
             // TODO: maybe we need other stuff, some sort of tween timeline before we just cut?
-            Main.game.setScreen(new EndingScreen());
+//            Main.game.setScreen(new EndingScreen());
+            Main.game.setScreen(new EndStoryScreen());
         }
     }
 }

@@ -48,7 +48,7 @@ public class TurretPattern implements Component {
         switch (type) {
             case LINE: return 300f;
             case FAN: return 150f;
-            case SWEEP: return 150f;
+            case SWEEP: return 140f;
             default: return 100f;
         }
     }
@@ -57,7 +57,7 @@ public class TurretPattern implements Component {
         switch (type) {
             case LINE: return 6;
             case FAN: return 12;
-            case SWEEP: return 4;
+            case SWEEP: return 5;
             default: return 1;
         }
     }
