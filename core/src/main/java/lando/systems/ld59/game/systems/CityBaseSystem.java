@@ -45,6 +45,8 @@ public class CityBaseSystem extends IteratingSystem {
             for (int i = enemies.size() -1; i>= 0; i--) {
                 var isBoss = Components.has(enemies.get(i), Boss.class);
                 if (!isBoss) {
+                    var enemyTag = Components.get(enemies.get(i), EnemyTag.class);
+                    engine.removeEntity(enemyTag.lightOverlay);
                     engine.removeEntity(enemies.get(i));
                 }
             }
