@@ -44,7 +44,7 @@ public class EnemySystem extends IteratingSystem {
             // Boss dead
         } else if (Components.has(entity, EnemyTag.class)) {
             var enemyTag = Components.get(entity, EnemyTag.class);
-
+            getEngine().removeEntity(enemyTag.lightOverlay);
             AudioEvent.playSound(SoundType.EXPLOSION3, .25f);
 
             var canSplit   = enemyTag.split < enemyTag.MAX_SPLIT;
