@@ -3,6 +3,7 @@ package lando.systems.ld59.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
@@ -83,7 +84,7 @@ public class WaveScheduleSystem extends IteratingSystem {
             }
         }));
 
-        // Wave 5 (30 seconds)
+        // Wave 5 (30 seconds and keeps going)
         waves.add(new WaveEvent(30f, () -> {
             for (int i = 0; i < 7; i++) {
                 var x = Config.window_width / 8f * (i + 1);
@@ -97,6 +98,13 @@ public class WaveScheduleSystem extends IteratingSystem {
 
                 getEngine().addEntity(spawner);
             }
+
+            for (int i = 0; i < 3; i++) {
+                var x = Config.window_width / 4f * (i + 1);
+                var spawner = Factory.enemySpawner(x, customY + 50f, List.of(EnemyTag.EnemyType.FLYER));
+                getEngine().addEntity(spawner);
+            }
+
         }));
 
     }
