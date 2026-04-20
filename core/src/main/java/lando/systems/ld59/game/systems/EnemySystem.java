@@ -88,7 +88,7 @@ public class EnemySystem extends IteratingSystem {
         var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
 
-        vel.set(0f, vel.y() * 1.005f);
+        vel.set(0f, vel.y() * 1.0025f);
     }
 
     private void flyer(Entity entity, EnemyTag enemy, float delta) {
@@ -116,12 +116,7 @@ public class EnemySystem extends IteratingSystem {
 
         enemy.floatTimer += delta;
         anim.rotation += delta * 360f;
-        vel.set(0f, -10f);
-
-        if (enemy.fireTimer > enemy.FIRE_RATE) {
-            enemy.shoot();
-            enemy.fireTimer = 0f;
-        }
-        enemy.fireTimer += delta;
+        float driftSpeed = MathUtils.sin(enemy.floatTimer * 1.5f) * 20f;
+        vel.set(driftSpeed, -10f);
     }
 }
