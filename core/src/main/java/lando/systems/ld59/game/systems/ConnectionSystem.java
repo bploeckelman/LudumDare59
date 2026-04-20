@@ -26,6 +26,7 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
         var connection = Components.get(entity, Connection.class);
         if (connection.isPending() && connection.hasBothEndpoints()) {
             connection.complete();
+            closeDoors();
         } else if (connection.isConnected()) {
             if (connection.ropePath != null) {
                 connection.ropePath.update(deltaTime);
@@ -33,7 +34,7 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
         }
 
         if (connection.isPending()) {
-            // lets dongle it
+            // lets dangle it
         }
     }
 
@@ -98,6 +99,7 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
 
             // Create a pending connection if there isn't one...
             if (pendingConnection == null) {
+                openDoors();
                 var entity = Factory.createEntity();
                 var pConn = Connection.createPending(entity, baseButton);
                 AudioEvent.playSound(SoundType.PLUG1);
@@ -198,6 +200,22 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
             }
         } else {
             // shouldn't be calling this when it isn't about to replace a connection
+        }
+    }
+
+    private void openDoors() {
+        var doors = getEngine().getEntitiesFor(Family.one(Turret.class).get());
+        for (Entity door : doors) {
+            var turret = Components.get(door, Turret.class);
+            turret.openDoor();
+        }
+    }
+
+    private void closeDoors() {
+        var doors = getEngine().getEntitiesFor(Family.one(Turret.class).get());
+        for (Entity door : doors) {
+            var turret = Components.get(door, Turret.class);
+            turret.closeDoor();
         }
     }
 }

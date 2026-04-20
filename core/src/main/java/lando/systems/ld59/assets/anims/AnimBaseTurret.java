@@ -17,7 +17,8 @@ public enum AnimBaseTurret implements AnimType {
     , CANNON_BARREL_C
     , CANNON_BARREL_D
     , CANNON_BARREL_E
-    , DOOR_OPEN(0.2f, Animation.PlayMode.LOOP_PINGPONG)
+    , DOOR_OPEN(0.05f, Animation.PlayMode.NORMAL)
+    , DOOR_CLOSE(0.05f, Animation.PlayMode.NORMAL)
     , PORT_ARROW_LIGHT_OVERLAY(0.5f)
     , PORT_LEFT_LIGHT_OVERLAY(0.5f)
     , PORT_RIGHT_LIGHT_OVERLAY(0.5f)

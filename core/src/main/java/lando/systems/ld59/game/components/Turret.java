@@ -127,10 +127,11 @@ public class Turret implements Component {
         // Door anim, port and rock overlays sit on top of base
         //
 
-        var doorAnim = new Animator(AnimBaseTurret.DOOR_OPEN, new Vector2(0, height / 2f));
+        var doorAnim = new Animator(AnimBaseTurret.DOOR_CLOSE, new Vector2(0, height / 2f));
         doorAnim.depth = AnimDepths.TURRETS + 3;
         doorAnim.size.set(width, height);
         doorAnim.rotation = rotation;
+        doorAnim.stateTime = doorAnim.animation.getAnimationDuration();
 
         // Overlays are at the same anim depth
         var overlayDepth = AnimDepths.TURRETS + 4;
@@ -368,5 +369,24 @@ public class Turret implements Component {
         var pos = Components.get(cannon, Position.class);
         var shape = cannonCollider.shape(CollisionCirc.class);
         return shape.circle(pos);
+    }
+
+    public void openDoor() {
+        var doorAnim = Components.get(door, Animator.class);
+        if (doorAnim == null) return;
+        if (doorAnim.type == AnimBaseTurret.DOOR_CLOSE) {
+            doorAnim.start(AnimBaseTurret.DOOR_OPEN);
+        }
+    }
+
+    public void closeDoor() {
+        var color = Components.get(cannon, EnergyColor.class);
+        var pattern = Components.get(cannon, TurretPattern.class);
+        if (color != null || pattern != null) return;
+        var doorAnim = Components.get(door, Animator.class);
+        if (doorAnim == null) return;
+        if (doorAnim.type == AnimBaseTurret.DOOR_OPEN) {
+            doorAnim.start(AnimBaseTurret.DOOR_CLOSE);
+        }
     }
 }
