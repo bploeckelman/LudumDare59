@@ -15,7 +15,7 @@ public class EnemySystem extends IteratingSystem {
     private static final String TAG = EnemySystem.class.getSimpleName();
 
     public EnemySystem() {
-        super(Family.one(EnemyTag.class).get());
+        super(Family.one(EnemyTag.class, Boss.class).get());
     }
 
     @Override
@@ -71,6 +71,7 @@ public class EnemySystem extends IteratingSystem {
     protected void processEntity(Entity entity, float delta) {
         if (Components.has(entity, Boss.class)) {
             // Handle boss logic
+            updateBoss(entity, delta);
             return;
         }
         var enemy = Components.get(entity, EnemyTag.class);
@@ -87,6 +88,8 @@ public class EnemySystem extends IteratingSystem {
         else if (EnemyTag.EnemyType.FLYER == enemy.type) flyer(entity, enemy, delta);
         else if (EnemyTag.EnemyType.SPLITTER == enemy.type) splitter(entity, enemy, delta);
     }
+
+
 
     private void suicider(Entity entity, EnemyTag enemy, float delta) {
         var pos = Components.get(entity, Position.class);
@@ -178,5 +181,19 @@ public class EnemySystem extends IteratingSystem {
         anim.rotation += delta * 360f;
         float driftSpeed = MathUtils.sin(enemy.accumTimer * 1.5f) * 20f;
         vel.set(driftSpeed, -10f);
+    }
+
+    private void updateBoss(Entity entity, float dt) {
+        if (!Components.has(entity, Position.class)) {
+            return;
+        }
+        var boss = Components.get(entity, Boss.class);
+        var bossAnim = Components.get(entity, Animator.class);
+        bossAnim.rotation += dt * 30f;
+        boss.rotation = bossAnim.rotation;
+        boss.update(dt);
+        if (boss.areAllGemsDead()) {
+            entity.add(boss.bossCollider);
+        }
     }
 }

@@ -39,8 +39,8 @@ public class WaveScheduleSystem extends IteratingSystem {
         super(Family.all(SceneContainer.class).get());
         setupWaves();
         this.boss = Main.game.engine.createEntity();
-        boss.add(new Boss());
-        boss.add(new Health(100));
+        boss.add(new Boss(this.boss));
+        boss.add(new Health(20));
         Main.game.engine.addEntity(boss);
     }
 
@@ -48,6 +48,7 @@ public class WaveScheduleSystem extends IteratingSystem {
         var centerX = Config.window_width / 2f;
         var topY = Config.window_height - 50f;
         var customY = 3 * topY / 4f;
+
 
         // Wave 1 (1 second in)
         waves.add(new WaveEvent(1f, () -> {
@@ -119,15 +120,21 @@ public class WaveScheduleSystem extends IteratingSystem {
 
         }));
 
-        waves.add(new WaveEvent(12f, () -> {
+        waves.add(new WaveEvent(120f, () -> {
             float width = 300;
-            boss.add(new Position(Config.window_width / 3f, Config.window_height + 200));
+            var pos = new Position(Config.window_width / 3f, Config.window_height + 100);
+            var bossComp = Components.get(boss, Boss.class);
+            bossComp.addPosition(pos);
+            boss.add(pos);
+            boss.add(new Velocity(0, 0));
             var bossAnim = new Animator(AnimEnemy.BOSS, new Vector2(width / 2f, width / 2f));
             bossAnim.depth = 100;
             bossAnim.size.set(width, width);
             boss.add(bossAnim);
             // Anything else that needs to happen after the boss is spawned
         }));
+
+
 
     }
 

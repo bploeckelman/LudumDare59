@@ -162,7 +162,7 @@ public class TurretSystem extends IteratingSystem {
     }
 
     public Position nearestEnemy(Position tPos) {
-        var enemies = Main.game.engine.getEntitiesFor(Family.one(EnemyTag.class).get());
+        var enemies = Main.game.engine.getEntitiesFor(Family.one(EnemyTag.class, Gem.class).get());
         float closestDist = Float.MAX_VALUE;
         Position closestPos = null;
         for (int i = 0; i < enemies.size(); i++) {

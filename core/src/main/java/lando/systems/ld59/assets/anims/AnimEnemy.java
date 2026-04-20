@@ -12,7 +12,7 @@ public enum AnimEnemy implements AnimType {
     , BLUE_1, BLUE_2, BLUE_3, BLUE_4, BLUE_5
     , GREEN_1, GREEN_2, GREEN_3, GREEN_4, GREEN_5
     , RED_1, RED_2, RED_3, RED_4, RED_5
-    , BOSS
+    , BOSS, GEM
     ;
 
     private static final String BASE_PATH = "characters/enemies/";
