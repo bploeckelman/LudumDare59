@@ -5,6 +5,7 @@ import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Config;
+import lando.systems.ld59.ShakeAmounts;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimEmoji;
@@ -13,6 +14,7 @@ import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.game.signals.CollisionEvent;
+import lando.systems.ld59.game.signals.ScreenShakeEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
 import lando.systems.ld59.particles.effects.EmojiPopEffect;
 import lando.systems.ld59.particles.effects.ShieldDamageEffect;
@@ -189,12 +191,14 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 //                    0, Config.window_width,
 //                    -1, 1,
 //                    pos.x);
+                ScreenShakeEvent.shake(ShakeAmounts.TURRET_HIT);
                 var params = new SmokeEffect.Params(particlePos);
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);
                 getEngine().addEntity(emitter);
                 AudioEvent.playSound(SoundType.CLANG, .0625f, panValue);
                 Stats.instance().damageTaken += bulletDamage.damage * damageMultiplier;
             } else if (Components.has(other, CityShield.class)) {
+                ScreenShakeEvent.shake(ShakeAmounts.SHIELD_HIT);
                 var params = new ShieldDamageEffect.Params(particlePos);
                 var emitter = Factory.emitter(EmitterType.SHIELD_DAMAGE, params);
                 getEngine().addEntity(emitter);
@@ -207,6 +211,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 
             if (city != null) {
                 // Trigger a hit animation on the base ground
+                ScreenShakeEvent.shake(ShakeAmounts.CITY_HIT);
                 var cityGroundPart = Components.get(city, GroundPart.class);
                 Components.get(cityGroundPart.baseEntity, Base.class).handleHit();
                 Stats.instance().damageTaken += bulletDamage.damage * damageMultiplier;
@@ -217,6 +222,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
         } else if (turret != null && enemy != null) {
 //            AudioEvent.playSound(SoundType.BOOM);
             // turret kamikazed
+            ScreenShakeEvent.shake(ShakeAmounts.TURRET_HIT);
             Components.get(enemy, Health.class).getHit(enemy, 1000f); // kill the enemy
             Components.get(turret, Health.class).getHit(turret, ENEMY_RAMMING_DAMAGE); // do damage to the turret
             Stats.instance().damageTaken += ENEMY_RAMMING_DAMAGE;
@@ -226,12 +232,14 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 
         } else if (shield != null) {   // shield vs non bullets
 //            Util.log(TAG, "Shield hit: " + Util.entityString(shield));
+            ScreenShakeEvent.shake(ShakeAmounts.SHIELD_HIT);
             var other = shield == overlap.entityA() ? overlap.entityB() : overlap.entityA();
             Components.get(other, Health.class).getHit(other, 1000f);
             Components.get(shield, Health.class).getHit(shield, ENEMY_RAMMING_DAMAGE);
             AudioEvent.playSound(SoundType.EXPLOSION2, 0.125f);
         } else if (city != null) {
             // something not a bullet hit the city
+            ScreenShakeEvent.shake(ShakeAmounts.CITY_HIT);
 //            Util.log(TAG, "City hit: " + Util.entityString(city));
             AudioEvent.playSound(SoundType.EXPLOSION2, 0.125f);
             Components.get(city, Health.class).getHit(city, ENEMY_RAMMING_DAMAGE);

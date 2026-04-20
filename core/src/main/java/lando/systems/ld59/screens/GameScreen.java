@@ -257,7 +257,7 @@ public class GameScreen extends BaseScreen {
         springTestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                scene.springConnectionTest();
+                scene.shakeConnectionsTest();
             }
         });
 

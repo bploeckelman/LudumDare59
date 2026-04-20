@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.Config;
+import lando.systems.ld59.ShakeAmounts;
 import lando.systems.ld59.assets.ImageType;
 import lando.systems.ld59.assets.anims.AnimBaseButton;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
@@ -120,8 +121,8 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
     }
 
     private static final Family CONNECTIONS = Family.one(Connection.class).get();
-    public void springConnectionTest() {
-        ScreenShakeEvent.shake(10);
+    public void shakeConnectionsTest() {
+        ScreenShakeEvent.shake(ShakeAmounts.ROPE_TEST);
     }
 
     @Override
