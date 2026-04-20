@@ -217,8 +217,12 @@ public class Factory {
         // NOTE(Brian): Bounds is not Position relative like Collider, Animator
         var bounds = new Bounds(x - size / 2f, y - size / 2f, size, size);
 
+        // NOTE: buttons are rotated so that they 'push in' to the appropriate side, left or right
         animator.depth = AnimDepths.BUTTONS;
         animator.size.set(size, size);
+        animator.rotationOrigin.set(size / 2f, size / 2f);
+        if      (type.isColor()) animator.rotation = 90f;
+        else if (type.isShape()) animator.rotation = -90f;
 
         entity.add(position);
         entity.add(animator);

@@ -41,17 +41,22 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
 
         var worldCamWidth = screen.worldCamera.viewportWidth;
         var worldCamHeight = screen.worldCamera.viewportHeight;
-        var centerX = worldCamWidth / 2f;
-        var centerY = worldCamHeight / 2f;
+        var worldCenterX = worldCamWidth / 2f;
+        var worldCenterY = worldCamHeight / 2f;
 
         var background = Factory.background(ImageType.BACKGROUND, new Vector2(0, 0), new Vector2(worldCamWidth, worldCamHeight));
-        var base = Factory.base(centerX, 0f);
+        var base = Factory.base(worldCenterX, 0f);
         var baseComp = Components.get(base, Base.class);
         this.cityAnimator = Components.get(baseComp.city, Animator.class);
 
         // Buttons -----------------------------------------------------------------------------------------------------
-        var baseButtonBoardLeft = Factory.baseButtonBoard(AnimBaseButton.BOARD_LEFT, 0, centerY);
-        var baseButtonBoardRight = Factory.baseButtonBoard(AnimBaseButton.BOARD_RIGHT, worldCamWidth, centerY);
+        var baseButtonBoardHeight = 280f;
+        var pinBoardToTop = worldCamHeight - baseButtonBoardHeight / 2f;
+        var pinBoardToCenter = worldCenterY;
+//        var boardCenterY = pinBoardToTop;
+        var boardCenterY = pinBoardToCenter;
+        var baseButtonBoardLeft = Factory.baseButtonBoard(AnimBaseButton.BOARD_LEFT, 0, boardCenterY);
+        var baseButtonBoardRight = Factory.baseButtonBoard(AnimBaseButton.BOARD_RIGHT, worldCamWidth, boardCenterY);
 
         var baseButtonBoardPosition = Components.get(baseButtonBoardLeft, Position.class);
         var baseButtonBoardAnimator = Components.get(baseButtonBoardLeft, Animator.class);
@@ -73,7 +78,7 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         // Turrets------------------------------------------------------------------------------------------------------
         // Place turrets on the planet, layout follows planet curve
         // - planet center is offscreen downward
-        var center = FramePool.vec2(centerX, -410f);
+        var center = FramePool.vec2(worldCenterX, -410f);
         // - planet isn't perfect circle, bends slightly more on one axis than the other
         var distFromCenter = FramePool.vec2(580f, 600);
         // - starting on the right, create a turret every 'rotatationStep' degrees along planet curve

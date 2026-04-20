@@ -9,8 +9,15 @@ import lando.systems.ld59.game.Components;
 
 public class BaseButton implements Component {
 
-    public enum Type { BLUE, GREEN, RED, CIRCLE, SQUARE, TRIANGLE }
     private enum State { IDLE, PRESSED, ACTIVE, DISABLED }
+
+    public enum Type {
+        BLUE, GREEN, RED,
+        CIRCLE, SQUARE, TRIANGLE
+        ;
+        public boolean isColor() { return this == BLUE || this == RED || this == GREEN; }
+        public boolean isShape() { return this == CIRCLE || this == SQUARE || this == TRIANGLE; }
+    }
 
     // NOTE: actual size 72x72, slight shrink to fit in the button board slots better
 //    public static final float SIZE = 72f;

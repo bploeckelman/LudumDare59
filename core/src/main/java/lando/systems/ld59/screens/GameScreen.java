@@ -197,8 +197,13 @@ public class GameScreen extends BaseScreen {
         uiStage.addActor(liveEnemyCountTable);
 
         var buttonSize  = 50f;
-        var buttonPosY  = windowCamera.viewportHeight - margin - buttonSize;
-        var settingsPos = FramePool.vec2(windowCamera.viewportWidth - margin - buttonSize, buttonPosY);
+        var numButtons  = 4;
+        var buttonsWidth = (numButtons + 1) * buttonSize + (numButtons - 1) * margin;
+//        var buttonPosX  = windowCamera.viewportWidth - margin - buttonSize; // RIGHT
+        var buttonPosX  = (windowCamera.viewportWidth + buttonsWidth) / 2f - margin; // CENTER
+        var buttonPosY  = windowCamera.viewportHeight - margin - buttonSize; // TOP
+//        var buttonPosY  = margin; // BOTTOM
+        var settingsPos = FramePool.vec2(buttonPosX, buttonPosY);
         var cityPos     = FramePool.vec2(settingsPos.x - margin - buttonSize, buttonPosY);
         var turretPos   = FramePool.vec2(cityPos.x - margin - buttonSize, buttonPosY);
         var springPos   = FramePool.vec2(turretPos.x - margin - buttonSize, buttonPosY);
