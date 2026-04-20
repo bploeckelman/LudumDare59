@@ -18,7 +18,7 @@ public class EnemyTag implements Component {
     private Engine engine;
     public float FIRE_RATE = 6f;
     public float fireTimer = 0f;
-    public float floatTimer = 0f;
+    public float accumTimer = 0f;
     public int split = 0;
     public int MAX_SPLIT = 1;
 

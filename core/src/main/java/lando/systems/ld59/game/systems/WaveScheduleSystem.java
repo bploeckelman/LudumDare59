@@ -37,7 +37,7 @@ public class WaveScheduleSystem extends IteratingSystem {
 
     private void setupWaves() {
         var centerX = Config.window_width / 2f;
-        var topY = Config.window_height;
+        var topY = Config.window_height - 50f;
         var customY = 3 * topY / 4f;
 
         // Wave 1 (1 second in)
@@ -45,6 +45,16 @@ public class WaveScheduleSystem extends IteratingSystem {
             var spawner = Factory.enemySpawner(centerX, customY, List.of(EnemyTag.EnemyType.FLYER));
             getEngine().addEntity(spawner);
         }));
+
+        // Wave 1.5 (5 second in)
+        waves.add(new WaveEvent(5f, () -> {
+            for (int i = 0; i < 3; i++) {
+                var x = Config.window_width / 4f * (i + 1);
+                var spawner = Factory.enemySpawner(x, customY + 50f, List.of(EnemyTag.EnemyType.FLYER));
+                getEngine().addEntity(spawner);
+            }
+        }));
+
 
         // Wave 2 (10 seconds)
         waves.add(new WaveEvent(10f, () -> {
@@ -79,8 +89,7 @@ public class WaveScheduleSystem extends IteratingSystem {
                 var x = Config.window_width / 8f * (i + 1);
                 var spawner = Factory.enemySpawner(x, topY, List.of(
                     EnemyTag.EnemyType.SUICIDER,
-                    EnemyTag.EnemyType.SPLITTER,
-                    EnemyTag.EnemyType.FLYER
+                    EnemyTag.EnemyType.SPLITTER
                 ));
                 var spawnerComponent = Components.get(spawner, EnemySpawner.class);
                 spawnerComponent.fireOnce = false;

@@ -105,7 +105,8 @@ public class Factory {
         var animator = new Animator(animType, new Vector2(size, size), animOrigin);
         var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, size / 2f, collidesWith);
         var health = new Health(ENEMY_MAX_HEALTH);
-
+        animator.scale.set(0.3f, 0.3f);
+        animator.tint.a = 0f;
         entity.add(name);
         entity.add(tag);
         entity.add(position);

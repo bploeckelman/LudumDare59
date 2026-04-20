@@ -87,17 +87,58 @@ public class EnemySystem extends IteratingSystem {
     private void suicider(Entity entity, EnemyTag enemy, float delta) {
         var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
+        float standbyDuration = 3f;
+        float appearDuration = 1f;
+        var anim = Components.get(entity, Animator.class);
 
-        vel.set(0f, vel.y() * 1.0025f);
+        enemy.accumTimer += delta;
+
+        if (enemy.accumTimer < appearDuration) {
+            float appearProgress = enemy.accumTimer / appearDuration;
+            float riseSpeed = 80f * (1f - appearProgress); // Start fast, slow down
+            vel.set(0, riseSpeed);
+
+            float scale = 0.3f + (0.7f * appearProgress);
+            anim.scale.set(scale, scale);
+
+            anim.tint.a = appearProgress;
+            return;
+        }
+        anim.scale.set(1f, 1f);
+        anim.tint.a = 1f;
+        if (enemy.accumTimer > standbyDuration) {
+            if (vel.y() >= 0) {
+                vel.set(0, -15f);
+            }
+            vel.set(0f, vel.y() * 1.0035f);
+        }
     }
 
     private void flyer(Entity entity, EnemyTag enemy, float delta) {
         var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
+        var anim = Components.get(entity, Animator.class);
 
-        enemy.floatTimer += delta;
-        float bobSpeed = MathUtils.sin(enemy.floatTimer * 2f) * 15f;
-        float driftSpeed = MathUtils.sin(enemy.floatTimer * 1.5f) * 10f;
+        enemy.accumTimer += delta;
+
+        float appearDuration = 1f;
+        if (enemy.accumTimer < appearDuration) {
+            float appearProgress = enemy.accumTimer / appearDuration;
+            float riseSpeed = 80f * (1f - appearProgress); // Start fast, slow down
+            vel.set(0, riseSpeed);
+
+            float scale = 0.3f + (0.7f * appearProgress);
+            anim.scale.set(scale, scale);
+
+            anim.tint.a = appearProgress;
+            return;
+        }
+
+        anim.scale.set(1f, 1f);
+        anim.tint.a = 1f;
+
+        float bobSpeed = MathUtils.sin(enemy.accumTimer * 2f) * 15f;
+        float driftSpeed = MathUtils.sin(enemy.accumTimer * 1.5f) * 10f;
 
         vel.set(driftSpeed, bobSpeed);
 
@@ -114,9 +155,24 @@ public class EnemySystem extends IteratingSystem {
         var vel = Components.get(entity, Velocity.class);
         var anim = Components.get(entity, Animator.class);
 
-        enemy.floatTimer += delta;
+        enemy.accumTimer += delta;
+
+        float appearDuration = 1f;
+
+        if (enemy.accumTimer < appearDuration) {
+            float appearProgress = enemy.accumTimer / appearDuration;
+            float riseSpeed = 80f * (1f - appearProgress); // Start fast, slow down
+            vel.set(0, riseSpeed);
+
+            float scale = 0.3f + (0.7f * appearProgress);
+            anim.scale.set(scale, scale);
+
+            anim.tint.a = appearProgress;
+            return;
+        }
+
         anim.rotation += delta * 360f;
-        float driftSpeed = MathUtils.sin(enemy.floatTimer * 1.5f) * 20f;
+        float driftSpeed = MathUtils.sin(enemy.accumTimer * 1.5f) * 20f;
         vel.set(driftSpeed, -10f);
     }
 }

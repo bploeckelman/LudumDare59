@@ -30,10 +30,14 @@ public class EnemySpawnerSystem extends IteratingSystem {
 
         spawner.spawnTimer -= delta;
         if (spawner.spawnTimer > 0) return;
-        var enemy = Factory.enemyShip(spawner.enemyType.get(MathUtils.random(spawner.enemyType.size() - 1)),
+        var enemyType = spawner.enemyType.get(MathUtils.random(spawner.enemyType.size() - 1));
+
+        float actualSpawnY = (enemyType == EnemyTag.EnemyType.FLYER) ? spawnY - 80f : spawnY;
+
+        var enemy = Factory.enemyShip(enemyType,
             EnergyColor.Type.getRandom(),
             spawnX,
-            spawnY,
+            actualSpawnY,
             0,
             -10f,
             32f

@@ -30,8 +30,6 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         createView(Config.framebuffer_width, Config.framebuffer_height);
 
         var centerX = screen.worldCamera.viewportWidth / 2f;
-        var topY = screen.worldCamera.viewportHeight;
-        var customY = 3 * topY / 4f;
         var buttonY = BaseButton.SIZE - 10;
 
         var base = Factory.base(centerX, 0f);
