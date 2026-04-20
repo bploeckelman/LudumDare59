@@ -226,6 +226,11 @@ public class Turret implements Component {
 
     }
 
+    public boolean hasPattern() {
+        var turretPattern = cannon.getComponent(TurretPattern.class);
+        return turretPattern != null;
+    }
+
     private void createBullet(float rotationOffset) {
         float diameter = 20f;
         float radius = diameter / 2f;

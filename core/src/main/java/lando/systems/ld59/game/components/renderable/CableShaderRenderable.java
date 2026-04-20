@@ -31,6 +31,7 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
 
     public Color color;
     public Connection connection;
+    public boolean flowing;
 
 
     public CableShaderRenderable(Connection connection, RopePath path) {
@@ -53,7 +54,11 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
 
     public void render() {
 
-        this.color = connection.getTurret().getCannonColor();
+        this.color = connection.getColor();
+        var turrent = connection.getTurret();
+        if (turrent != null) {
+            flowing = turrent.hasPattern();
+        }
 
         populateVertexArray();
 
@@ -61,6 +66,7 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
 
         int vertexCount = verticesIndex / NUM_COMPONENTS_PER_VERTEX;
         mesh.setVertices(vertices);
+        shaderProgram.setUniformf("u_flow", flowing ? 1f : 0f);
         mesh.render(shaderProgram, GL20.GL_TRIANGLE_STRIP, 0, vertexCount);
 
         verticesIndex = 0;
@@ -75,6 +81,8 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
 
             float interp1 = (float) i  / (float) numVertices;
             float interp2 = (float) i2 / (float) numVertices;
+
+            interp1 *= path.getCurrentLength() * .001f;
 
             Vector2 p1 = points.get(i);
             Vector2 p2 = points.get(i2);

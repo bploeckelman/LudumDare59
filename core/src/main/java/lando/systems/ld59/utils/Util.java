@@ -75,7 +75,7 @@ public class Util {
         var points = new Array<Vector2>();
         float segmentLength = 20f; // arbitrary, but determines 'density' of points... e.g. 200px rope gets ~10 points, 400px rope gets ~20
         float totalDist = start.dst(end);
-        int segments = Math.max(1, MathUtils.round(totalDist / segmentLength));
+        int segments = Math.max(3, MathUtils.round(totalDist / segmentLength));
 
         for (int i = 0; i <= segments; i++) {
             float t = (float) i / segments;

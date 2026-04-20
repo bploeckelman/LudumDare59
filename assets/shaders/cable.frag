@@ -4,6 +4,7 @@ precision mediump float;
 
 uniform sampler2D u_texture;
 uniform float u_time;
+uniform float u_flow;
 uniform vec4 u_edgeColor;
 
 //input from vertex shader
@@ -69,7 +70,7 @@ float cubicPulse( float c, float w, float x )
 
 void main() {
     vec4 texSample = texture2D(u_texture, v_texCoords);
-    float n1 = abs(perlinNoise(vec2(v_texCoords.x * 100. - u_time*20., v_texCoords.y + u_time/2.5))) * .6;
+    float n1 = abs(perlinNoise(vec2(v_texCoords.x * 100. - u_time*20. * u_flow, v_texCoords.y + u_time/2.5))) * .6;
     float n2 = abs(perlinNoise(vec2(v_texCoords.x * 100. - u_time*3., v_texCoords.y + u_time/2.))) * .3;
     float n3 = abs(perlinNoise(vec2(v_texCoords.x * 100. - u_time*5., v_texCoords.y + u_time))) * .2;
 

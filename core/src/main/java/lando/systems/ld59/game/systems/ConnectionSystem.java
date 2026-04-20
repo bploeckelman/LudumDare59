@@ -34,6 +34,10 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                 connection.ropePath.update(deltaTime);
             }
         }
+
+        if (connection.isPending()) {
+            // lets dongle it
+        }
     }
 
     @Override

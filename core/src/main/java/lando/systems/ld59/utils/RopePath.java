@@ -123,6 +123,20 @@ public class RopePath {
         }
     }
 
+    /**
+     * Returns the current length of the rope by summing distances between adjacent points.
+     * This changes as the rope stretches and simulates.
+     */
+    public float getCurrentLength() {
+        if (positions.size < 2) return 0f;
+
+        float length = 0f;
+        for (int i = 0; i < positions.size - 1; i++) {
+            length += positions.get(i).dst(positions.get(i + 1));
+        }
+        return length;
+    }
+
 
 
 
