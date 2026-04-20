@@ -111,6 +111,7 @@ public class Turret implements Component {
         var bullet = Factory.createEntity();
         var cannonPos = cannon.getComponent(Position.class);
         var energyColor = cannon.getComponent(EnergyColor.class);
+        var turretPattern = cannon.getComponent(TurretPattern.class);
 //        if (energyColor == null) {
 //            // no energy, no bullet
 //            return;
@@ -120,7 +121,7 @@ public class Turret implements Component {
         var tempVec = FramePool.vec2(60, 0).rotateDeg(cannonRotation.floatValue());
         pos.add((int) tempVec.x, (int)tempVec.y);
 
-        var speed = 100f;
+        var speed = turretPattern.bulletSpeed();
         var totalRotation = cannonRotation.floatValue();
         var vel = new Velocity(
                 MathUtils.cosDeg(totalRotation) * speed,
