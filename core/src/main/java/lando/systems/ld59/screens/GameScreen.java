@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.github.tommyettinger.digital.Stringf;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.badlogic.ashley.core.Family;
@@ -38,6 +39,8 @@ public class GameScreen extends BaseScreen {
     private final SceneGame scene;
     private final SettingsUI settingsUI = new SettingsUI();
 
+    private VisLabel fpsLabel;
+
     private VisTable liveEnemyCountTable;
     private VisLabel redEnemyCountLabel;
     private VisLabel greenEnemyCountLabel;
@@ -67,6 +70,8 @@ public class GameScreen extends BaseScreen {
     @Override
     public void update(float delta) {
         super.update(delta);
+        fpsLabel.setText(Stringf.format("FPS: %.0f", Gdx.graphics.getFramesPerSecond()));
+
         if (settingsUI.isVisible()) {
             return;
         }
@@ -281,6 +286,10 @@ public class GameScreen extends BaseScreen {
         var killTableY = 0;
         killCountTable.setPosition(killTableX, killTableY);
 
+        fpsLabel = new VisLabel("");
+        fpsLabel.setPosition(10, 10);
+
         uiStage.addActor(killCountTable);
+        uiStage.addActor(fpsLabel);
     }
 }
