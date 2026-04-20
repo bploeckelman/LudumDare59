@@ -38,6 +38,7 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
     private String page1;
     private String page2;
     private String page3;
+    private String page4;
     private TypingLabel pageCounter;
     float storyAccum = 0f;
     boolean hasClicked = false;
@@ -60,39 +61,33 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
         AudioEvent.playMusic(MusicType.INTRO_MUSIC);
 
 
-
-//        typingLabel = new TypingLabel(page1, FontType.HEMI_HEAD.get());
-//        typingLabel.setPosition(worldCamera.viewportWidth * .05f,
-//            worldCamera.viewportHeight * 0.5f);
-//        typingLabel.setWidth(Config.window_width * .9f);
-//        typingLabel.wrap = true;
-//        typingLabel.setScale(.6f);
-//        typingLabel.getFont().adjustLineHeight(1.125f);
     }
 
     private String getNextStory() {
         switch (currentPage) {
             case 1: currentPage ++; return page2;
             case 2: currentPage ++; return page3;
-            case 3: currentPage ++; return page3;
-            case 4: currentPage = 4; return page3;
-            default: return page3;
+            case 3: currentPage ++; return page4;
+            case 4: currentPage ++ ; return page4;
+            case 5: currentPage = 5; return page4;
+            default: return page4;
         }
     }
 
     private String getPageCount() {
         switch (currentPage) {
-            case 1: return "1/3";
-            case 2: return "2/3";
-            case 3: return "3/3";
-            case 4: return "3/3";
+            case 1: return "1/4";
+            case 2: return "2/4";
+            case 3: return "3/4";
+            case 4: return "4/4";
+            case 5: return "4/4";
             default: return "Go!";
         }
     }
     @Override
     public void update(float delta) {
         super.update(delta);
-        if(currentPage < 4) {
+        if(currentPage < 5) {
             storyAccum -= delta;
         }
         if(hasClicked) {
@@ -109,7 +104,7 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
             hasClicked = true;
         }
 
-        if (currentPage == 4 && storyText.hasEnded() && !transitioning && Gdx.input.justTouched()) {
+        if (currentPage == 5 && storyText.hasEnded() && !transitioning && Gdx.input.justTouched()) {
             transitioning = true;
             game.setScreen(new GameScreen());
         }
@@ -119,7 +114,6 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
     @Override
     public void render(float delta) {
 
-//        ScreenUtils.clear(Color.DARK_GRAY);
         ScreenUtils.clear(.0f, .0f, .1f, 1f);
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
@@ -164,6 +158,13 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
             "With no plasma color chosen, the turrets will still fire, but their bullets will be {COLOR=grey}pale, limp, and flaccid{COLOR=white;}.\n\n" +
             "With the right plasma types chosen and a strategic firing pattern, the aliens will have no choice but to " +
             "kneel before you and cower as your girthy turrets spray ropey, {RAINBOW}colorful{ENDRAINBOW} jets of {WAVE}freedom.{ENDWAVE}";
+
+        page4 = "{COLOR=orange}TLDR:\n\n" +
+            "{COLOR=white}1. Click a {COLOR=yellow}fire button{COLOR=white} (on the right) to select a firing pattern.\n\n" +
+            "2. Click a {COLOR=grey}turret{COLOR=white} (center, bottom) to connect the cable, enabling cannon fire.\n\n" +
+            "3. Click the {COLOR=magenta}pl{COLOR=dark green}as{COLOR=blue}ma{COLOR=white} buttons (on the left) and connect them to the turrets to change the bullet type\n\n" +
+            "4. Try to survive until the final boss appears. \n\n" +
+            "5. Behold the boss's glory, then destroy it!";
 
 //        if (Flag.DEBUG_RENDER.isEnabled()) {
 //            var screenName = new VisLabel(getClass().getSimpleName());
