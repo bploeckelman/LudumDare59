@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import lando.systems.ld59.assets.SoundType;
+import lando.systems.ld59.AnimDepths;import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.renderable.FlatShape;
 import lando.systems.ld59.game.signals.AudioEvent;
@@ -30,7 +30,6 @@ public class Connection implements Component {
     private FlatShape flatShape;
 
     public static Connection createPending(Entity entity, Turret turret) {
-
         return new Connection(entity, State.PENDING, turret, null);
     }
 
@@ -78,7 +77,7 @@ public class Connection implements Component {
             // NOTE: FlatShape takes RopePath points by ref so it should stay up to date as RopePath updates run
             ropePath = new RopePath(points);
             // TODO: replace this FlatShape.path with a shader based electricity thing, and wire up jostling based on screen shake triggering events
-            flatShape = FlatShape.path(BaseButton.ANIM_DEPTH - 1, ropePath.positions, pathColor, lineWidth);
+            flatShape = FlatShape.path(AnimDepths.CABLES, ropePath.positions, pathColor, lineWidth);
 
             entity.add(flatShape);
         }
@@ -110,44 +109,5 @@ public class Connection implements Component {
             AudioEvent.playSound(SoundType.PLUGOUT);
             EntityEvent.remove(entity);
         }
-
-    }
-
-    /**
-     * Generates points along a line between start to end, with internal points randomly displaced perpendicularly from the line for variation
-     */
-    private Array<Vector2> generatePathPoints(Vector2 start, Vector2 end) {
-        var defaultDensity = 0.1f;
-        var defaultMaxDisplacement = 30f;
-        return generatePathPoints(start, end, defaultDensity, defaultMaxDisplacement);
-    }
-
-    /**
-     * Generates points along a line between start to end, with internal points randomly displaced perpendicularly from the line for variation,
-     * customizing the number of points along the length based on {@code density} and the maximum perpendicular displacement distance from the line with {@code maxDisplacement}
-     */
-    private Array<Vector2> generatePathPoints(Vector2 start, Vector2 end, float density, float maxDisplacement) {
-        var points = new Array<Vector2>();
-
-        var direction = FramePool.vec2(end).sub(start);
-        var distance = direction.len();
-        direction.nor();
-
-        var perpendicular = FramePool.vec2(-direction.y, direction.x);
-
-        var numPoints = Math.max(2, Math.round(distance * density));
-        for (int i = 0; i < numPoints; i++) {
-            var t = (float) i / (numPoints - 1);
-            var point = new Vector2(start).lerp(end, t);
-
-            // Displace this point perpendicularly from line, if it's not the start or end point
-            if (i > 0 && i < numPoints - 1) {
-                var displacement = (MathUtils.random() - 0.5f) * 2 * maxDisplacement;
-                point.add(perpendicular.x * displacement, perpendicular.y * displacement);
-            }
-
-            points.add(point);
-        }
-        return points;
     }
 }

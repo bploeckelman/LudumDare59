@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import lando.systems.ld59.Config;
+import lando.systems.ld59.AnimDepths;import lando.systems.ld59.Config;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
@@ -33,8 +33,6 @@ public class Turret implements Component {
 
     public static final float WIDTH = 160f;
     public static final float HEIGHT = 128f;
-    public static final float ANIM_DEPTH = Base.ANIM_DEPTH + 10;
-    public static final float ANIM_DEPTH_BULLET = 100f;
     public static final CollisionMask[] COLLIDES_WITH = new CollisionMask[] {
             CollisionMask.ENEMY, CollisionMask.ENEMY_PROJECTILE
     };
@@ -91,14 +89,14 @@ public class Turret implements Component {
         //
 
         var cannonAnim = new Animator(AnimBaseTurret.CANNON_BARREL_A, new Vector2(width / 2f, height / 2f));
-        cannonAnim.depth = ANIM_DEPTH + 1;
+        cannonAnim.depth = AnimDepths.TURRETS + 1;
         cannonAnim.size.set(width, height);
         // NOTE: smaller turret anim means the cannon origin moved from halfway mark in source image
 //        cannonAnim.rotationOrigin.set(width / 2f, height / 2f);
         cannonAnim.rotationOrigin.set(width * 0.5625f, height / 2f);
 
         var baseAnim = new Animator(AnimBaseTurret.BASE_IDLE, new Vector2(0, height / 2f));
-        baseAnim.depth = ANIM_DEPTH + 2;
+        baseAnim.depth = AnimDepths.TURRETS + 2;
         baseAnim.size.set(width, height);
         baseAnim.rotation = rotation;
 
@@ -107,12 +105,12 @@ public class Turret implements Component {
         //
 
         var doorAnim = new Animator(AnimBaseTurret.DOOR_OPEN, new Vector2(0, height / 2f));
-        doorAnim.depth = ANIM_DEPTH + 3;
+        doorAnim.depth = AnimDepths.TURRETS + 3;
         doorAnim.size.set(width, height);
         doorAnim.rotation = rotation;
 
         // Overlays are at the same anim depth
-        var overlayDepth = ANIM_DEPTH + 4;
+        var overlayDepth = AnimDepths.TURRETS + 4;
         var rockAnim = new Animator(AnimBaseTurret.ROCK_OVERLAY, new Vector2(0, height / 2f));
         rockAnim.depth = overlayDepth;
         rockAnim.size.set(width, height);
@@ -250,7 +248,7 @@ public class Turret implements Component {
             MathUtils.sinDeg(totalRotation) * speed);
 
         var animator = new Animator(AnimMisc.PROJECTILE);
-        animator.depth = ANIM_DEPTH_BULLET;
+        animator.depth = AnimDepths.BULLETS;
         animator.size.set(diameter, diameter);
         animator.origin.set(radius, radius);
         animator.tint.set(Optional.ofNullable(energyColor)

@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import lando.systems.ld59.Main;
+import lando.systems.ld59.AnimDepths;import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.ImageType;
 import lando.systems.ld59.assets.anims.AnimEnemy;
@@ -130,7 +130,7 @@ public class Factory {
         // NOTE(Brian): Bounds is not Position relative like Collider, Animator
         var bounds = new Bounds(x - size / 2f, y - size / 2f, size, size);
 
-        animator.depth = BaseButton.ANIM_DEPTH;
+        animator.depth = AnimDepths.BUTTONS;
         animator.size.set(size, size);
 
         entity.add(position);
