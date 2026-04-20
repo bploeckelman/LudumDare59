@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
+import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
@@ -52,7 +53,12 @@ public class CityBaseSystem extends IteratingSystem {
             // Fix Turrets
             var turrets = engine.getEntitiesFor(Family.all(Turret.class).get());
             for (int i = turrets.size() -1; i>= 0; i--) {
+                var turret = Components.get(turrets.get(i), Turret.class);
                 var turretHealth = Components.get(turrets.get(i), Health.class);
+                var baseAnim = Components.get(turret.base, Animator.class);
+                baseAnim.start(AnimBaseTurret.BASE_IDLE);
+                turret.base.add(turret.baseCollider);
+                turret.cannon.add(turret.cannonCollider);
                 turretHealth.currentHealth = turretHealth.maxHealth;
             }
 
