@@ -7,15 +7,19 @@ import lando.systems.ld59.assets.AnimType;
 import java.util.EnumMap;
 
 public enum AnimBaseTurret implements AnimType {
-    // TODO: add door closed/open, overlays (rocks, port, arrow), etc... once provided
-      BASE
-    , BARREL_ICON
+      BARREL_ICON /* TODO: should be moved to AnimMisc + /misc */
+    , BASE_DAMAGED(0.5f)
+    , BASE_IDLE(0.5f)
     , CANNON_BARREL_A
     , CANNON_BARREL_B
     , CANNON_BARREL_C
     , CANNON_BARREL_D
     , CANNON_BARREL_E
-    , CANNON
+    , DOOR_OPEN(0.2f, Animation.PlayMode.LOOP_PINGPONG)
+    , PORT_ARROW_LIGHT_OVERLAY(0.5f)
+    , PORT_LEFT_LIGHT_OVERLAY(0.5f)
+    , PORT_RIGHT_LIGHT_OVERLAY(0.5f)
+    , ROCK_OVERLAY
     ;
 
     public AnimBaseTurret nextBarrel() {
@@ -34,9 +38,27 @@ public enum AnimBaseTurret implements AnimType {
     private static final EnumMap<AnimBaseTurret, Animation<TextureRegion>> container = AnimType.createAndRegisterContainer(AnimBaseTurret.class);
     private static final EnumMap<AnimBaseTurret, AnimType.AnimConfig> configs = AnimType.createConfigs(
             AnimBaseTurret.values(), BASE_PATH,
-            e -> e.name().toLowerCase().replace("_", "-"),
-            e -> new AnimType.Data()
+            e -> e.folderPrefix + e.name().toLowerCase().replace("_", "-"),
+            e -> new AnimType.Data(e.frameDuration, e.playMode)
     );
+
+    public final String folderPrefix;
+    public final float frameDuration;
+    public final Animation.PlayMode playMode;
+
+    AnimBaseTurret() {
+        this(0.1f, Animation.PlayMode.LOOP);
+    }
+
+    AnimBaseTurret(float frameDuration) {
+        this(frameDuration, Animation.PlayMode.LOOP);
+    }
+
+    AnimBaseTurret(float frameDuration, Animation.PlayMode playMode) {
+        this.folderPrefix = name().toLowerCase().replace("_", "-") + "/";
+        this.frameDuration = frameDuration;
+        this.playMode = playMode;
+    }
 
     @Override
     public AnimType.AnimConfig getConfig() {

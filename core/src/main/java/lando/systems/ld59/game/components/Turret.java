@@ -29,6 +29,8 @@ import static lando.systems.ld59.game.Constants.PLAYER_PROJECTILE_DAMAGE;
 public class Turret implements Component {
 
     public static final float size = 200f;
+    public static final float WIDTH = 160f;
+    public static final float HEIGHT = 128f;
 
     public static final float ANIM_DEPTH = Base.ANIM_DEPTH + 10;
     public static final CollisionMask[] COLLIDES_WITH = new CollisionMask[] {
@@ -46,6 +48,10 @@ public class Turret implements Component {
 
     public final Entity base;
     public final Entity cannon;
+    public final Entity door;
+    public final Entity rockOverlay;
+    public final Entity portArrowOverlay;
+    public final Entity portLightOverlay;
 
     public final Collider baseCollider;
     public final Collider cannonCollider;
@@ -62,25 +68,56 @@ public class Turret implements Component {
         this.cannonRotation = new MutableFloat(0);
         this.base = Factory.createEntity();
         this.cannon = Factory.createEntity();
+        this.door = Factory.createEntity();
+        this.rockOverlay = Factory.createEntity();
+        this.portArrowOverlay = Factory.createEntity();
+        this.portLightOverlay = Factory.createEntity();
         this.baseOutline    = new Outline(Color.CLEAR_WHITE, Color.CLEAR_WHITE, 3f);
         this.cannonOutline  = new Outline(Color.CLEAR_WHITE, Color.CLEAR_WHITE, 2f);
         this.baseCollider   = Collider.circ(CollisionMask.TURRET, 0, 10, 80, COLLIDES_WITH);
         this.cannonCollider = Collider.circ(CollisionMask.TURRET, 96,  0, 23, COLLIDES_WITH);
 
-        var width = size;
-        var height = size;
+        var width = WIDTH;
+        var height = HEIGHT;
 
         // Cannon sits 'behind' base so that it can retract...
 
-        var cannonAnim = new Animator(AnimBaseTurret.CANNON_BARREL_A, new Vector2(0, width / 2f));
-        cannonAnim.depth = ANIM_DEPTH + 1;
+        var cannonAnim = new Animator(AnimBaseTurret.CANNON_BARREL_A, new Vector2(0, height / 2f));
+        cannonAnim.depth = ANIM_DEPTH + 3; // TODO(TEMP): revert to ANIM_DEPTH + 1
         cannonAnim.size.set(width, height);
-        cannonAnim.rotationOrigin.set(width / 2f, height / 2f);
+        // NOTE: smaller turret anim means the cannon origin moved from halfway mark in source image
+//        cannonAnim.rotationOrigin.set(width / 2f, height / 2f);
+        cannonAnim.rotationOrigin.set(width * 0.5625f, height / 2f);
 
-        var baseAnim = new Animator(AnimBaseTurret.BASE, new Vector2(0, width / 2f));
+        var baseAnim = new Animator(AnimBaseTurret.BASE_IDLE, new Vector2(-10, height / 2f));
         baseAnim.depth = ANIM_DEPTH + 2;
         baseAnim.size.set(width, height);
         baseAnim.rotation = rotation;
+
+        // Door anim, port and rock overlays sit on top of base
+
+        var doorAnim = new Animator(AnimBaseTurret.DOOR_OPEN, new Vector2(0, height / 2f));
+        doorAnim.depth = ANIM_DEPTH + 3;
+        doorAnim.size.set(width, height);
+        doorAnim.rotation = rotation;
+
+        // Overlays are at the same anim depth
+        var overlayDepth = ANIM_DEPTH + 4;
+
+        var rockAnim = new Animator(AnimBaseTurret.ROCK_OVERLAY, new Vector2(0, height / 2f));
+        rockAnim.depth = overlayDepth;
+        rockAnim.size.set(width, height);
+        rockAnim.rotation = rotation;
+
+        var portArrowAnim = new Animator(AnimBaseTurret.PORT_ARROW_LIGHT_OVERLAY, new Vector2(0, height / 2f));
+        portArrowAnim.depth = overlayDepth;
+        portArrowAnim.size.set(width, height);
+        portArrowAnim.rotation = rotation;
+
+        var portLightAnim = new Animator(AnimBaseTurret.PORT_ARROW_LIGHT_OVERLAY, new Vector2(0, height / 2f));
+        portLightAnim.depth = overlayDepth;
+        portLightAnim.size.set(width, height);
+        portLightAnim.rotation = rotation;
 
         var cannonOffset = 96f;
         cannon.add(turretHealth);
@@ -98,10 +135,26 @@ public class Turret implements Component {
         base.add(baseOutline);
         base.add(baseCollider);
         base.add(new TurretPart());
-        base.add(new Position(pos.x, pos.y));
+        base.add(new Position(pos));
+
+        door.add(doorAnim);
+        door.add(new Position(pos));
+
+        rockOverlay.add(rockAnim);
+        rockOverlay.add(new Position(pos));
+
+        portArrowOverlay.add(portArrowAnim);
+        portArrowOverlay.add(new Position(pos));
+
+        portLightOverlay.add(portArrowAnim);
+        portLightOverlay.add(new Position(pos));
 
         engine.addEntity(base);
         engine.addEntity(cannon);
+        engine.addEntity(door);
+        engine.addEntity(rockOverlay);
+        engine.addEntity(portArrowOverlay);
+        engine.addEntity(portLightOverlay);
     }
 
     public void shoot() {

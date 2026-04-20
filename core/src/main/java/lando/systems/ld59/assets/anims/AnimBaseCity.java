@@ -12,7 +12,7 @@ public enum AnimBaseCity implements AnimType {
     , CRACK_3
     , CRACK_4
     , DEAD
-    , GLASS_BREAK(Animation.PlayMode.NORMAL)
+    , GLASS_BREAK
     , HIT_A
     , IDLE(Animation.PlayMode.LOOP)
     , IDLE_WEAK(Animation.PlayMode.LOOP)
