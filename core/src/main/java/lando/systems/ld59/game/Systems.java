@@ -20,6 +20,7 @@ public class Systems {
     public static ProjectileSystem       projectiles;
     public static RenderDebugSystem      renderDebug;
     public static RenderSystem           render;
+    public static ShieldSystem           shield;
     public static ViewSystem             view;
     public static TimerSystem            timer;
     public static TurretSystem           turret;
@@ -42,6 +43,7 @@ public class Systems {
         Systems.projectiles      = new ProjectileSystem();
         Systems.renderDebug      = new RenderDebugSystem();
         Systems.render           = new RenderSystem();
+        Systems.shield           = new ShieldSystem();
         Systems.view             = new ViewSystem();
         Systems.timer            = new TimerSystem();
         Systems.turret           = new TurretSystem();
@@ -63,6 +65,7 @@ public class Systems {
         engine.addSystem(projectiles);
         engine.addSystem(renderDebug);
         engine.addSystem(render);
+        engine.addSystem(shield);
         engine.addSystem(view);
         engine.addSystem(timer);
         engine.addSystem(turret);

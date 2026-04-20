@@ -14,7 +14,7 @@ import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.signals.ConnectionEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
-import lando.systems.ld59.utils.FramePool;
+import lando.systems.ld59.utils.FramePool;import static lando.systems.ld59.game.Constants.CITY_TURRET_REPAIR_TIME;
 
 public class TurretSystem extends IteratingSystem  {
 
@@ -61,7 +61,7 @@ public class TurretSystem extends IteratingSystem  {
             turret.cannon.remove(Collider.class);
 
             if (turret.repairTimer < 0) {
-                turret.repairTimer = 10f;
+                turret.repairTimer = CITY_TURRET_REPAIR_TIME;
             }
 
             turret.repairTimer -= dt;

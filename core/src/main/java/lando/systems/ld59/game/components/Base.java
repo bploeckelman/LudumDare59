@@ -63,7 +63,7 @@ public class Base implements Component {
         shield.add(new Position(pos.x, pos.y));
         shield.add(shieldCollider);
         shield.add(new Health(SHIELD_MAX_HEALTH));
-        shield.add(new CityShield());
+        shield.add(new CityShield(shieldCollider));
         shield.add(new ShieldShaderRenderable());
 
         engine.addEntity(ground);

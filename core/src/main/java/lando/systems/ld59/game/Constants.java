@@ -13,6 +13,9 @@ public class Constants {
     public static final float SHIELD_MAX_HEALTH = 100f;
     public static final float MATCHING_COLOR_DAMAGE_MULTIPLIER = 10f;
 
+    public static final float CITY_SHIELD_REPAIR_TIME = 10f;
+    public static final float CITY_TURRET_REPAIR_TIME = 10f;
+
 
     public static final int Z_DEPTH_BACKGROUND = -100;
     public static final int Z_DEPTH_DEFAULT    = 0;
