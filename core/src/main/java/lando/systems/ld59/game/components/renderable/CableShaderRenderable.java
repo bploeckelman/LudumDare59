@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld59.assets.ImageType;
@@ -21,7 +22,7 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
     private static final int MAX_TRIANGLES = 1000;
     private static final int MAX_NUM_VERTICES = MAX_TRIANGLES * 3;
 
-    public static final float THICKNESS = 8;
+    public static final float THICKNESS = 12;
 
     public RopePath path;
     public Array<Vector2> points;
@@ -95,7 +96,9 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
             // perpendicularized
             perp.set(-perp.y, perp.x);
 
-            float thick = (2f * THICKNESS);
+            float taper = MathUtils.clamp(Math.min(5, (numVertices - i)) / 5f, 0f, 1f);
+
+            float thick = (2f * THICKNESS * taper);
 
             float alpha = 1f;
 

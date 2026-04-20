@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class RopePath {
 
-    private static final Vector2 DEFAULT_GRAVITY = new Vector2(0, -100f);
+    private static final Vector2 DEFAULT_GRAVITY = new Vector2(0, -1000f);
     private static final float DEFAULT_DAMPING = 0.98f; // 1 = no damping
     private static final int CONSTRAINT_ITERATIONS = 10;
 
@@ -33,6 +33,7 @@ public class RopePath {
         pinned = new boolean[initialPositions.size];
         pinPoint(0);
         pinPoint(initialPositions.size - 1);
+        pinPoint(initialPositions.size - 2);
     }
 
     public void jostle() {
@@ -56,6 +57,7 @@ public class RopePath {
         float py =  ax / len;
 
         for (int i = 1; i < positions.size - 1; i++) {
+            if (pinned[i]) continue;
             // Parabolic falloff: max in middle, zero at endpoints
             float t = (float) i / (positions.size - 1);
             float falloff = 4f * t * (1f - t);
@@ -107,9 +109,10 @@ public class RopePath {
 
                 if (dist < 0.0001f) continue;
 
+                float constraintStiffness = 0.2f; // 1.0 = rigid, 0.1 = very stretchy
                 float diff = (dist - restDist) / dist;
-                float offsetX = dx * 0.5f * diff;
-                float offsetY = dy * 0.5f * diff;
+                float offsetX = dx * 0.5f * diff * constraintStiffness;
+                float offsetY = dy * 0.5f * diff * constraintStiffness;
 
                 if (!pinned[i]) {
                     p1.x += offsetX;

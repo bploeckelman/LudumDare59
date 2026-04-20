@@ -64,6 +64,7 @@ public class CityBaseSystem extends IteratingSystem {
 
 
             // Let the user know what happened
+            //TODO: we need some modal or something here
         }
 
         // update shield behavior

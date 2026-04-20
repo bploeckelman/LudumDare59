@@ -60,6 +60,11 @@ public class Turret implements Component {
 
     public boolean swappingCannonBarrel = false;
 
+    public Vector2 colorPortPenUltimateLocation;
+    public Vector2 colorPortLocation;
+    public Vector2 patternPortPenUltimateLocation;
+    public Vector2 patternPortLocation;
+
     public Turret(Engine engine, Entity entity, Position pos, float rot, Health turretHealth) {
         this.engine = engine;
         this.entity = entity;
@@ -83,6 +88,24 @@ public class Turret implements Component {
 
         var width = WIDTH;
         var height = HEIGHT;
+
+        var colorPortOffset = new Vector2(35, 5);
+        colorPortOffset.rotateDeg(rotation);
+
+        var patternPortOffset = new Vector2(35, -5);
+        patternPortOffset.rotateDeg(rotation);
+
+        colorPortLocation = new Vector2(pos.x + colorPortOffset.x, pos.y + colorPortOffset.y);
+        patternPortLocation = new Vector2(pos.x + patternPortOffset.x, pos.y + patternPortOffset.y);
+
+        colorPortOffset = new Vector2(35, 10);
+        colorPortOffset.rotateDeg(rotation);
+
+        patternPortOffset = new Vector2(35, -10);
+        patternPortOffset.rotateDeg(rotation);
+
+        colorPortPenUltimateLocation = new Vector2(pos.x + colorPortOffset.x, pos.y + colorPortOffset.y);
+        patternPortPenUltimateLocation = new Vector2(pos.x + patternPortOffset.x, pos.y + patternPortOffset.y);
 
         //
         // Cannon sits 'behind' base so that it can retract...

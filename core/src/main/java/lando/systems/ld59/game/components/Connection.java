@@ -50,6 +50,8 @@ public class Connection implements Component {
     }
 
     public void complete() {
+        var endPenUltimateLocation = turret.colorPortPenUltimateLocation;
+        var endLocation = turret.colorPortLocation;
         if (baseButton.isEnergy()) {
             var energyColor = baseButton.getEnergyColor();
             turret.connectEnergy(energyColor);
@@ -62,17 +64,18 @@ public class Connection implements Component {
             turret.connectPattern(turretPattern);
             state = State.CONNECTED;
             AudioEvent.playSound(SoundType.PLUGIN, 1f);
+            endPenUltimateLocation = turret.patternPortPenUltimateLocation;
+            endLocation = turret.patternPortLocation;
             Util.log(TAG, "Connected: pattern '" + turretPattern.type + "' to turret");
         }
 
         // Create a 'path' FlatShape renderable for this connection if there isn't already one created
         if (flatShape == null) {
-            var turretPos = Components.get(turret.entity, Position.class);
             var buttonPos = Components.get(baseButton.entity, Position.class);
 
             var start = FramePool.vec2(buttonPos.x, buttonPos.y);
-            var end = FramePool.vec2(turretPos.x, turretPos.y);
-            var points = Util.generateStraightPath(start, end);
+            var points = Util.generateStraightPath(start, endPenUltimateLocation);
+            points.add(endLocation);
 
             var lineWidth = 10f;
             var cannonColor = turret.getCannonColor();
