@@ -118,7 +118,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             var entityColor = Components.get(other, EnergyColor.class);
             var damageMultiplier = 1f;
             if (bulletColor != null && entityColor != null) {
-                damageMultiplier = bulletColor.type == entityColor.type ? MATCHING_COLOR_DAMAGE_MULTIPLIER : 1.0f;
+                damageMultiplier = bulletColor.type == entityColor.type ? MATCHING_COLOR_DAMAGE_MULTIPLIER : .5f;
             }
 
 
