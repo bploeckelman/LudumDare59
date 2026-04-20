@@ -15,6 +15,7 @@ import lando.systems.ld59.game.Stats;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.signals.AudioEvent;
+import lando.systems.ld59.game.signals.ScreenShakeEvent;
 import lando.systems.ld59.screens.GameScreen;
 
 public class CityBaseSystem extends IteratingSystem {
@@ -35,6 +36,7 @@ public class CityBaseSystem extends IteratingSystem {
 
         var cityHealth = Components.get(city, Health.class);
         if (cityHealth.isDead()) {
+            ScreenShakeEvent.shake(1f);
             if (Main.game.currentScreen instanceof GameScreen) {
                 GameScreen gameScreen = (GameScreen) Main.game.currentScreen;
                 gameScreen.cityDeathModal.show();
@@ -45,6 +47,8 @@ public class CityBaseSystem extends IteratingSystem {
             for (int i = enemies.size() -1; i>= 0; i--) {
                 var isBoss = Components.has(enemies.get(i), Boss.class);
                 if (!isBoss) {
+                    var enemyTag = Components.get(enemies.get(i), EnemyTag.class);
+                    engine.removeEntity(enemyTag.lightOverlay);
                     engine.removeEntity(enemies.get(i));
                 }
             }

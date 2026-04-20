@@ -86,12 +86,14 @@ public class Connection implements Component {
 
         var buttonPos = Components.get(baseButton.entity, Position.class);
 
-        var start = FramePool.vec2(buttonPos.x, buttonPos.y);
         var points = tempPath.positions;
+        points.removeIndex(points.size - 1);
+        points.add(endPenUltimateLocation);
         points.add(endLocation);
 
         // NOTE: FlatShape takes RopePath points by ref so it should stay up to date as RopePath updates run
         ropePath = new RopePath(points);
+        ropePath.pinEnds();
 
         cableShaderRenderable = new CableShaderRenderable(this, ropePath);
         entity.add(cableShaderRenderable);
@@ -126,8 +128,6 @@ public class Connection implements Component {
 
     public void setPendingPoint(Vector3 point, float dt) {
         pendingPoint.set(point.x, point.y);
-        Util.log(TAG, "Pending point: " + pendingPoint.x + ", " + pendingPoint.y);
-
         tempPath.setPointPosition(tempPath.positions.size - 1, point.x, point.y);
         tempPath.update(dt);
 
