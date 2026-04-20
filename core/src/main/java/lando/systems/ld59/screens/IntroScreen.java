@@ -108,6 +108,11 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
             hasClicked = true;
         }
 
+        if (currentPage == 3 && storyText.hasEnded() && !transitioning && Gdx.input.justTouched()) {
+            transitioning = true;
+            game.setScreen(new GameScreen());
+        }
+
     }
 
     @Override
