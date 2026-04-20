@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld59.AnimDepths;import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.game.Components;
+import lando.systems.ld59.game.components.renderable.CableShaderRenderable;
 import lando.systems.ld59.game.components.renderable.FlatShape;
 import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.game.signals.EntityEvent;
@@ -28,6 +29,7 @@ public class Connection implements Component {
     private Turret turret;
     private BaseButton baseButton;
     private FlatShape flatShape;
+    private CableShaderRenderable cableShaderRenderable;
 
     public static Connection createPending(Entity entity, Turret turret) {
         return new Connection(entity, State.PENDING, turret, null);
@@ -43,6 +45,7 @@ public class Connection implements Component {
         this.turret = turret;
         this.baseButton = baseButton;
         this.flatShape = null;
+        cableShaderRenderable = null;
     }
 
     public void complete() {
@@ -78,8 +81,10 @@ public class Connection implements Component {
             ropePath = new RopePath(points);
             // TODO: replace this FlatShape.path with a shader based electricity thing, and wire up jostling based on screen shake triggering events
             flatShape = FlatShape.path(AnimDepths.CABLES, ropePath.positions, pathColor, lineWidth);
+//            entity.add(flatShape);
 
-            entity.add(flatShape);
+            cableShaderRenderable = new CableShaderRenderable(this, ropePath);
+            entity.add(cableShaderRenderable);
         }
     }
 
@@ -104,6 +109,7 @@ public class Connection implements Component {
                 turret.connectPattern(null);
             }
             flatShape = null;
+            cableShaderRenderable = null;
             turret = null;
             baseButton = null;
             AudioEvent.playSound(SoundType.PLUGOUT);

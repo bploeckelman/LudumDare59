@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.Main;
-import lando.systems.ld59.assets.ShaderType;
+import lando.systems.ld59.assets.ImageType;import lando.systems.ld59.assets.ShaderType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.Health;
 import lando.systems.ld59.game.components.Position;
@@ -51,7 +51,7 @@ public class RenderSystem extends SortedIteratingSystem {
     public void processEntity(Entity entity, float deltaTime) {
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, OrthographicCamera camera) {
         for (var entity : getEntities()) {
             var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
 
@@ -67,6 +67,28 @@ public class RenderSystem extends SortedIteratingSystem {
         }
 
         drawShieldShader(batch);
+        drawCableShader(camera);
+    }
+
+    public void drawCableShader(OrthographicCamera camera) {
+        var engine = Main.game.engine;
+        var cables = engine.getEntitiesFor(Family.one(CableShaderRenderable.class).get());
+        var shader = ShaderType.CABLE.get();
+
+        shader.bind();
+
+        shader.setUniformMatrix("u_projTrans", camera.combined);
+        shader.setUniformf("u_time", accum);
+        shader.setUniformi("u_texture", 0);
+        shader.setUniformf("u_edgeColor", Color.BLACK);
+        ImageType.NOISE.get().bind(0);
+        for (Entity cable : cables) {
+            var renderable = Components.get(cable, CableShaderRenderable.class);
+            renderable.render();
+        }
+
+        // End
+
     }
 
     public void drawShieldShader(SpriteBatch batch) {

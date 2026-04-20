@@ -39,6 +39,7 @@ public class Components {
         entry(Image.class,          ComponentMapper.getFor(Image.class)),
         entry(FlatShape.class,      ComponentMapper.getFor(FlatShape.class)),
         entry(ShieldShaderRenderable.class, ComponentMapper.getFor(ShieldShaderRenderable.class)),
+        entry(CableShaderRenderable.class, ComponentMapper.getFor(CableShaderRenderable.class)),
 
         // Combat -------------------------------------------------------------
         entry(Turret.class,         ComponentMapper.getFor(Turret.class)),

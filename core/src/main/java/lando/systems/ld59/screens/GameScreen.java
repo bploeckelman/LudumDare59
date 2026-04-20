@@ -113,7 +113,7 @@ public class GameScreen extends BaseScreen {
         batch.setProjectionMatrix(worldCamera.combined);
         batch.begin();
         {
-            Systems.render.draw(batch);
+            Systems.render.draw(batch, worldCamera);
             Systems.renderDebug.draw(shapes);
             Systems.renderDebug.drawText(batch);
         }

@@ -11,6 +11,7 @@ public enum ShaderType implements AssetType<ShaderProgram> {
     //@formatter:off
       OUTLINE   ("shaders/outline.frag")
     , SHIELD    ("shaders/shield.frag")
+    , CABLE     ("shaders/standardMesh.vert", "shaders/cable.frag")
     ;
     //@formatter:on
 
