@@ -130,7 +130,7 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         var testEmitter2 = Factory.emitter(EmitterType.EXPLOSION, new ExplosionEffect.Params(clickPos));
         var testEmitter3 = Factory.emitter(EmitterType.CONFETTI,  new PetConfettiEffect.Params(clickPos));
         engine().addEntity(testEmitter1);
-        AudioEvent.playSound(SoundType.SHOT, .25f);
+//        AudioEvent.playSound(SoundType.PLUG1, .25f);
 
         var baseButtonHandled = Systems.baseButtons.handleTouchUp(touchPos.x, touchPos.y, pointer, button);
         if (baseButtonHandled) return true;

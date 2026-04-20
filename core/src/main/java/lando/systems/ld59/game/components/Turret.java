@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import lando.systems.ld59.Config;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
@@ -113,6 +114,56 @@ public class Turret implements Component {
             }
         } else {
             createBullet(0);
+        }
+        var energyColor = Components.get(cannon, EnergyColor.class);
+        boolean useFancySounds = energyColor != null;
+        float squareVolume = 0.5f;
+        float sawVolume = 1f;
+        float sineVolume = 1f;
+        float panValue = MathUtils.map(
+            0, Config.window_width,
+            -0.9f, 0.9f,
+            Components.get(cannon, Position.class).x);
+        int[] chord;
+        switch(turretPattern.type){
+            case FAN: chord = SoundType.cMaj; break;
+            case LINE: chord = SoundType.fMaj; break;
+            case SWEEP: chord = SoundType.gMaj; break;
+            default: chord = SoundType.cMaj;break;
+        }
+        if(useFancySounds) {
+            switch (energyColor.type) {
+                case BLUE:
+                    AudioEvent.playSound(
+                        SoundType.getRandomSound(chord, SoundType.NoteType.SQUARE),
+                        squareVolume,
+                        panValue
+                    );
+                    break;
+                case GREEN:
+                    AudioEvent.playSound(
+                        SoundType.getRandomSound(chord, SoundType.NoteType.SAW),
+                        sawVolume,
+                        panValue
+                    );
+                    break;
+                case RED:
+                    AudioEvent.playSound(
+                        SoundType.getRandomSound(chord, SoundType.NoteType.SINE),
+                        sineVolume,
+                        panValue
+                    );
+                    break;
+                default:
+                    break;
+            }
+        }
+        else {
+            AudioEvent.playSound(
+                SoundType.BLIP_HIT,
+                1.5f,
+                panValue
+            );
         }
 
     }

@@ -40,27 +40,7 @@ public class Health implements Component {
     public void getHit(Entity entity, float damage) {
         lastHit = 0f;
         damage(damage);
-        var energyColor = Components.get(entity, EnergyColor.class);
-        boolean useFancySounds = energyColor != null;
-        if(useFancySounds){
-            switch (energyColor.type) {
-                case BLUE:
-                    float squareVolume = .5f;
-//                    AudioEvent.playSound(SoundType.getRandomSquareSound(), squareVolume);
-//                    AudioEvent.playSound(SoundType.getRandomSound(SoundType.fMaj, SoundType.NoteType.SQUARE), squareVolume);
-                    break;
-                case GREEN:
-                    float sawVolume = .7f;
-//                    AudioEvent.playSound(SoundType.getRandomSound(SoundType.gMaj, SoundType.NoteType.SAW), sawVolume);
-                    ;
-                    break;
-                case RED:
-                    float sineVolume = .45f;
-//                    AudioEvent.playSound(SoundType.getRandomSound(SoundType.cMaj, SoundType.NoteType.SINE), sineVolume);
-                    break;
-                default:
-                    break;
-            }
-        }
+//        var energyColor = Components.get(entity, EnergyColor.class);
+//        boolean useFancySounds = energyColor != null;
     }
 }

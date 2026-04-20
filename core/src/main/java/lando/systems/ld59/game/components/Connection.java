@@ -51,12 +51,14 @@ public class Connection implements Component {
             var energyColor = baseButton.getEnergyColor();
             turret.connectEnergy(energyColor);
             state = State.CONNECTED;
+            AudioEvent.playSound(SoundType.PLUGIN, 1f);
             Util.log(TAG, "Connected: energy '" + energyColor.type + "' to turret");
         }
         else if (baseButton.isPattern()) {
             var turretPattern = baseButton.getTurretPattern();
             turret.connectPattern(turretPattern);
             state = State.CONNECTED;
+            AudioEvent.playSound(SoundType.PLUGIN, 1f);
             Util.log(TAG, "Connected: pattern '" + turretPattern.type + "' to turret");
         }
 
@@ -77,7 +79,7 @@ public class Connection implements Component {
             ropePath = new RopePath(points);
             // TODO: replace this FlatShape.path with a shader based electricity thing, and wire up jostling based on screen shake triggering events
             flatShape = FlatShape.path(BaseButton.ANIM_DEPTH - 1, ropePath.positions, pathColor, lineWidth);
-            AudioEvent.playSound(SoundType.PLUG1);
+
             entity.add(flatShape);
         }
     }
@@ -105,7 +107,7 @@ public class Connection implements Component {
             flatShape = null;
             turret = null;
             baseButton = null;
-            AudioEvent.playSound(SoundType.PLUG2);
+            AudioEvent.playSound(SoundType.PLUGOUT);
             EntityEvent.remove(entity);
         }
 

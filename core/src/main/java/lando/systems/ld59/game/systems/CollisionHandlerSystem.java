@@ -87,7 +87,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 
             float volumeValue = MathUtils.map(
                 0, Config.window_height,
-                0f, 1f,
+                .5f, 1.5f,
                 Components.get(bullet, Position.class).y);
 
             if (Components.has(other, Projectile.class)) {
@@ -98,10 +98,6 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);
                 getEngine().addEntity(emitter);
 
-//                float panValue = MathUtils.map(
-//                    0, Config.window_width,
-//                    -1, 1,
-//                    pos.x);
                 AudioEvent.playSound(SoundType.THUD, .5f, panValue);
             }
 
@@ -131,47 +127,46 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);
                 getEngine().addEntity(emitter);
 
-                float squareVolume = 0.65f;
-                float sawVolume = 0.8f;
-                float sineVolume = 1f;
+//                float squareVolume = 0.65f;
+//                float sawVolume = 0.8f;
+//                float sineVolume = 1f;
 
-//                var energyColor = Components.get(other, EnergyColor.class);
-                var energyColor = Components.get(bullet, EnergyColor.class);
-                boolean useFancySounds = energyColor != null;
-                if(useFancySounds) {
-                    switch (energyColor.type) {
-                        case BLUE:
-                            AudioEvent.playSound(
-                                SoundType.getRandomSound(SoundType.cMaj, SoundType.NoteType.SQUARE),
-                                squareVolume,
-                                panValue
-                            );
-                            break;
-                        case GREEN:
-                            AudioEvent.playSound(
-                                SoundType.getRandomSound(SoundType.fMaj, SoundType.NoteType.SAW),
-                                sawVolume,
-                                panValue
-                            );
-                            break;
-                        case RED:
-                            AudioEvent.playSound(
-                                SoundType.getRandomSound(SoundType.gMaj, SoundType.NoteType.SINE),
-                                sineVolume,
-                                panValue
-                            );
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else {
-                    AudioEvent.playSound(
-                        SoundType.BLIP_HIT,
-                        volumeValue * 1.5f,
-                        panValue
-                    );
-                }
+//                var energyColor = Components.get(bullet, EnergyColor.class);
+//                boolean useFancySounds = energyColor != null;
+//                if(useFancySounds) {
+//                    switch (energyColor.type) {
+//                        case BLUE:
+//                            AudioEvent.playSound(
+//                                SoundType.getRandomSound(SoundType.cMaj, SoundType.NoteType.SQUARE),
+//                                squareVolume,
+//                                panValue
+//                            );
+//                            break;
+//                        case GREEN:
+//                            AudioEvent.playSound(
+//                                SoundType.getRandomSound(SoundType.fMaj, SoundType.NoteType.SAW),
+//                                sawVolume,
+//                                panValue
+//                            );
+//                            break;
+//                        case RED:
+//                            AudioEvent.playSound(
+//                                SoundType.getRandomSound(SoundType.gMaj, SoundType.NoteType.SINE),
+//                                sineVolume,
+//                                panValue
+//                            );
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                }
+//                else {
+//                    AudioEvent.playSound(
+//                        SoundType.BLIP_HIT,
+//                        volumeValue * 1.5f,
+//                        panValue
+//                    );
+//                }
 
 
             } else if (Components.has(other, TurretPart.class)) {
