@@ -25,8 +25,6 @@ import lando.systems.ld59.utils.Calc;
 public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
 
     NinePatch   dialogBox;
-    TypingLabel typingLabel;
-    String page1 = "";
 //    Rectangle skipButton = new Rectangle(Gdx.graphics.getWidth() - 200, 20, 180, 80);
 
     // TEMPORARY -----------------------------------------
@@ -36,15 +34,22 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
     // TEMPORARY -----------------------------------------
 
     private float accum;
+    private TypingLabel storyText;
+    private String page1;
+    private String page2;
+    private String page3;
+    private TypingLabel pageCounter;
+    float storyAccum = 0f;
+    boolean hasClicked = false;
 
-    int currentPage = 0;
+    int currentPage = 1;
     float transitionAlpha = 0f;
 
     public IntroScreen() {
         this.countdownLabel = new VisLabel(Stringf.format("%.1f", countdownTimer));
         dialogBox = Main.game.assets.dialogBox;
 
-//        initializeUI();
+        initializeUI();
 
 
 //        typingLabel = new TypingLabel();
@@ -54,14 +59,7 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
         engine.update(0f);
         AudioEvent.playMusic(MusicType.INTRO_MUSIC);
 
-        String page1 =
-            "{COLOR=white}" +
-                //"A 0123456789-01234567890-1234567890-1234567890-0123456789-B" +
-                "The year is 2027.\n\n" +
-                "In this far-flung future, some things have changed.\n\n " +
-                "Notably, all of earth's civilization now lives in a bubble in the center of the planet"
 
-            ;
 
 //        typingLabel = new TypingLabel(page1, FontType.HEMI_HEAD.get());
 //        typingLabel.setPosition(worldCamera.viewportWidth * .05f,
@@ -72,34 +70,44 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
 //        typingLabel.getFont().adjustLineHeight(1.125f);
     }
 
+    private String getNextStory() {
+        switch (currentPage) {
+            case 1: currentPage ++; return page2;
+            case 2: currentPage ++; return page3;
+            case 3: currentPage = 3; return page3;
+            default: return page3;
+        }
+    }
+
+    private String getPageCount() {
+        switch (currentPage) {
+            case 1: return "1/3";
+            case 2: return "2/3";
+            case 3: return "3/3";
+            default: return page3;
+        }
+    }
     @Override
     public void update(float delta) {
         super.update(delta);
-        if (!transitioning && Gdx.input.justTouched()){
-            transitioning = true;
-            game.setScreen(new TitleScreen());
+        if(currentPage < 3) {
+            storyAccum -= delta;
         }
-//        if (Gdx.input.justTouched() && accum > .015f) {
-//            accum = 0;
-//            var touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-//            worldCamera.unproject(touchPos);
-//
-//            if (transitionAlpha < 1f) {
-//                transitionAlpha = 1f;
-//            }
-//            else if (!typingLabel.hasEnded()) {
-//                typingLabel.skipToTheEnd();
-//            }
-//            else {
-//                currentPage++;
-//                if (currentPage == 1) {
-//                    game.setScreen(new GameScreen());
-//                }
-////                if (!transitioning && countdownTimer <= 0) {
-////                    transitioning = true;
-////                }
-//            }
-//        }
+        if(hasClicked) {
+            if (Gdx.input.justTouched() ) {
+                storyText.setText(getNextStory());
+                storyText.restart();
+                pageCounter.setText(getPageCount());
+                hasClicked = false;
+            }
+        }
+        if (!transitioning && Gdx.input.justTouched()){
+//            transitioning = true;
+            storyText.skipToTheEnd();
+            storyAccum = 5f;
+            hasClicked = true;
+        }
+
     }
 
     @Override
@@ -116,18 +124,6 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
 
         uiStage.draw();
 
-        //        batch.enableBlending();
-        //        batch.setProjectionMatrix(windowCamera.combined);
-        //        batch.begin();
-        //        batch.setColor(1f, 1f, 1f, transitionAlpha);
-        ////        dialogBox.draw(batch, windowCamera.viewportWidth / 4, windowCamera.viewportHeight / 4, windowCamera.viewportWidth / 2, windowCamera.viewportHeight / 4);
-        //
-        ////        typingLabel.draw(batch, 1f);
-        //
-        //        batch.end();
-        //        batch.setShader(null);
-        //
-        //        uiStage.draw();
     }
 
     @Override
@@ -137,24 +133,57 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
 
     @Override
     protected void initializeUI() {
-        String page1 =
+        page1 =
             "{COLOR=white}" +
                 //"A 0123456789-01234567890-1234567890-1234567890-0123456789-B" +
-                "The year is 2027.\n\n" +
-                "In this far-flung future, some things have changed.\n\n " +
-                "Notably, all of earth's civilization now lives in a bubble in the center of the planet"
+                "The year is 2027, and things have changed.\n\n" +
+//                "In this far-flung future, things are a little... different.\n\n" +
+                "Long story short, Earth has been rendered mostly uninhabitable." +
+                " (let's just say concerns about AI's water consumption weren't entirely overblown).\n\n" +
+                "Civilization now resides entirely within a {COLOR=teal}bubble{COLOR=white} on the surface of the rocky husk that was once teeming with life. \n\n" +
+                "As if that wasn't embarrassing enough, an {COLOR=green}invading alien army{COLOR=white} with absolutely zero chill " +
+                "has decided to make their emotional immaturity our problem.\n\n" +
+                "They're trying to burst our bubble with their bullshit, and we will not stand for it."
 
             ;
 
-        if (Flag.DEBUG_RENDER.isEnabled()) {
-            var screenName = new VisLabel(getClass().getSimpleName());
-            screenName.setPosition(10, windowCamera.viewportHeight - 10 - screenName.getHeight());
-            uiStage.addActor(screenName);
-        }
+        page2 = "Because of some enthusiastic recent cuts to government spending however, " +
+            "our only line of defense is a series of turrets. \n\n" +
+            "Each turret can be plugged into one of three different firing patterns (shapes) and "  +
+            "one of three different types of plasma (colors).\n\n" +
+            "When a turret is receiving a complete {COLOR=blue}signal{COLOR=white} of both a plasma type and firing pattern," +
+            " it's time for those alien bastards to pay!";
 
-        var clickToBegin = new TypingLabel(page1, FontType.HEMI_HEAD.get());
-        uiRoot.add(clickToBegin)
-            .expand()
-            .center();
+        page3 = "But these damn dirty extraterrestrials are crafty.\n\n" +
+            "Different aliens are susceptible to some plasma types (color), and resistant to others.\n\n" +
+            "With no plasma color chosen, the turrets will still fire, but their bullets will be limp and flaccid.\n\n" +
+            "With the right plasma types chosen and a strategic firing pattern, the aliens will have no choice but to " +
+            "kneel before you and cower as your girthy turrets spray ropey, colorful jets of freedom.";
+
+//        if (Flag.DEBUG_RENDER.isEnabled()) {
+//            var screenName = new VisLabel(getClass().getSimpleName());
+//            screenName.setPosition(100, 100);
+//            uiStage.addActor(screenName);
+//        }
+
+        storyText = new TypingLabel(page1, FontType.HEMI_HEAD.get());
+//        storyText = new TypingLabel(page1, FontType.HEMI_HEAD.get());
+        storyText.setPosition(
+            Config.window_width * .06f,
+            Config.window_height * .521f
+        );
+        storyText.setWidth(Config.window_width * .85f);
+        storyText.wrap = true;
+        storyText.setScale(.2f);
+        storyText.getFont().adjustLineHeight(1.125f);
+
+        pageCounter = new TypingLabel(getPageCount(), FontType.HEMI_HEAD.get());
+        pageCounter.setPosition(1200, 40);
+        uiStage.addActor(pageCounter);
+
+
+        uiStage.addActor(storyText);
+//            .expand()
+//            .center();
     }
 }

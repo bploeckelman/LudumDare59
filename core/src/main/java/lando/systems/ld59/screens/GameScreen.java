@@ -15,6 +15,7 @@ import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
 import lando.systems.ld59.assets.MusicType;
+import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.assets.anims.AnimMisc;
@@ -25,8 +26,10 @@ import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.game.scenes.Scene;
 import lando.systems.ld59.game.scenes.SceneGame;
 import lando.systems.ld59.game.signals.AudioEvent;
+import lando.systems.ld59.game.systems.AudioSystem;
 import lando.systems.ld59.ui.SettingsUI;
 import lando.systems.ld59.utils.FramePool;
+import lando.systems.ld59.utils.Util;
 
 public class GameScreen extends BaseScreen {
 
@@ -52,6 +55,7 @@ public class GameScreen extends BaseScreen {
 
         game.inputMux.setProcessors(scene, uiStage);
         Gdx.input.setInputProcessor(game.inputMux);
+        AudioEvent.stopAllMusic();
         AudioEvent.playMusic(MusicType.MAIN_MUSIC);
     }
 
@@ -73,6 +77,21 @@ public class GameScreen extends BaseScreen {
             transitioning = true;
             game.setScreen(new EndingScreen(), EffectType.DREAMY);
         }
+
+//        if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+////            AudioEvent.playSound(SoundType.SHATTER, 0.5f);
+////            AudioEvent.playSound(SoundType.CRACK1, 0.5f);
+////            AudioEvent.playSound(SoundType.EXPLOSION1, 0.5f);
+////            AudioEvent.playSound(SoundType.EXPLOSION2, 0.5f);
+//            AudioEvent.playSound(SoundType.EXPLOSION1, 0.5f);
+//        }
+//        if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+////            AudioEvent.playSound(SoundType.CRACK2, 0.5f);
+//            AudioEvent.playSound(SoundType.EXPLOSION3, 0.5f);
+//        }
+//        if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+//            AudioEvent.playSound(SoundType.SHATTER, 0.75f);
+//        }
 
         if (Flag.FRAME_STEP.isEnabled()) {
             Config.stepped_frame = Gdx.input.isKeyJustPressed(Input.Keys.NUM_9);
@@ -109,6 +128,7 @@ public class GameScreen extends BaseScreen {
         }
 
         redEnemyCountLabel.setText("Red: " + redCount);
+
         greenEnemyCountLabel.setText("Green: " + greenCount);
         blueEnemyCountLabel.setText("Blue: " + blueCount);
 
