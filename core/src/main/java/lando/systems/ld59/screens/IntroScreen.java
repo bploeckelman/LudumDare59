@@ -74,7 +74,8 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
         switch (currentPage) {
             case 1: currentPage ++; return page2;
             case 2: currentPage ++; return page3;
-            case 3: currentPage = 3; return page3;
+            case 3: currentPage ++; return page3;
+            case 4: currentPage = 4; return page3;
             default: return page3;
         }
     }
@@ -84,13 +85,14 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
             case 1: return "1/3";
             case 2: return "2/3";
             case 3: return "3/3";
-            default: return page3;
+            case 4: return "3/3";
+            default: return "Go!";
         }
     }
     @Override
     public void update(float delta) {
         super.update(delta);
-        if(currentPage < 3) {
+        if(currentPage < 4) {
             storyAccum -= delta;
         }
         if(hasClicked) {
@@ -102,13 +104,12 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
             }
         }
         if (!transitioning && Gdx.input.justTouched()){
-//            transitioning = true;
             storyText.skipToTheEnd();
             storyAccum = 5f;
             hasClicked = true;
         }
 
-        if (currentPage == 3 && storyText.hasEnded() && !transitioning && Gdx.input.justTouched()) {
+        if (currentPage == 4 && storyText.hasEnded() && !transitioning && Gdx.input.justTouched()) {
             transitioning = true;
             game.setScreen(new GameScreen());
         }
