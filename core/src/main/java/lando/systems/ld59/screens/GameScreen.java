@@ -26,6 +26,7 @@ import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.game.scenes.Scene;
 import lando.systems.ld59.game.scenes.SceneGame;
 import lando.systems.ld59.game.signals.AudioEvent;
+import lando.systems.ld59.ui.CityDeathModal;
 import lando.systems.ld59.ui.SettingsUI;
 import lando.systems.ld59.utils.FramePool;
 
@@ -35,6 +36,7 @@ public class GameScreen extends BaseScreen {
 
     private final SceneGame scene;
     private final SettingsUI settingsUI = new SettingsUI();
+    public final CityDeathModal cityDeathModal = new CityDeathModal();
 
     private VisLabel fpsLabel;
 
@@ -51,6 +53,7 @@ public class GameScreen extends BaseScreen {
     public GameScreen() {
         this.scene = new SceneGame(this, 5);
         uiStage.addActor(settingsUI);
+        uiStage.addActor(cityDeathModal);
         initializeUI();
 
         game.inputMux.setProcessors(scene, uiStage);
@@ -69,7 +72,7 @@ public class GameScreen extends BaseScreen {
         super.update(delta);
         fpsLabel.setText(Stringf.format("FPS: %.0f", Gdx.graphics.getFramesPerSecond()));
 
-        if (settingsUI.isVisible()) {
+        if (settingsUI.isVisible() || cityDeathModal.isVisible) {
             return;
         }
         var TEMP_CLICK_TO_TRANSITION = Gdx.input.justTouched()

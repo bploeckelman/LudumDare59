@@ -15,6 +15,7 @@ import lando.systems.ld59.game.Stats;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.signals.AudioEvent;
+import lando.systems.ld59.screens.GameScreen;
 
 public class CityBaseSystem extends IteratingSystem {
 
@@ -34,6 +35,10 @@ public class CityBaseSystem extends IteratingSystem {
 
         var cityHealth = Components.get(city, Health.class);
         if (cityHealth.isDead()) {
+            if (Main.game.currentScreen instanceof GameScreen) {
+                GameScreen gameScreen = (GameScreen) Main.game.currentScreen;
+                gameScreen.cityDeathModal.show();
+            }
             Engine engine = Main.game.engine;
             // kill it all with fire....
             var enemies = engine.getEntitiesFor(enemyFamily);
@@ -65,7 +70,10 @@ public class CityBaseSystem extends IteratingSystem {
             Stats.instance().cityLost++;
 
             // Let the user know what happened
-            //TODO: we need some modal or something here
+            if (Main.game.currentScreen instanceof GameScreen) {
+                GameScreen gameScreen = (GameScreen) Main.game.currentScreen;
+                gameScreen.cityDeathModal.show();
+            }
         }
 
         // update shield behavior
