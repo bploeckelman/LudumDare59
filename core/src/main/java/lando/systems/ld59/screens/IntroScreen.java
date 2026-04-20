@@ -152,7 +152,7 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
 
             ;
 
-        page2 = "However, because of some rather... enthusiastic... cuts to government spending recently, " +
+        page2 = "However, due to some rather... enthusiastic... cuts to government spending recently, " +
             "our only line of defense is a series of turrets. \n\n" +
             "Each turret can be plugged into one of three different firing patterns (shapes) and "  +
             "one of three {COLOR=green;}different {COLOR=magenta;}types {COLOR=white;}of {COLOR=blue;}plasma{COLOR=white;} (colors).\n\n" +
@@ -160,7 +160,7 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
             " it's time for those alien bastards to pay!";
 
         page3 = "But these damn dirty extraterrestrials are crafty.\n\n" +
-            "Different aliens are susceptible to some plasma types (colors), and resistant to others.\n\n" +
+            "Different aliens are susceptible to some plasma colors, and resistant to others.\n\n" +
             "With no plasma color chosen, the turrets will still fire, but their bullets will be {COLOR=grey}pale, limp, and flaccid{COLOR=white;}.\n\n" +
             "With the right plasma types chosen and a strategic firing pattern, the aliens will have no choice but to " +
             "kneel before you and cower as your girthy turrets spray ropey, {RAINBOW}colorful{ENDRAINBOW} jets of {WAVE}freedom.{ENDWAVE}";
