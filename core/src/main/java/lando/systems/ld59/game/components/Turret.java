@@ -53,6 +53,11 @@ public class Turret implements Component {
     public final Entity portArrowOverlay;
     public final Entity portLightOverlay;
 
+    public final Entity leftPlug;
+    public final Entity rightPlug;
+    public final Animator leftPlugAnim;
+    public final Animator rightPlugAnim;
+
     public final Collider baseCollider;
     public final Collider cannonCollider;
     private final Outline baseOutline;
@@ -77,6 +82,8 @@ public class Turret implements Component {
         this.rockOverlay = Factory.createEntity();
         this.portArrowOverlay = Factory.createEntity();
         this.portLightOverlay = Factory.createEntity();
+        this.leftPlug = Factory.createEntity();
+        this.rightPlug = Factory.createEntity();
 
         this.baseOutline    = new Outline(Color.CLEAR_WHITE, Color.CLEAR_WHITE, 1f);
         this.cannonOutline  = new Outline(Color.CLEAR_WHITE, Color.CLEAR_WHITE, 2f);
@@ -133,6 +140,14 @@ public class Turret implements Component {
         doorAnim.rotation = rotation;
         doorAnim.stateTime = doorAnim.animation.getAnimationDuration();
 
+        leftPlugAnim = new Animator(AnimBaseTurret.BASE_PLUG_LEFT, new Vector2(0, height / 2f));
+        leftPlugAnim.depth = AnimDepths.TURRETS + 3;
+        leftPlugAnim.rotation = rotation;
+
+        rightPlugAnim = new Animator(AnimBaseTurret.BASE_PLUG_RIGHT, new Vector2(0, height / 2f));
+        rightPlugAnim.depth = AnimDepths.TURRETS + 3;
+        rightPlugAnim.rotation = rotation;
+
         // Overlays are at the same anim depth
         var overlayDepth = AnimDepths.TURRETS + 4;
         var rockAnim = new Animator(AnimBaseTurret.ROCK_OVERLAY, new Vector2(0, height / 2f));
@@ -169,6 +184,9 @@ public class Turret implements Component {
         door.add(doorAnim);
         door.add(new Position(pos));
 
+        leftPlug.add(new Position(pos));
+        rightPlug.add(new Position(pos));
+
         rockOverlay.add(rockAnim);
         rockOverlay.add(new Position(pos));
 
@@ -184,6 +202,8 @@ public class Turret implements Component {
         engine.addEntity(rockOverlay);
         engine.addEntity(portArrowOverlay);
         engine.addEntity(portLightOverlay);
+        engine.addEntity(leftPlug);
+        engine.addEntity(rightPlug);
     }
 
     public void shoot() {
@@ -305,9 +325,10 @@ public class Turret implements Component {
     public void connectPattern(TurretPattern pattern) {
         // remove old pattern, add new one
         cannon.remove(TurretPattern.class);
+        rightPlug.remove(Animator.class);
         if (pattern != null) {
             cannon.add(pattern);
-
+            rightPlug.add(rightPlugAnim);
             // Update cannon barrel based on firing pattern;
             // - rotate existing barrel behind base (base turret rotation + 180 == relative 270 deg)
             // - swap barrel animation
@@ -342,12 +363,15 @@ public class Turret implements Component {
      */
     public void connectEnergy(EnergyColor color) {
         cannon.remove(EnergyColor.class);
+        leftPlug.remove(Animator.class);
         if (color == null) {
             baseOutline.outlineColor(Color.CLEAR_WHITE);
             cannonOutline.outlineColor(Color.CLEAR_WHITE);
             return;
         }
         cannon.add(color);
+        leftPlug.add(leftPlugAnim);
+
 
         baseOutline.outlineColor(color.getColor());
         cannonOutline.outlineColor(color.getColor());
