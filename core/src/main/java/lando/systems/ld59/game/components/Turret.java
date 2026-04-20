@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
-import lando.systems.ld59.game.Components;
+import lando.systems.ld59.assets.anims.AnimMisc;import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.collision.CollisionCirc;
 import lando.systems.ld59.game.components.collision.CollisionMask;
@@ -106,7 +106,7 @@ public class Turret implements Component {
     public void shoot() {
         if (swappingCannonBarrel) return;
 
-        float width = 10f;
+        float width = 20f;
 
         var bullet = Factory.createEntity();
         var cannonPos = cannon.getComponent(Position.class);
@@ -127,7 +127,7 @@ public class Turret implements Component {
                 MathUtils.cosDeg(totalRotation) * speed,
                 MathUtils.sinDeg(totalRotation) * speed);
 
-        var baseAnim = new Animator(Main.game.assets.pixelRegion);
+        var baseAnim = new Animator(AnimMisc.PROJECTILE);
         baseAnim.depth = 100;
         baseAnim.size.set(width, width);
         if (energyColor != null) {

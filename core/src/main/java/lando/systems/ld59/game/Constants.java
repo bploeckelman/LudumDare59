@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Constants {
 
-    public static final float TURRET_MAX_HEALTH = 100f;
+    public static final float TURRET_MAX_HEALTH = 35f;
     public static final float ENEMY_MAX_HEALTH = 6f;
     public static final float ENEMY_PROJECTILE_DAMAGE = 2f;
     public static final float PLAYER_PROJECTILE_DAMAGE = 1f;

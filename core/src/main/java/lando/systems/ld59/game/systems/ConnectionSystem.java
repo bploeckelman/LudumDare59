@@ -58,9 +58,9 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
 
             // Create a pending connection if there isn't one...
             if (pendingConnection == null) {
-                var entity = Factory.createEntity();
-                entity.add(Connection.createPending(entity, turret));
-                getEngine().addEntity(entity);
+//                var entity = Factory.createEntity();
+//                entity.add(Connection.createPending(entity, turret));
+//                getEngine().addEntity(entity);
             }
             // ...otherwise update the existing pending connection...
             else {

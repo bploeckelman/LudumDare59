@@ -4,18 +4,22 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.Config;
+import lando.systems.ld59.Main;
+import lando.systems.ld59.assets.anims.AnimEnemy;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
-import lando.systems.ld59.game.components.EnemySpawner;
-import lando.systems.ld59.game.components.EnemyTag;
-import lando.systems.ld59.game.components.SceneContainer;
+import lando.systems.ld59.game.components.*;
+import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WaveScheduleSystem extends IteratingSystem {
+
+    public Entity boss;
 
     public static class WaveEvent {
         public float time;
@@ -34,6 +38,10 @@ public class WaveScheduleSystem extends IteratingSystem {
     public WaveScheduleSystem() {
         super(Family.all(SceneContainer.class).get());
         setupWaves();
+        this.boss = Main.game.engine.createEntity();
+        boss.add(new Boss());
+        boss.add(new Health(100));
+        Main.game.engine.addEntity(boss);
     }
 
     private void setupWaves() {
@@ -95,7 +103,7 @@ public class WaveScheduleSystem extends IteratingSystem {
                 var spawnerComponent = Components.get(spawner, EnemySpawner.class);
                 spawnerComponent.fireOnce = false;
                 spawnerComponent.spawnInterval = 10f;
-
+                spawnerComponent.spawnsLeft = 20;
                 getEngine().addEntity(spawner);
             }
 
@@ -105,9 +113,20 @@ public class WaveScheduleSystem extends IteratingSystem {
                 var spawnerComponent = Components.get(spawner, EnemySpawner.class);
                 spawnerComponent.fireOnce = false;
                 spawnerComponent.spawnInterval = 5f;
+                spawnerComponent.spawnsLeft = 20;
                 getEngine().addEntity(spawner);
             }
 
+        }));
+
+        waves.add(new WaveEvent(12f, () -> {
+            float width = 300;
+            boss.add(new Position(Config.window_width / 3f, Config.window_height + 200));
+            var bossAnim = new Animator(AnimEnemy.BOSS, new Vector2(width / 2f, width / 2f));
+            bossAnim.depth = 100;
+            bossAnim.size.set(width, width);
+            boss.add(bossAnim);
+            // Anything else that needs to happen after the boss is spawned
         }));
 
     }

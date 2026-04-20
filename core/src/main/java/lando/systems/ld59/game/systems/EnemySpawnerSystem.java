@@ -43,8 +43,9 @@ public class EnemySpawnerSystem extends IteratingSystem {
             32f
         );
         getEngine().addEntity(enemy);
+        spawner.spawnsLeft--;
         spawner.spawnTimer = spawner.spawnInterval;
-        if (spawner.fireOnce) {
+        if (spawner.fireOnce || spawner.spawnsLeft <= 0) {
             getEngine().removeEntity(entity);
         }
     }

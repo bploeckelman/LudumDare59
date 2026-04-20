@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Main;
-import lando.systems.ld59.game.Factory;
+import lando.systems.ld59.assets.anims.AnimMisc;import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 
@@ -44,7 +44,7 @@ public class EnemyTag implements Component {
         float width = 10f;
 
         var bullet = Factory.createEntity();
-        var baseAnim = new Animator(Main.game.assets.pixelRegion);
+        var baseAnim = new Animator(AnimMisc.PROJECTILE);
         var energyColor = entity.getComponent(EnergyColor.class);
         baseAnim.depth = 100;
         baseAnim.size.set(width, width);

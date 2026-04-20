@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
+import lando.systems.ld59.Main;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.*;
@@ -22,7 +23,7 @@ public class EnemySystem extends IteratingSystem {
         for (int i = getEntities().size() - 1; i>= 0;  i--) {
             var entity = getEntities().get(i);
             var health = Components.get(entity, Health.class);
-            if (health.isDead()) {
+            if (health != null && health.isDead()) {
                 handleEnemyDeath(entity);
                 getEngine().removeEntity(entity);
                 continue;
@@ -68,7 +69,10 @@ public class EnemySystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float delta) {
-
+        if (Components.has(entity, Boss.class)) {
+            // Handle boss logic
+            return;
+        }
         var enemy = Components.get(entity, EnemyTag.class);
         var health = Components.get(entity, Health.class);
         health.update(delta);

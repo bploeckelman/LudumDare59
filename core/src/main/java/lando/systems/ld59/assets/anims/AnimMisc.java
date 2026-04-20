@@ -14,6 +14,7 @@ public enum AnimMisc implements AnimType {
     , STARFOX_ARWING
     , GEAR
     , SPRING
+    , PROJECTILE
     ;
 
     private static final String BASE_PATH = "misc/";

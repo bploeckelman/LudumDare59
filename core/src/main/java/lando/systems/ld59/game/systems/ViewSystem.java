@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class ViewSystem extends IteratingSystem {
 
     private static final String TAG = ViewSystem.class.getSimpleName();
-    private static final float KILL_ZONE_MARGIN = 200f;
+    private static final float KILL_ZONE_MARGIN = 400f;
 
     private final Rectangle killZone = new Rectangle();
 
