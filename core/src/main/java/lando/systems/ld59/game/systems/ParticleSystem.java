@@ -181,16 +181,18 @@ public class ParticleSystem extends IteratingSystem implements Disposable {
                 MathUtils.lerp(data.yStart, data.yTarget, progress));
         }
         else {
+            data.velocity.x += data.accel.x * delta;
+            data.velocity.y += data.accel.y * delta;
+
             data.accel.x *= data.accDamp;
             data.accel.y *= data.accDamp;
             if (MathUtils.isEqual(data.accel.x, 0f, 0.01f)) data.accel.x = 0f;
             if (MathUtils.isEqual(data.accel.y, 0f, 0.01f)) data.accel.y = 0f;
 
-            data.velocity.x += data.accel.x * delta;
-            data.velocity.y += data.accel.y * delta;
-
-            position.x += (int) (data.velocity.x * delta);
-            position.y += (int) (data.velocity.y * delta);
+            data.px += data.velocity.x * delta;
+            data.py += data.velocity.y * delta;
+            position.x = (int) data.px;
+            position.y = (int) data.py;
         }
 
         data.width  = MathUtils.lerp(data.widthStart,  data.widthEnd,  progress);

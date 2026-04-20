@@ -35,6 +35,9 @@ public class ParticleData implements Pool.Poolable {
     public float xStart;
     public float yStart;
 
+    public float px;
+    public float py;
+
     public boolean targeted;
     public float xTarget;
     public float yTarget;
@@ -109,6 +112,8 @@ public class ParticleData implements Pool.Poolable {
 
         this.xStart = 0f;
         this.yStart = 0f;
+        this.px = 0f;
+        this.py = 0f;
 
         this.targeted = false;
         this.xTarget = 0f;
@@ -119,7 +124,7 @@ public class ParticleData implements Pool.Poolable {
         this.bounceScale = .8f;
 
         this.accel.set(0, 0);
-        this.accDamp = 0f;
+        this.accDamp = 1f;
 
         this.widthStart = 0f;
         this.widthEnd = 0f;
@@ -182,7 +187,7 @@ public class ParticleData implements Pool.Poolable {
 
         private float xAcc = 0f;
         private float yAcc = 0f;
-        private float accDamp = 0f;
+        private float accDamp = 1f;
 
         private float widthStart = 0f;
         private float widthEnd = 0f;
@@ -401,6 +406,8 @@ public class ParticleData implements Pool.Poolable {
 
             particleData.xStart = xStart;
             particleData.yStart = yStart;
+            particleData.px = xStart;
+            particleData.py = yStart;
 
             particleData.targeted = targeted;
             particleData.xTarget = xTarget;

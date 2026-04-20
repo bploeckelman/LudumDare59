@@ -5,12 +5,18 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Config;
+import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
+import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.components.*;
+import lando.systems.ld59.game.signals.AudioEvent;
+import lando.systems.ld59.particles.effects.PetConfettiEffect;
+import lando.systems.ld59.particles.effects.ExplosionEffect;
+import lando.systems.ld59.particles.effects.SparkleEffect;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.screens.GameScreen;
 import lando.systems.ld59.utils.FramePool;
@@ -118,6 +124,13 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         var touchPos = FramePool.vec3(screenX, screenY, 0);
         screen.worldCamera.unproject(touchPos);
+
+        var clickPos = new Position(touchPos.x, touchPos.y);
+        var testEmitter1 = Factory.emitter(EmitterType.SPARKLE,   new SparkleEffect.Params(clickPos));
+        var testEmitter2 = Factory.emitter(EmitterType.EXPLOSION, new ExplosionEffect.Params(clickPos));
+        var testEmitter3 = Factory.emitter(EmitterType.CONFETTI,  new PetConfettiEffect.Params(clickPos));
+        engine().addEntity(testEmitter1);
+        AudioEvent.playSound(SoundType.SHOT, .25f);
 
         var baseButtonHandled = Systems.baseButtons.handleTouchUp(touchPos.x, touchPos.y, pointer, button);
         if (baseButtonHandled) return true;

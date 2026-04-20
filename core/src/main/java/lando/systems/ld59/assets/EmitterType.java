@@ -5,14 +5,20 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld59.particles.ParticleEffect;
+import lando.systems.ld59.particles.effects.PetConfettiEffect;
+import lando.systems.ld59.particles.effects.ExplosionEffect;
 import lando.systems.ld59.particles.effects.SmokeEffect;
+import lando.systems.ld59.particles.effects.SparkleEffect;
 import lando.systems.ld59.particles.effects.TestEffect;
 
 import java.util.EnumMap;
 
 public enum EmitterType implements AssetType<ParticleEffect> {
       TEST(TestEffect.class),
-      SMOKE(SmokeEffect.class)
+      SMOKE(SmokeEffect.class),
+      SPARKLE(SparkleEffect.class),
+      EXPLOSION(ExplosionEffect.class),
+      CONFETTI(PetConfettiEffect.class)
     ;
 
     private static final String TAG = EmitterType.class.getSimpleName();
