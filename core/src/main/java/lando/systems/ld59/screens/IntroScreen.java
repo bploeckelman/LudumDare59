@@ -144,7 +144,7 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
 //                "In this far-flung future, things are a little... different.\n\n" +
                 "Long story short, Earth has been rendered mostly uninhabitable." +
                 " (let's just say concerns about AI's water consumption weren't entirely overblown).\n\n" +
-                "Civilization now resides entirely within a {COLOR=teal}bubble{COLOR=white} on the surface of the rocky husk that was once teeming with life. \n\n" +
+                "Civilization now resides entirely within a {GRADIENT=teal;grey}bubble{ENDGRADIENT}{COLOR=white} on the surface of the rocky husk that was once teeming with life. \n\n" +
                 "As if that wasn't embarrassing enough, an {GRADIENT=green;grey}invading alien army{ENDGRADIENT}{COLOR=white} with absolutely zero chill " +
                 "has decided to make their emotional immaturity our problem.\n\n" +
                 "They're trying to burst our bubble with their bullshit, and we will not stand for it."
@@ -154,8 +154,8 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
         page2 = "Because of some enthusiastic recent cuts to government spending however, " +
             "our only line of defense is a series of turrets. \n\n" +
             "Each turret can be plugged into one of three different firing patterns (shapes) and "  +
-            "one of three different types of plasma {GRADIENT=magenta;green;blue}(colors){ENDGRADIENT}.\n\n" +
-            "When a turret is receiving a complete {GRADIENT=navy;grey}signal{ENDGRADIENT}{COLOR=white} of both a plasma type and firing pattern," +
+            "one of three {COLOR=green;}different {COLOR=magenta;}types {COLOR=white;}of {COLOR=blue;}plasma{COLOR=white;} (colors).\n\n" +
+            "When a turret is receiving a complete {GRADIENT=grey;navy}signal{ENDGRADIENT}{COLOR=white} of both a plasma type and firing pattern," +
             " it's time for those alien bastards to pay!";
 
         page3 = "But these damn dirty extraterrestrials are crafty.\n\n" +
