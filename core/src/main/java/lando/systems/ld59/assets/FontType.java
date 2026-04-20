@@ -30,6 +30,7 @@ public enum FontType implements AssetType<Font> {
     , ROUNDABOUT_LARGE           ("chevyray-roundabout.ttf", 32)
     , SOURCE_CODE_PRO            ("source-code-pro-regular.otf")
     , SOURCE_CODE_PRO_OUTLINED   ("source-code-pro-regular.otf", ParamBuilder.withSize(20).border(2, Color.DARK_GRAY).build())
+    , HEMI_HEAD   ("hemihead.otf", 32)
     ;
 
     private static final String TAG = FontType.class.getSimpleName();

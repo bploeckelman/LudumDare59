@@ -27,8 +27,9 @@ public class CreditsScreen extends BaseScreen {
     private Image novaImage;
     private Image cherryImage;
     private Image oshaImage;
-    private Font creditFont = FontType.CHEVYRAY_RISE.get();
-    private Font creditHeader = FontType.CHEVYRAY_RISE.get();
+//    private Font creditFont = FontType.CHEVYRAY_RISE.get();
+    private Font creditHeader = FontType.HEMI_HEAD.get();
+    private Font creditFont = FontType.HEMI_HEAD.get();
 
     // TODO: in i18n strings...
     //  how to mix formatting placeholders: {0}, {1}, ..., with typing label placeholders like {GRADIENT},
@@ -106,9 +107,9 @@ public class CreditsScreen extends BaseScreen {
             //setDebug(true);
             defaults().padBottom(10);
 
-            var thanks = new TypingLabel(assets.strings.get("credits.footer.thanks"), FontType.ROBOTO_LARGE.get());
+            var thanks = new TypingLabel(assets.strings.get("credits.footer.thanks"), creditFont);
             var madeWith = new TypingLabel(assets.strings.get("credits.footer.made-with"), creditFont);
-            var disclaimer = new TypingLabel(assets.strings.get("credits.footer.disclaimer"), FontType.ROBOTO_SMALL.get());
+            var disclaimer = new TypingLabel(assets.strings.get("credits.footer.disclaimer"), creditFont);
             var returnToTitleBtn = new VisTextButton("Return to title...", new ChangeListener() {
                 public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                     if (transitioning) return;

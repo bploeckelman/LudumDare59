@@ -38,8 +38,8 @@ public class TurretPattern implements Component {
     public float angleExtents() {
         switch (type) {
             case LINE: return 30;
-            case FAN: return 35;
-            case SWEEP: return 40;
+            case FAN: return 70;
+            case SWEEP: return 60;
             default: return 0;
         }
     }
@@ -55,9 +55,9 @@ public class TurretPattern implements Component {
 
     public int getShotMod() {
         switch (type) {
-            case LINE: return 4;
+            case LINE: return 6;
             case FAN: return 12;
-            case SWEEP: return 3;
+            case SWEEP: return 4;
             default: return 1;
         }
     }

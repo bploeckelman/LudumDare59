@@ -45,7 +45,7 @@ public class LaunchScreen extends BaseScreen {
             uiStage.addActor(screenName);
         }
 
-        var clickToBegin = new TypingLabel(assets.strings.get("launch.click-text"), FontType.ROUNDABOUT_LARGE.get());
+        var clickToBegin = new TypingLabel(assets.strings.get("launch.click-text"), FontType.HEMI_HEAD.get());
         uiRoot.add(clickToBegin).expand().center();
     }
 }
