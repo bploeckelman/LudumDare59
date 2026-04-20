@@ -18,11 +18,12 @@ public class AssetTypeRegistry {
         register(AnimBaseButton.class, AnimType::initEnum);
         register(AnimBaseCity.class,   AnimType::initEnum);
         register(AnimBaseTurret.class, AnimType::initEnum);
-        register(AnimEnemy.class,   AnimType::initEnum);
-        register(AnimHero.class,    AnimType::initEnum);
-        register(AnimPet.class,     AnimType::initEnum);
-        register(AnimEmoji.class,   AnimType::initEnum);
-        register(AnimMisc.class,    AnimType::initEnum);
+        register(AnimEffect.class,     AnimType::initEnum);
+        register(AnimEmoji.class,      AnimType::initEnum);
+        register(AnimEnemy.class,      AnimType::initEnum);
+        register(AnimHero.class,       AnimType::initEnum);
+        register(AnimPet.class,        AnimType::initEnum);
+        register(AnimMisc.class,       AnimType::initEnum);
         register(ColorType.class,   ColorType::initEnum);
         register(EffectType.class,  EffectType::initEnum);
         register(EmitterType.class, EmitterType::initEnum);

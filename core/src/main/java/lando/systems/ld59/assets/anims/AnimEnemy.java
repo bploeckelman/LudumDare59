@@ -2,6 +2,7 @@ package lando.systems.ld59.assets.anims;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.assets.AnimType;
 import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.utils.Util;
@@ -9,7 +10,8 @@ import lando.systems.ld59.utils.Util;
 import java.util.EnumMap;
 
 public enum AnimEnemy implements AnimType {
-      ALIEN_DEAD, ALIEN_FLAIL /* TODO: move AnimMisc.SKELETON here */
+      ALIEN_DEAD_A, ALIEN_DEAD_B, ALIEN_DEAD_C
+    , ALIEN_FLAIL(Animation.PlayMode.LOOP) /* TODO: move AnimMisc.SKELETON here */
     , BOSS, GEM
     , SHIP_A, SHIP_A_LIGHT_OVERLAY
     , SHIP_B, SHIP_B_LIGHT_OVERLAY
@@ -24,12 +26,24 @@ public enum AnimEnemy implements AnimType {
             e -> new AnimType.Data(e.frameDuration, e.playMode)
     );
 
+    public static AnimEnemy getRandomDeadAlien() {
+        switch (MathUtils.random(2)) {
+            case 0: return ALIEN_DEAD_A;
+            case 1: return ALIEN_DEAD_B;
+            case 2: default: return ALIEN_DEAD_C;
+        }
+    }
+
     public final String folderPrefix;
     public final float frameDuration;
     public final Animation.PlayMode playMode;
 
     AnimEnemy() {
         this(0.1f, Animation.PlayMode.LOOP);
+    }
+
+    AnimEnemy(Animation.PlayMode playMode) {
+        this(0.1f, playMode);
     }
 
     AnimEnemy(float frameDuration) {

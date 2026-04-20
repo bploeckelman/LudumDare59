@@ -1,5 +1,6 @@
 package lando.systems.ld59.game;
 
+import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,6 +16,9 @@ import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.particles.ParticleEffectParams;
+import lando.systems.ld59.utils.Callbacks;
+import lando.systems.ld59.utils.Util;
+import lando.systems.ld59.utils.accessors.ColorAccessor;
 
 import java.util.List;
 
@@ -61,6 +65,51 @@ public class Factory {
         entity.add(position);
         entity.add(turret);
         entity.add(health);
+
+        return entity;
+    }
+
+    public static Entity alienBody(float x, float y) {
+        var entity = Factory.createEntity();
+
+        var animator = new Animator(AnimEnemy.ALIEN_FLAIL);
+        animator.depth = AnimDepths.SHIPS - 10;
+
+        // 1. flail -> dead
+        // 2. dead -> skeleton
+        // 3. skeleton -> fade-out
+        // 4. fade-out -> remove entity
+        var timer = new Timer(entity, 3f);
+        timer.onEnd = new Callbacks.NoArg() {
+            int state = 1;
+            @Override
+            public void run() {
+                switch (state) {
+                    case 1: {
+                        state = 2;
+                        animator.start(AnimEnemy.getRandomDeadAlien());
+                        timer.start(2f);
+                    } break;
+                    case 2: {
+                        state = 3;
+                        animator.start(AnimMisc.SKELETON);
+                        timer.start(2f);
+                    } break;
+                    case 3: {
+                        state = 4;
+                        Tween.to(animator.tint, ColorAccessor.A, 1f).target(0f).start(Main.game.tween);
+                        timer.start(1f);
+                    } break;
+                    case 4: {
+                        Main.game.engine.removeEntity(entity);
+                    } break;
+                }
+            }
+        };
+
+        entity.add(new Position(x, y));
+        entity.add(animator);
+        entity.add(timer);
 
         return entity;
     }

@@ -21,6 +21,7 @@ public class Systems {
     public static RenderDebugSystem      renderDebug;
     public static RenderSystem           render;
     public static ViewSystem             view;
+    public static TimerSystem            timer;
     public static TurretSystem           turret;
     public static EnemySystem            enemy;
     public static EnemySpawnerSystem     enemySpawner;
@@ -42,6 +43,7 @@ public class Systems {
         Systems.renderDebug      = new RenderDebugSystem();
         Systems.render           = new RenderSystem();
         Systems.view             = new ViewSystem();
+        Systems.timer            = new TimerSystem();
         Systems.turret           = new TurretSystem();
         Systems.enemy            = new EnemySystem();
         Systems.enemySpawner     = new EnemySpawnerSystem();
@@ -62,6 +64,7 @@ public class Systems {
         engine.addSystem(renderDebug);
         engine.addSystem(render);
         engine.addSystem(view);
+        engine.addSystem(timer);
         engine.addSystem(turret);
         engine.addSystem(enemy);
         engine.addSystem(enemySpawner);

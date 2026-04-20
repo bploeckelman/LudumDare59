@@ -3,7 +3,6 @@ package lando.systems.ld59.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import lando.systems.ld59.game.Factory;
 
 public class EnemyTag implements Component {
 
@@ -26,9 +25,5 @@ public class EnemyTag implements Component {
         this.entity = entity;
         this.enemyType = enemyType;
         this.energyColorType = energyColorType;
-    }
-
-    public void shoot() {
-        engine.addEntity(Factory.bullet(entity));
     }
 }

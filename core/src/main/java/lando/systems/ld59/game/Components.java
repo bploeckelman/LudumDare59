@@ -30,6 +30,7 @@ public class Components {
         entry(Outline.class,        ComponentMapper.getFor(Outline.class)),
         entry(Particle.class,       ComponentMapper.getFor(Particle.class)),
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
+        entry(Timer.class,          ComponentMapper.getFor(Timer.class)),
         entry(Velocity.class,       ComponentMapper.getFor(Velocity.class)),
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
         entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
