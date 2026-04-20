@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
+import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimEnemy;
@@ -13,6 +14,7 @@ import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.particles.effects.ShipExplodeEffect;
+import lando.systems.ld59.screens.EndingScreen;
 
 public class EnemySystem extends IteratingSystem {
 
@@ -240,6 +242,11 @@ public class EnemySystem extends IteratingSystem {
                 getEngine().addEntity(finalGem);
             }
 
+        }
+
+        if (boss.isGameOver()) {
+            // TODO: maybe we need other stuff, some sort of tween timeline before we just cut?
+            Main.game.setScreen(new EndingScreen());
         }
     }
 }
