@@ -8,9 +8,11 @@ import lando.systems.ld59.utils.Util;
 import java.util.EnumMap;
 
 public enum SoundType implements AssetType<Sound> {
-    SHOT("shot.wav", 1.0f)
+    SHOT("shot1.wav", 1.0f)
+    ,PEW("pew.wav", 1.0f)
     ,EXPLODE_SMALL("explode_small.ogg")
     ,BLIP("blip1.ogg")
+    ,BEOW("beow.wav")
     ,BLIP_HIT("blip_hit.wav", 1f)
     ,SHATTER("shatter2.wav", 0.2f)
     ,CRACK1("crack1.wav", 0.2f)

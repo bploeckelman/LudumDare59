@@ -85,10 +85,10 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 -1, 1,
                 Components.get(bullet, Position.class).x);
 
-            float volumeValue = MathUtils.map(
-                0, Config.window_height,
-                .5f, 1.5f,
-                Components.get(bullet, Position.class).y);
+//            float volumeValue = MathUtils.map(
+//                0, Config.window_height,
+//                .5f, 1.5f,
+//                Components.get(bullet, Position.class).y);
 
             if (Components.has(other, Projectile.class)) {
                 // both bullets
@@ -127,6 +127,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);
                 getEngine().addEntity(emitter);
 
+                AudioEvent.playSound(SoundType.BLIP_HIT, 1.5f);
 //                float squareVolume = 0.65f;
 //                float sawVolume = 0.8f;
 //                float sineVolume = 1f;

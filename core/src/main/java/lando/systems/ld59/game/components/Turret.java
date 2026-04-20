@@ -160,8 +160,8 @@ public class Turret implements Component {
         }
         else {
             AudioEvent.playSound(
-                SoundType.BLIP_HIT,
-                1.5f,
+                SoundType.PEW,
+                1f,
                 panValue
             );
         }
