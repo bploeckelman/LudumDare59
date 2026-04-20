@@ -22,7 +22,7 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
     private static final int MAX_TRIANGLES = 1000;
     private static final int MAX_NUM_VERTICES = MAX_TRIANGLES * 3;
 
-    public static final float THICKNESS = 12;
+    public static final float THICKNESS = 4;
 
     public RopePath path;
     public Array<Vector2> points;
