@@ -14,7 +14,7 @@ public class AssetTypeRegistry {
     private final Map<Class<? extends AssetType<?>>, BiConsumer<Class<?>, Assets>> loaders = new LinkedHashMap<>();
 
     public AssetTypeRegistry() {
-        register(AnimBase.class,       AnimType::initEnum);
+        register(AnimBaseGround.class,       AnimType::initEnum);
         register(AnimBaseButton.class, AnimType::initEnum);
         register(AnimBaseCity.class,   AnimType::initEnum);
         register(AnimBaseTurret.class, AnimType::initEnum);

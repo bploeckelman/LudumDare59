@@ -5,8 +5,10 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import lando.systems.ld59.AnimDepths;import lando.systems.ld59.assets.anims.AnimBase;
+import lando.systems.ld59.AnimDepths;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
+import lando.systems.ld59.assets.anims.AnimBaseGround;
+import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
@@ -18,21 +20,23 @@ import static lando.systems.ld59.game.Constants.SHIELD_MAX_HEALTH;
 
 public class Base implements Component {
 
+    public final Entity entity;
     public final Position pos;
     public final Entity ground;
     public final Entity city;
     public final Entity shield;
     public final Collider shieldCollider;
 
-    public Base(Engine engine, Position pos) {
+    public Base(Engine engine, Entity entity, Position pos) {
+        this.entity = entity;
         this.pos = pos;
         this.ground = Factory.createEntity();
         this.city = Factory.createEntity();
         this.shield = Factory.createEntity();
 
         var groundW = 1080f;
-        var groundH = 256f;
-        var groundAnim = new Animator(AnimBase.GROUND, new Vector2(groundW / 2, 0));
+        var groundH = 320f;
+        var groundAnim = new Animator(AnimBaseGround.IDLE, new Vector2(groundW / 2, 0));
         groundAnim.depth = AnimDepths.GROUND;
         groundAnim.size.set(groundW, groundH);
 
@@ -53,8 +57,7 @@ public class Base implements Component {
         city.add(new Outline(Color.LIME, Color.CLEAR_WHITE, 2));
         city.add(new Health(CITY_BASE_MAX_HEALTH));
         city.add(groundCollider);
-        city.add(new GroundPart());
-
+        city.add(new GroundPart(entity));
 
         shieldCollider = Collider.circ(CollisionMask.SHIELD, 0, -350, 730, collidesWith);
         shield.add(new Position(pos.x, pos.y));
@@ -66,7 +69,20 @@ public class Base implements Component {
         engine.addEntity(ground);
         engine.addEntity(city);
         engine.addEntity(shield);
+    }
 
+    public void handleHit() {
+        var animHit = AnimBaseGround.HIT;
+        var animIdle = AnimBaseGround.IDLE;
 
+        var animator = Components.get(ground, Animator.class);
+        animator.start(animHit);
+
+        // Revert to idle animation after hit animation completes
+        var duration = animHit.get().getAnimationDuration();
+        entity.add(new Timer(entity, duration, () -> {
+            animator.start(animIdle);
+            entity.remove(Timer.class);
+        }));
     }
 }

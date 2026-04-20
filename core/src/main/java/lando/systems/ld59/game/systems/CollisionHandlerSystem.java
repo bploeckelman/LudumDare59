@@ -192,6 +192,11 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             bulletDamage.damage = 0f;
             bulletHealth.getHit(bullet, 2f);
 
+            if (city != null) {
+                // Trigger a hit animation on the base ground
+                var cityGroundPart = Components.get(city, GroundPart.class);
+                Components.get(cityGroundPart.baseEntity, Base.class).handleHit();
+            }
         } else if (turret != null && enemy != null) {
 //            AudioEvent.playSound(SoundType.BOOM);
             // turret kamikazed
@@ -212,6 +217,9 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             var other = city == overlap.entityA() ? overlap.entityB() : overlap.entityA();
             Components.get(other, Health.class).getHit(other, 1000f);
 
+            // Trigger a hit animation on the base ground
+            var cityGroundPart = Components.get(city, GroundPart.class);
+            Components.get(cityGroundPart.baseEntity, Base.class).handleHit();
         } else {
             Util.warn(TAG, "Overlap collision that wasn't handled between: \n\t" + Util.entityString(overlap.entityA()) + " and \n\t" + Util.entityString(overlap.entityB()) + ".");
             Components.get(overlap.entityA(), Health.class).getHit(overlap.entityA(), 100f);

@@ -41,7 +41,7 @@ public class Factory {
         var entity = createEntity();
 
         var position = new Position(x, y);
-        var base = new Base(Main.game.engine, position);
+        var base = new Base(Main.game.engine, entity, position);
 
         entity.add(position);
         entity.add(base);
