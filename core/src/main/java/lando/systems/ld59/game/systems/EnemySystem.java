@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
+import lando.systems.ld59.Config;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.SoundType;
@@ -230,9 +231,43 @@ public class EnemySystem extends IteratingSystem {
             return;
         }
 
-        anim.rotation += delta * 360f;
-        float driftSpeed = MathUtils.sin(enemy.accumTimer * 1.5f) * 20f;
-        vel.set(driftSpeed, -10f);
+        float zapInterval = 5f;
+        float teleportDuration = 0.3f;
+
+        enemy.zapTimer += delta;
+
+        float cycleTime = zapInterval + teleportDuration;
+        float normalizedTime = (enemy.zapTimer + enemy.zapTimerOffset) % cycleTime;
+
+        if (normalizedTime < teleportDuration / 2f) {
+            float disappearProgress = normalizedTime / (teleportDuration / 2f);
+            float scale = 1f - disappearProgress;
+            anim.scale.set(scale, scale);
+            anim.tint.a = scale;
+            animLights.scale.set(scale, scale);
+            animLights.tint.a = scale;
+        } else if (normalizedTime < teleportDuration) {
+            if (anim.scale.x < 0.1f) {
+                float marginX = Config.window_width / 4f;
+                float minX = marginX;
+                float maxX = Config.window_width - marginX;
+                pos.x = (int) MathUtils.random(minX, maxX);
+            }
+
+            float appearProgress = (normalizedTime - teleportDuration / 2f) / (teleportDuration / 2f);
+            float scale = appearProgress;
+            anim.scale.set(scale, scale);
+            anim.tint.a = scale;
+            animLights.scale.set(scale, scale);
+            animLights.tint.a = scale;
+        } else {
+            anim.scale.set(1f, 1f);
+            anim.tint.a = 1f;
+            animLights.scale.set(1f, 1f);
+            animLights.tint.a = 1f;
+        }
+
+        vel.set(0, -15f);
 
         posLights.set(pos);
     }

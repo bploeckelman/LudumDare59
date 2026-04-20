@@ -178,6 +178,9 @@ public class Factory {
         var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, size / 3f, collidesWith);
 
         var enemyTag = new EnemyTag(Main.game.engine, entity, position, animator, enemyType);
+        if (enemyType == EnemyTag.EnemyType.SPLITTER) {
+            enemyTag.zapTimerOffset = MathUtils.random(0f, 1.0f);
+        }
 
         entity.add(enemyTag);
         entity.add(animator);

@@ -73,8 +73,8 @@ public class WaveScheduleSystem extends IteratingSystem {
             }
         }));
 
-        // Wave 3 (15 seconds)
-        waves.add(new WaveEvent(15f, () -> {
+        // Wave 3 (25 seconds)
+        waves.add(new WaveEvent(25f, () -> {
             for (int i = 0; i < 6; i++) {
                 var x = Config.window_width / 7f * (i + 1);
                 var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.KAMIKAZE));
@@ -82,10 +82,10 @@ public class WaveScheduleSystem extends IteratingSystem {
             }
         }));
 
-        // Wave 4 (20 seconds)
+        // Wave 4 (35 seconds)
         waves.add(new WaveEvent(20f, () -> {
-            for (int i = 0; i < 5; i++) {
-                var x = Config.window_width / 6f * (i + 1);
+            for (int i = 0; i < 2; i++) {
+                var x = Config.window_width / 3f * (i + 1);
                 var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.SPLITTER));
                 getEngine().addEntity(spawner);
             }
@@ -93,8 +93,8 @@ public class WaveScheduleSystem extends IteratingSystem {
 
         // Wave 5 (30 seconds and keeps going)
         waves.add(new WaveEvent(30f, () -> {
-            for (int i = 0; i < 7; i++) {
-                var x = Config.window_width / 8f * (i + 1);
+            for (int i = 0; i < 4; i++) {
+                var x = Config.window_width / 5f * (i + 1);
                 var spawner = Factory.enemySpawner(x, topY, List.of(
                     EnemyTag.EnemyType.KAMIKAZE,
                     EnemyTag.EnemyType.SPLITTER
