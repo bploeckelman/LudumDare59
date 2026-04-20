@@ -34,35 +34,39 @@ public class EnemySystem extends IteratingSystem {
 
     private void handleEnemyDeath(Entity entity) {
         var enemy = Components.get(entity, EnemyTag.class);
+        if (Components.has(entity, Boss.class)) {
+            // Boss dead
+        }
+        if (Components.has(entity, EnemyTag.class)) {
+            if (enemy.type == EnemyTag.EnemyType.SPLITTER && enemy.split < enemy.MAX_SPLIT) {
+                var pos = Components.get(entity, Position.class);
+                var anim = Components.get(entity, Animator.class);
+                var energyColor = Components.get(entity, EnergyColor.class);
 
-        if (enemy.type == EnemyTag.EnemyType.SPLITTER && enemy.split < enemy.MAX_SPLIT) {
-            var pos = Components.get(entity, Position.class);
-            var anim = Components.get(entity, Animator.class);
-            var energyColor = Components.get(entity, EnergyColor.class);
+                int numSplits = 2;
+                var size = anim.size.x / 2;
+                for (int j = 0; j < numSplits; j++) {
+                    float angle = (360f / numSplits) * j;
+                    float velX = MathUtils.cosDeg(angle) * 40f;
+                    float velY = MathUtils.sinDeg(angle) * 20f - 20f; // Spread out and move downward
 
-            int numSplits = 2;
-            var size = anim.size.x / 2;
-            for (int j = 0; j < numSplits; j++) {
-                float angle = (360f / numSplits) * j;
-                float velX = MathUtils.cosDeg(angle) * 40f;
-                float velY = MathUtils.sinDeg(angle) * 20f - 20f; // Spread out and move downward
+                    var split = Factory.enemyShip(
+                        EnemyTag.EnemyType.SPLITTER,
+                        energyColor.type,
+                        pos.x + MathUtils.random(-10f, 10f),
+                        pos.y + MathUtils.random(-10f, 10f),
+                        velX,
+                        velY,
+                        size
+                    );
+                    var splitEnemy = Components.get(split, EnemyTag.class);
+                    splitEnemy.split = enemy.split + 1;
+                    var splitHealth = Components.get(split, Health.class);
+                    splitHealth.maxHealth = 3 - enemy.split;
+                    splitHealth.currentHealth = splitHealth.maxHealth;
 
-                var split = Factory.enemyShip(
-                    EnemyTag.EnemyType.SPLITTER,
-                    energyColor.type,
-                    pos.x + MathUtils.random(-10f, 10f),
-                    pos.y + MathUtils.random(-10f, 10f),
-                    velX,
-                    velY,
-                    size
-                );
-                var splitEnemy = Components.get(split, EnemyTag.class);
-                splitEnemy.split = enemy.split + 1;
-                var splitHealth = Components.get(split, Health.class);
-                splitHealth.maxHealth = 3 - enemy.split;
-                splitHealth.currentHealth = splitHealth.maxHealth;
-
-                getEngine().addEntity(split);
+                    getEngine().addEntity(split);
+                }
             }
         }
     }
