@@ -89,8 +89,8 @@ public class Turret implements Component {
         this.cannonOutline  = new Outline(Color.CLEAR_WHITE, Color.CLEAR_WHITE, 2f);
 
         var baseCollRotX = MathUtils.cosDeg(rotation) * 60f;
-        var baseCollRotY = MathUtils.sinDeg(rotation) * 60f;
-        this.baseCollider   = Collider.circ(CollisionMask.TURRET, baseCollRotX, baseCollRotY, 40, COLLIDES_WITH);
+        var baseCollRotY = MathUtils.sinDeg(rotation) * 40f;
+        this.baseCollider   = Collider.circ(CollisionMask.TURRET, baseCollRotX, baseCollRotY, 50, COLLIDES_WITH);
         this.cannonCollider = Collider.circ(CollisionMask.TURRET, 10, 2, 22, COLLIDES_WITH);
 
         var width = WIDTH;
