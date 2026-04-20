@@ -2,17 +2,21 @@ package lando.systems.ld59.utils;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import lando.systems.ld59.Config;
 import lando.systems.ld59.Main;
 import lando.systems.ld59.game.components.SceneContainer;
 
 public class RopePath {
 
-    private static final Vector2 DEFAULT_GRAVITY = new Vector2(0, -1000f);
+    private static final Vector2 DEFAULT_GRAVITY = new Vector2(0, -100f);
     private static final float DEFAULT_DAMPING = 0.99f; // 1 = no damping
-    private static final int CONSTRAINT_ITERATIONS = 10;
+    private static final int CONSTRAINT_ITERATIONS = 4;
+    private static final float CONSTRAINT_STIFFNESS = 0.3f;
+
 
     private static final float FIXED_TIMESTEP = 1f / 60f;
     private static final int MAX_STEPS_PER_FRAME = 5; // prevent spiral of death
@@ -27,7 +31,18 @@ public class RopePath {
     private final Array<Float> restDistances = new Array<>();
     private boolean[] pinned;
 
+    private Array<Circle> colliders = new Array<>();
+
+    public void addCircleCollider(float x, float y, float radius) {
+        colliders.add(new Circle(x, y, radius));
+    }
+
+    public void clearColliders() {
+        colliders.clear();
+    }
+
     public RopePath(Array<Vector2> initialPositions) {
+        addCircleCollider(Config.window_width/2, 75, 100);
         for (int i = 0; i < initialPositions.size; i++) {
             var pos = initialPositions.get(i);
             positions.add(new Vector2(pos));
@@ -117,6 +132,8 @@ public class RopePath {
             pos.y += vy + gravity.y * dt * dt;
         }
 
+
+
         // Satisfy distance constraints — also runs at fixed rate now
         for (int iter = 0; iter < CONSTRAINT_ITERATIONS; iter++) {
             for (int i = 0; i < positions.size - 1; i++) {
@@ -130,10 +147,9 @@ public class RopePath {
 
                 if (dist < 0.0001f) continue;
 
-                float constraintStiffness = 0.5f;
                 float diff = (dist - restDist) / dist;
-                float offsetX = dx * 0.5f * diff * constraintStiffness;
-                float offsetY = dy * 0.5f * diff * constraintStiffness;
+                float offsetX = dx * 0.5f * diff * CONSTRAINT_STIFFNESS;
+                float offsetY = dy * 0.5f * diff * CONSTRAINT_STIFFNESS;
 
                 if (!pinned[i]) {
                     p1.x += offsetX;
@@ -142,6 +158,42 @@ public class RopePath {
                 if (!pinned[i + 1]) {
                     p2.x -= offsetX;
                     p2.y -= offsetY;
+                }
+            }
+        }
+        for (int pass = 0; pass < 3; pass++) {
+            for (int i = 0; i < positions.size; i++) {
+                if (pinned[i]) continue;
+
+                var pos = positions.get(i);
+                var old = oldPositions.get(i);
+
+                for (int c = 0; c < colliders.size; c++) {
+                    Circle circle = colliders.get(c);
+                    float dx = pos.x - circle.x;
+                    float dy = pos.y - circle.y;
+                    float distSq = dx * dx + dy * dy;
+                    float minDist = circle.radius + 0.5f; // small epsilon prevents sticking
+
+                    if (distSq < minDist * minDist && distSq > 0.0001f) {
+                        float dist = (float) Math.sqrt(distSq);
+                        float penetration = minDist - dist;
+
+                        // Push out along normal
+                        float nx = dx / dist;
+                        float ny = dy / dist;
+                        pos.x += nx * penetration;
+                        pos.y += ny * penetration;
+
+                        // Adjust old position too so Verlet doesn't snap it back in
+                        old.x += nx * penetration;
+                        old.y += ny * penetration;
+                    }
+                    // Handle exact center case
+                    else if (distSq < 0.0001f) {
+                        pos.x += minDist;
+                        old.x += minDist;
+                    }
                 }
             }
         }
