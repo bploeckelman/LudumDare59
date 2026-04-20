@@ -102,6 +102,9 @@ public class WaveScheduleSystem extends IteratingSystem {
             for (int i = 0; i < 3; i++) {
                 var x = Config.window_width / 4f * (i + 1);
                 var spawner = Factory.enemySpawner(x, customY + 50f, List.of(EnemyTag.EnemyType.FLYER));
+                var spawnerComponent = Components.get(spawner, EnemySpawner.class);
+                spawnerComponent.fireOnce = false;
+                spawnerComponent.spawnInterval = 5f;
                 getEngine().addEntity(spawner);
             }
 
