@@ -12,10 +12,7 @@ import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.BaseButton;
 import lando.systems.ld59.game.components.Connection;
 import lando.systems.ld59.game.components.Turret;
-import lando.systems.ld59.game.signals.AudioEvent;
-import lando.systems.ld59.game.signals.ConnectionEvent;
-import lando.systems.ld59.game.signals.EntityEvent;
-import lando.systems.ld59.game.signals.SignalEvent;
+import lando.systems.ld59.game.signals.*;
 
 public class ConnectionSystem extends IteratingSystem implements Listener<SignalEvent> {
 
@@ -42,6 +39,11 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
 
     @Override
     public void receive(Signal<SignalEvent> signal, SignalEvent event) {
+        if (event instanceof ScreenShakeEvent) {
+            handleShake(event);
+            return;
+        }
+
         var isConnectionEvent = event instanceof ConnectionEvent;
         if (!isConnectionEvent) return;
 
@@ -127,6 +129,14 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                     // ...and allowing the next processEntity call to finalize the connection
                 }
             }
+        }
+    }
+
+    public void handleShake(SignalEvent event) {
+        var entities = getEntities();
+        for (int i = 0; i < entities.size(); i++) {
+            var connection = Components.get(entities.get(i), Connection.class);
+            connection.jostle();
         }
     }
 

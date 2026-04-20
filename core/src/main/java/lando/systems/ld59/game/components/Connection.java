@@ -92,6 +92,12 @@ public class Connection implements Component {
         }
     }
 
+    public void jostle() {
+        if (ropePath != null) {
+            ropePath.jostle();
+        }
+    }
+
     public boolean hasTurret() { return turret != null; }
     public boolean hasBaseButton() { return baseButton != null; }
 

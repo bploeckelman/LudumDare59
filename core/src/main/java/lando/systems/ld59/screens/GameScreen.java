@@ -126,10 +126,10 @@ public class GameScreen extends BaseScreen {
         ScreenUtils.clear(backgroundColor);
 
         // Draw scene
-        batch.setProjectionMatrix(worldCamera.combined);
+        batch.setProjectionMatrix(shaker.getCombinedMatrix());
         batch.begin();
         {
-            Systems.render.draw(batch, worldCamera);
+            Systems.render.draw(batch, shaker.getCombinedMatrix());
             Systems.renderDebug.draw(shapes);
             Systems.renderDebug.drawText(batch);
         }

@@ -2,13 +2,15 @@ package lando.systems.ld59.game.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.SortedIteratingSystem;
+import com.badlogic.ashley.signals.Listener;
+import com.badlogic.ashley.signals.Signal;import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -18,13 +20,16 @@ import lando.systems.ld59.assets.ShaderType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.Health;
 import lando.systems.ld59.game.components.Position;
-import lando.systems.ld59.game.components.renderable.*;
+import lando.systems.ld59.game.components.SceneContainer;import lando.systems.ld59.game.components.renderable.*;
+import lando.systems.ld59.game.scenes.Scene;
+import lando.systems.ld59.game.signals.ConnectionEvent;
+import lando.systems.ld59.game.signals.ScreenShakeEvent;import lando.systems.ld59.game.signals.SignalEvent;
 import lando.systems.ld59.utils.FramePool;
 import lando.systems.ld59.utils.Util;
 
 import java.util.Comparator;
 
-public class RenderSystem extends SortedIteratingSystem {
+public class RenderSystem extends SortedIteratingSystem implements Listener<SignalEvent> {
 
     private static final Family RENDERABLES = Family
         .one(Image.class, Animator.class, FlatShape.class).get();
@@ -43,6 +48,7 @@ public class RenderSystem extends SortedIteratingSystem {
 
     public RenderSystem() {
         super(RENDERABLES, comparator);
+        SignalEvent.addListener(this);
     }
 
     @Override
@@ -55,7 +61,7 @@ public class RenderSystem extends SortedIteratingSystem {
     public void processEntity(Entity entity, float deltaTime) {
     }
 
-    public void draw(SpriteBatch batch, OrthographicCamera camera) {
+    public void draw(SpriteBatch batch, Matrix4 combinedCameraMatrix) {
         beforeCablesEntities.clear();
         afterCablesEntities.clear();
 
@@ -83,7 +89,7 @@ public class RenderSystem extends SortedIteratingSystem {
         }
 
         batch.end();
-        drawCableShader(camera);
+        drawCableShader(combinedCameraMatrix);
         batch.begin();
 
         for (var entity : afterCablesEntities) {
@@ -105,14 +111,14 @@ public class RenderSystem extends SortedIteratingSystem {
 
     }
 
-    public void drawCableShader(OrthographicCamera camera) {
+    public void drawCableShader(Matrix4 combinedCameraMatrix) {
         var engine = Main.game.engine;
         var cables = engine.getEntitiesFor(Family.one(CableShaderRenderable.class).get());
         var shader = ShaderType.CABLE.get();
 
         shader.bind();
 
-        shader.setUniformMatrix("u_projTrans", camera.combined);
+        shader.setUniformMatrix("u_projTrans", combinedCameraMatrix);
         shader.setUniformf("u_time", accum);
         shader.setUniformi("u_texture", 0);
         shader.setUniformf("u_edgeColor", Color.BLACK);
@@ -230,5 +236,17 @@ public class RenderSystem extends SortedIteratingSystem {
         }
         batch.setShader(null);
         batch.setColor(prevColor);
+    }
+    @Override
+    public void receive(Signal<SignalEvent> signal, SignalEvent event) {
+        var isScreenShakeEvent = event instanceof ScreenShakeEvent;
+        if (!isScreenShakeEvent) return;
+
+        var screenShake = (ScreenShakeEvent) event;
+        var scenes = getEngine().getEntitiesFor(Family.one(SceneContainer.class).get());
+        for (Entity sceneEntity : scenes) {
+            var scene = sceneEntity.getComponent(SceneContainer.class).scene;
+            scene.screen.shaker.addDamage(screenShake.amount());
+        }
     }
 }

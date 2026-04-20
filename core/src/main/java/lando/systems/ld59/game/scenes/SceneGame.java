@@ -14,6 +14,7 @@ import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.signals.AudioEvent;
+import lando.systems.ld59.game.signals.ScreenShakeEvent;
 import lando.systems.ld59.particles.effects.PetConfettiEffect;
 import lando.systems.ld59.particles.effects.ExplosionEffect;
 import lando.systems.ld59.particles.effects.SparkleEffect;
@@ -103,15 +104,7 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
 
     private static final Family CONNECTIONS = Family.one(Connection.class).get();
     public void springConnectionTest() {
-        var entities = engine().getEntitiesFor(CONNECTIONS);
-        for (int i = 0; i < entities.size(); i++) {
-            var entity = entities.get(i);
-            var connection = Components.get(entity, Connection.class);
-            var ropePath = connection.ropePath;
-            if (ropePath != null) {
-                ropePath.jostle();
-            }
-        }
+        ScreenShakeEvent.shake(10);
     }
 
     @Override

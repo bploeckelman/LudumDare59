@@ -19,6 +19,7 @@ import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.Assets;
 import lando.systems.ld59.assets.FontType;
 import lando.systems.ld59.game.scenes.Scene;
+import lando.systems.ld59.utils.screenshake.ScreenShakeCameraController;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public abstract class BaseScreen implements Screen {
@@ -29,6 +30,7 @@ public abstract class BaseScreen implements Screen {
     public final ShapeDrawer shapes;
     public final TweenManager tween;
     public final OrthographicCamera windowCamera;
+    public final ScreenShakeCameraController shaker;
     public final Engine engine;
     public final Stage uiStage;
 
@@ -66,6 +68,8 @@ public abstract class BaseScreen implements Screen {
         // NOTE: if a screen needs to adjust input processors (rearrange, add more, etc...) use this pattern:
         game.inputMux.setProcessors(uiStage);
         Gdx.input.setInputProcessor(game.inputMux);
+
+        shaker = new ScreenShakeCameraController(worldCamera);
     }
 
     public Scene<? extends BaseScreen> scene() {
@@ -121,6 +125,7 @@ public abstract class BaseScreen implements Screen {
         // TODO: add a global input processor to toggle flags at runtime
         uiRoot.setDebug(Flag.DEBUG_UI.isEnabled());
         uiStage.act(Math.min(delta, 1 / 30f));
+        shaker.update(delta);
     }
 
     public void renderOffscreenBuffers(SpriteBatch batch) {}
