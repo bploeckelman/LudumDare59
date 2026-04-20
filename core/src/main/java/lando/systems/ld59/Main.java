@@ -128,7 +128,7 @@ public class Main extends Game {
 
     @Override
     public void render() {
-        FramePool.get().clear();
+        FramePool.get().resetAll();
         update(Time.delta);
 
         ScreenUtils.clear(Color.DARK_GRAY);

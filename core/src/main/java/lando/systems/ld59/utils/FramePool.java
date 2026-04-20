@@ -84,15 +84,25 @@ public class FramePool {
 
     public void resetAll() {
         vec2.freeAll(vec2Active);
+        vec2Active.clear();
         vec3.freeAll(vec3Active);
+        vec3Active.clear();
         pf2.freeAll(pf2Active);
+        pf2Active.clear();
         pi2.freeAll(pi2Active);
+        pi2Active.clear();
         pi3.freeAll(pi3Active);
+        pi3Active.clear();
         pi4.freeAll(pi4Active);
+        pi4Active.clear();
         pos.freeAll(posActive);
+        posActive.clear();
         circle.freeAll(circleActive);
+        circleActive.clear();
         rect.freeAll(rectActive);
+        rectActive.clear();
         color.freeAll(colorActive);
+        colorActive.clear();
     }
 
     public void clear() {
