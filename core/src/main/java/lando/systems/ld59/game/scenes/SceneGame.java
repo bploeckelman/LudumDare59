@@ -45,12 +45,20 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         this.cityAnimator = Components.get(baseComp.city, Animator.class);
 
         // @formatter:off
-        var redButton      = Factory.baseButton(BaseButton.Type.RED,      centerX - 125,           buttonY);
-        var greenButton    = Factory.baseButton(BaseButton.Type.GREEN,    centerX - 125 - 80,      buttonY);
-        var blueButton     = Factory.baseButton(BaseButton.Type.BLUE,     centerX - 125 - 80 - 80, buttonY);
-        var circleButton   = Factory.baseButton(BaseButton.Type.CIRCLE,   centerX + 125,           buttonY);
-        var squareButton   = Factory.baseButton(BaseButton.Type.SQUARE,   centerX + 125 + 80,      buttonY);
-        var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, centerX + 125 + 80 + 80, buttonY);
+        // Horizontal - bottom layout
+//        var redButton      = Factory.baseButton(BaseButton.Type.RED,      centerX - 125,           buttonY);
+//        var greenButton    = Factory.baseButton(BaseButton.Type.GREEN,    centerX - 125 - 80,      buttonY);
+//        var blueButton     = Factory.baseButton(BaseButton.Type.BLUE,     centerX - 125 - 80 - 80, buttonY);
+//        var circleButton   = Factory.baseButton(BaseButton.Type.CIRCLE,   centerX + 125,           buttonY);
+//        var squareButton   = Factory.baseButton(BaseButton.Type.SQUARE,   centerX + 125 + 80,      buttonY);
+//        var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, centerX + 125 + 80 + 80, buttonY);
+        // Vertical - side layout
+        var redButton      = Factory.baseButton(BaseButton.Type.RED,      40, buttonY + 150);
+        var greenButton    = Factory.baseButton(BaseButton.Type.GREEN,    40, buttonY + 150 + 80);
+        var blueButton     = Factory.baseButton(BaseButton.Type.BLUE,     40, buttonY + 150 + 80 + 80);
+        var circleButton   = Factory.baseButton(BaseButton.Type.CIRCLE,   screen.worldCamera.viewportWidth - 40, buttonY + 150);
+        var squareButton   = Factory.baseButton(BaseButton.Type.SQUARE,   screen.worldCamera.viewportWidth - 40, buttonY + 150 + 80);
+        var triangleButton = Factory.baseButton(BaseButton.Type.TRIANGLE, screen.worldCamera.viewportWidth - 40, buttonY + 150 + 80 + 80);
         // @formatter:on
 
         // Place turrets on the planet, layout follows planet curve
