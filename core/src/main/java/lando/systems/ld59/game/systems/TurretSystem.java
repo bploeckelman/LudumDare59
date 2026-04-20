@@ -55,7 +55,7 @@ public class TurretSystem extends IteratingSystem  {
 
         health.update(dt);
         if (health.isDead()) {
-            baseAnim.start(AnimBaseTurret.BASE_DAMAGED);
+            baseAnim.play(AnimBaseTurret.BASE_DAMAGED);
 
             turret.base.remove(Collider.class);
             turret.cannon.remove(Collider.class);

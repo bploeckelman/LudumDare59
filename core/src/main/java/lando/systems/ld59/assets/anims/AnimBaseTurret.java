@@ -8,7 +8,7 @@ import java.util.EnumMap;
 
 public enum AnimBaseTurret implements AnimType {
       BARREL_ICON /* TODO: should be moved to AnimMisc + /misc */
-    , BASE_DAMAGED(0.5f)
+    , BASE_DAMAGED(0.5f, Animation.PlayMode.LOOP)
     , BASE_IDLE(0.5f)
     , BASE_PLUG_LEFT
     , BASE_PLUG_RIGHT
