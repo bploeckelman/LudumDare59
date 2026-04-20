@@ -53,8 +53,8 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         var baseButtonBoardHeight = 280f;
         var pinBoardToTop = worldCamHeight - baseButtonBoardHeight / 2f;
         var pinBoardToCenter = worldCenterY;
-//        var boardCenterY = pinBoardToTop;
-        var boardCenterY = pinBoardToCenter;
+        var boardCenterY = pinBoardToTop;
+//        var boardCenterY = pinBoardToCenter;
         var baseButtonBoardLeft = Factory.baseButtonBoard(AnimBaseButton.BOARD_LEFT, 0, boardCenterY);
         var baseButtonBoardRight = Factory.baseButtonBoard(AnimBaseButton.BOARD_RIGHT, worldCamWidth, boardCenterY);
 
