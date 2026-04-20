@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
-import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
@@ -40,7 +39,7 @@ public class EnemySystem extends IteratingSystem {
             // Boss dead
         }
         if (Components.has(entity, EnemyTag.class)) {
-            if (enemy.type == EnemyTag.EnemyType.SPLITTER && enemy.split < enemy.MAX_SPLIT) {
+            if (enemy.enemyType == EnemyTag.EnemyType.SPLITTER && enemy.split < enemy.MAX_SPLIT) {
                 var pos = Components.get(entity, Position.class);
                 var anim = Components.get(entity, Animator.class);
                 var energyColor = Components.get(entity, EnergyColor.class);
@@ -91,9 +90,9 @@ public class EnemySystem extends IteratingSystem {
             anim.tint.set(1f, 1f, 1f, 1f);
         }
 
-        if      (EnemyTag.EnemyType.SUICIDER == enemy.type) suicider(entity, enemy, delta);
-        else if (EnemyTag.EnemyType.FLYER == enemy.type) flyer(entity, enemy, delta);
-        else if (EnemyTag.EnemyType.SPLITTER == enemy.type) splitter(entity, enemy, delta);
+        if      (EnemyTag.EnemyType.KAMIKAZE == enemy.enemyType) suicider(entity, enemy, delta);
+        else if (EnemyTag.EnemyType.FLYER == enemy.enemyType) flyer(entity, enemy, delta);
+        else if (EnemyTag.EnemyType.SPLITTER == enemy.enemyType) splitter(entity, enemy, delta);
     }
 
 

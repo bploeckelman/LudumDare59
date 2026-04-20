@@ -9,6 +9,7 @@ import lando.systems.ld59.AnimDepths;import lando.systems.ld59.Main;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.assets.ImageType;
 import lando.systems.ld59.assets.anims.AnimEnemy;
+import lando.systems.ld59.assets.anims.AnimMisc;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
@@ -17,8 +18,7 @@ import lando.systems.ld59.particles.ParticleEffectParams;
 
 import java.util.List;
 
-import static lando.systems.ld59.game.Constants.ENEMY_MAX_HEALTH;
-import static lando.systems.ld59.game.Constants.TURRET_MAX_HEALTH;
+import static lando.systems.ld59.game.Constants.*;
 
 public class Factory {
 
@@ -65,6 +65,38 @@ public class Factory {
         return entity;
     }
 
+    public static Entity bullet(Entity enemyShip) {
+        var defaultDiameter = 10f;
+        return bullet(enemyShip, defaultDiameter);
+    }
+
+    public static Entity bullet(Entity enemyShip, float diameter) {
+        var entity = Factory.createEntity();
+
+        var enemyShipPos = enemyShip.getComponent(Position.class);
+        var enemyShipEnergyColor = enemyShip.getComponent(EnergyColor.class);
+        var radius = diameter / 2f;
+
+        var baseAnim = new Animator(AnimMisc.PROJECTILE);
+        baseAnim.depth = AnimDepths.BULLETS;
+        baseAnim.size.set(diameter, diameter);
+        baseAnim.origin.set(radius, radius);
+        baseAnim.tint.set(enemyShipEnergyColor.getColor());
+
+        var collidesWith = new CollisionMask[] { CollisionMask.TURRET, CollisionMask.CITY, CollisionMask.SHIELD };
+        var bulletCollider = Collider.circ(CollisionMask.ENEMY_PROJECTILE, 0,  0, 2f, collidesWith);
+
+        entity.add(baseAnim);
+        entity.add(bulletCollider);
+        entity.add(enemyShipEnergyColor);
+        entity.add(new Position(enemyShipPos.x, enemyShipPos.y - diameter));
+        entity.add(new Velocity(0, -100));
+        entity.add(new Projectile(ENEMY_PROJECTILE_DAMAGE));
+        entity.add(new Health(1));
+
+        return entity;
+    }
+
     public static Entity enemySpawner(float x, float y, List<EnemyTag.EnemyType> enemyType) {
         var entity = createEntity();
         var position = new Position(x, y);
@@ -74,47 +106,27 @@ public class Factory {
         return entity;
     }
 
-    public static Entity enemyShip(EnemyTag.EnemyType enemy, EnergyColor.Type energyColor, float posX, float posY, float velX, float velY, float size) {
+    public static Entity enemyShip(EnemyTag.EnemyType enemyType, EnergyColor.Type energyColorType, float posX, float posY, float velX, float velY, float size) {
         var entity = createEntity();
-        var tag = new EnemyTag(entity, Main.game.engine);
-        AnimEnemy animType = null;
-        switch (energyColor) {
-            case RED:
-                tag.energyColor = EnergyColor.Type.RED;
-                animType = AnimEnemy.redShips.get(enemy.ordinal());
-                break;
-            case GREEN:
-                tag.energyColor = EnergyColor.Type.GREEN;
-                animType = AnimEnemy.greenShips.get(enemy.ordinal());
-                break;
-            case BLUE:
-                tag.energyColor = EnergyColor.Type.BLUE;
-                animType = AnimEnemy.blueShips.get(enemy.ordinal());
-                break;
-            default:
-                tag.energyColor = EnergyColor.Type.RED;
-                animType = AnimEnemy.RED_1;
-        }
-        tag.type = enemy;
-        var animOrigin = new Vector2(size / 2f, size / 2f);
-        var collidesWith = new CollisionMask[] { CollisionMask.SHIELD, CollisionMask.TURRET, CollisionMask.PLAYER_PROJECTILE, CollisionMask.CITY };
 
-        var name = new Name(energyColor.name() + " " + enemy.name());
-        var position = new Position(posX, posY);
-        var velocity = new Velocity(velX, velY);
-        var animator = new Animator(animType, new Vector2(size, size), animOrigin);
-        var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, size / 2f, collidesWith);
-        var health = new Health(ENEMY_MAX_HEALTH);
+        var enemyTag = new EnemyTag(Main.game.engine, entity, enemyType, energyColorType);
+
+        var animator = new Animator(AnimEnemy.of(energyColorType), new Vector2(size, size), new Vector2(size / 2f, size / 2f));
         animator.scale.set(0.3f, 0.3f);
         animator.tint.a = 0f;
-        entity.add(name);
-        entity.add(tag);
-        entity.add(position);
-        entity.add(velocity);
+
+        var collidesWith = new CollisionMask[] { CollisionMask.SHIELD, CollisionMask.TURRET, CollisionMask.PLAYER_PROJECTILE, CollisionMask.CITY };
+        var collider = Collider.circ(CollisionMask.ENEMY, 0, 0, size / 2f, collidesWith);
+
+        entity.add(enemyTag);
         entity.add(animator);
         entity.add(collider);
-        entity.add(health);
-        entity.add(new EnergyColor(energyColor));
+        entity.add(new Position(posX, posY));
+        entity.add(new Velocity(velX, velY));
+        entity.add(new Health(ENEMY_MAX_HEALTH));
+        entity.add(new EnergyColor(energyColorType));
+        entity.add(new Name(energyColorType.name() + " " + enemyType.name()));
+
         return entity;
     }
 

@@ -56,6 +56,18 @@ public class Util {
     }
 
     // ------------------------------------------------------------------------
+    // Enum related
+    // ------------------------------------------------------------------------
+
+    public <E extends Enum<E>> E randomEnumValue(Class<E> enumClass) {
+        var constants = enumClass.getEnumConstants();
+        if (constants.length == 0) {
+            throw new GdxRuntimeException("Enum has no values!");
+        }
+        return constants[MathUtils.random(constants.length - 1)];
+    }
+
+    // ------------------------------------------------------------------------
     // Path related
     // ------------------------------------------------------------------------
 

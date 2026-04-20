@@ -3,7 +3,6 @@ package lando.systems.ld59.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Main;
@@ -12,7 +11,6 @@ import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
-import lando.systems.ld59.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +68,7 @@ public class WaveScheduleSystem extends IteratingSystem {
         waves.add(new WaveEvent(10f, () -> {
             for (int i = 0; i < 3; i++) {
                 var x = Config.window_width / 4f * (i + 1);
-                var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.SUICIDER));
+                var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.KAMIKAZE));
                 getEngine().addEntity(spawner);
             }
         }));
@@ -79,7 +77,7 @@ public class WaveScheduleSystem extends IteratingSystem {
         waves.add(new WaveEvent(15f, () -> {
             for (int i = 0; i < 6; i++) {
                 var x = Config.window_width / 7f * (i + 1);
-                var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.SUICIDER));
+                var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.KAMIKAZE));
                 getEngine().addEntity(spawner);
             }
         }));
@@ -98,7 +96,7 @@ public class WaveScheduleSystem extends IteratingSystem {
             for (int i = 0; i < 7; i++) {
                 var x = Config.window_width / 8f * (i + 1);
                 var spawner = Factory.enemySpawner(x, topY, List.of(
-                    EnemyTag.EnemyType.SUICIDER,
+                    EnemyTag.EnemyType.KAMIKAZE,
                     EnemyTag.EnemyType.SPLITTER
                 ));
                 var spawnerComponent = Components.get(spawner, EnemySpawner.class);
