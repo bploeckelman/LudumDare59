@@ -183,7 +183,7 @@ public class Factory {
         entity.add(animator);
         entity.add(collider);
         entity.add(position);
-        entity.add(new Outline(energyColorType.getColor(), 1f));
+        entity.add(new Outline(energyColorType.getColor(), 3f));
         entity.add(new Velocity(velX, velY));
         entity.add(new Health(ENEMY_MAX_HEALTH));
         entity.add(new EnergyColor(energyColorType));
