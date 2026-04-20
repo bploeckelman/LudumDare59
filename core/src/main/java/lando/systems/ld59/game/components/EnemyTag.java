@@ -23,9 +23,13 @@ public class EnemyTag implements Component {
     public float fireTimer = 0f;
     public float accumTimer = 0f;
     public float zapTimer = 0f;
-    public float zapTimerOffset = 0f; // Random offset for teleport timing
+    public float randomOffset = 0f;
     public int split = 0;
     public int MAX_SPLIT = 1;
+
+    // Flyer drift behavior
+    public Vector2 driftDirection = new Vector2();
+    public float driftChangeTimer = 0f;
 
     public EnemyTag(Engine engine, Entity entity, Position pos, Animator anim, EnemyType enemyType) {
         this.engine = engine;

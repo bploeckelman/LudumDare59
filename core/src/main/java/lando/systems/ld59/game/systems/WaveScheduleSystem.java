@@ -83,7 +83,7 @@ public class WaveScheduleSystem extends IteratingSystem {
         }));
 
         // Wave 4 (35 seconds)
-        waves.add(new WaveEvent(20f, () -> {
+        waves.add(new WaveEvent(35f, () -> {
             for (int i = 0; i < 2; i++) {
                 var x = Config.window_width / 3f * (i + 1);
                 var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.SPLITTER));
@@ -91,8 +91,21 @@ public class WaveScheduleSystem extends IteratingSystem {
             }
         }));
 
+        waves.add(new WaveEvent(50f, () -> {
+            for (int i = 0; i < 4; i++) {
+                var x = Config.window_width / 5f * (i + 1);
+                var spawner = Factory.enemySpawner(x, topY, List.of(EnemyTag.EnemyType.SPLITTER));
+                getEngine().addEntity(spawner);
+            }
+            for (int i = 0; i < 5; i++) {
+                var x = Config.window_width / 6f * (i + 1);
+                var spawner = Factory.enemySpawner(x, customY + 50f, List.of(EnemyTag.EnemyType.FLYER));
+                getEngine().addEntity(spawner);
+            }
+        }));
+
         // Wave 5 (30 seconds and keeps going)
-        waves.add(new WaveEvent(30f, () -> {
+        waves.add(new WaveEvent(70f, () -> {
             for (int i = 0; i < 4; i++) {
                 var x = Config.window_width / 5f * (i + 1);
                 var spawner = Factory.enemySpawner(x, topY, List.of(

@@ -192,10 +192,45 @@ public class EnemySystem extends IteratingSystem {
         animLights.scale.set(1f, 1f);
         animLights.tint.a = 1f;
 
-        float bobSpeed = MathUtils.sin(enemy.accumTimer * 2f) * 15f;
-        float driftSpeed = MathUtils.sin(enemy.accumTimer * 1.5f) * 10f;
+        if (enemy.driftDirection.isZero()) {
+            float angle = MathUtils.random(360f);
+            enemy.driftDirection.set(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle));
+            enemy.driftDirection.scl(MathUtils.random(30f, 60f));
+        }
 
-        vel.set(driftSpeed, bobSpeed);
+        enemy.driftChangeTimer += delta;
+        float driftChangeInterval = 2f + enemy.randomOffset * 2f;
+        if (enemy.driftChangeTimer >= driftChangeInterval) {
+            enemy.driftChangeTimer = 0f;
+            float angle = MathUtils.random(360f);
+            enemy.driftDirection.set(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle));
+            enemy.driftDirection.scl(MathUtils.random(30f, 60f));
+        }
+
+        float marginX = 50f;
+        float marginY = 50f;
+        float minX = marginX;
+        float maxX = Config.window_width - marginX;
+        float minY = Config.window_height / 2f + 50f;
+        float maxY = Config.window_height - marginY;
+
+        if (pos.x <= minX && enemy.driftDirection.x < 0) {
+            enemy.driftDirection.x = -enemy.driftDirection.x;
+        }
+        if (pos.x >= maxX && enemy.driftDirection.x > 0) {
+            enemy.driftDirection.x = -enemy.driftDirection.x;
+        }
+        if (pos.y <= minY && enemy.driftDirection.y < 0) {
+            enemy.driftDirection.y = -enemy.driftDirection.y;
+        }
+        if (pos.y >= maxY && enemy.driftDirection.y > 0) {
+            enemy.driftDirection.y = -enemy.driftDirection.y;
+        }
+
+        float bobX = MathUtils.sin(enemy.accumTimer * (2f + enemy.randomOffset * 0.5f)) * 15f;
+        float bobY = MathUtils.cos(enemy.accumTimer * (1.5f + enemy.randomOffset * 0.5f)) * 10f;
+
+        vel.set(enemy.driftDirection.x + bobX, enemy.driftDirection.y + bobY);
 
         if (enemy.fireTimer >= enemy.FIRE_RATE) {
             enemy.fireTimer -= enemy.FIRE_RATE;
@@ -238,7 +273,7 @@ public class EnemySystem extends IteratingSystem {
         enemy.zapTimer += delta;
 
         float cycleTime = zapInterval + teleportDuration;
-        float normalizedTime = (enemy.zapTimer + enemy.zapTimerOffset) % cycleTime;
+        float normalizedTime = (enemy.zapTimer + enemy.randomOffset) % cycleTime;
 
         if (normalizedTime < teleportDuration / 2f) {
             float disappearProgress = normalizedTime / (teleportDuration / 2f);
