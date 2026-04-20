@@ -14,6 +14,7 @@ public enum ImageType implements AssetType<Texture> {
     , SHIELD("shield.png")
     , NOISE("noise.png")
     , BACKGROUND("background.png")
+    , BACKGROUND_TITLE("background-title.png")
     ;
     //@formatter:on
 

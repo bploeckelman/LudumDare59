@@ -45,7 +45,7 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         var worldCenterX = worldCamWidth / 2f;
         var worldCenterY = worldCamHeight / 2f;
 
-        var background = Factory.background(ImageType.BACKGROUND, new Vector2(0, 0), new Vector2(worldCamWidth, worldCamHeight));
+        var background = Factory.background(ImageType.BACKGROUND_TITLE, new Vector2(0, 0), new Vector2(worldCamWidth, worldCamHeight));
         var base = Factory.base(worldCenterX, 0f);
         var baseComp = Components.get(base, Base.class);
         this.cityAnimator = Components.get(baseComp.city, Animator.class);
