@@ -4,7 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.Config;
+import lando.systems.ld59.assets.ImageType;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
@@ -78,6 +80,10 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
             engine().addEntity(turret);
             turrets.add(turret);
         }
+
+        var worldW = screen.worldCamera.viewportWidth;
+        var worldH = screen.worldCamera.viewportHeight;
+        engine().addEntity(Factory.background(ImageType.BACKGROUND, new Vector2(0, 0), new Vector2(worldW, worldH)));
 
         engine().addEntity(base);
         engine().addEntity(redButton);

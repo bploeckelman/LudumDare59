@@ -13,6 +13,7 @@ public enum ImageType implements AssetType<Texture> {
       GDX("libgdx.png")
     , SHIELD("shield.png")
     , NOISE("noise.png")
+    , BACKGROUND("background.png")
     ;
     //@formatter:on
 
