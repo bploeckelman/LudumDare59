@@ -10,6 +10,7 @@ import lando.systems.ld59.particles.effects.ExplosionEffect;
 import lando.systems.ld59.particles.effects.SmokeEffect;
 import lando.systems.ld59.particles.effects.SparkleEffect;
 import lando.systems.ld59.particles.effects.TestEffect;
+import lando.systems.ld59.particles.effects.EmojiPopEffect;
 
 import java.util.EnumMap;
 
@@ -18,7 +19,8 @@ public enum EmitterType implements AssetType<ParticleEffect> {
       SMOKE(SmokeEffect.class),
       SPARKLE(SparkleEffect.class),
       EXPLOSION(ExplosionEffect.class),
-      CONFETTI(PetConfettiEffect.class)
+      CONFETTI(PetConfettiEffect.class),
+      EMOJI_POP(EmojiPopEffect.class)
     ;
 
     private static final String TAG = EmitterType.class.getSimpleName();
