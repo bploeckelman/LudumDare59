@@ -126,6 +126,8 @@ public class EnemySystem extends IteratingSystem {
         var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
         var anim = Components.get(entity, Animator.class);
+        var posLights = Components.get(enemy.lightOverlay, Position.class);
+        var animLights = Components.get(enemy.lightOverlay, Animator.class);
 
         float standbyDuration = 3f;
         float appearDuration = 1f;
@@ -139,24 +141,33 @@ public class EnemySystem extends IteratingSystem {
 
             float scale = 0.3f + (0.7f * appearProgress);
             anim.scale.set(scale, scale);
-
             anim.tint.a = appearProgress;
+
+            animLights.scale.set(scale, scale);
+            animLights.tint.a = appearProgress;
             return;
         }
         anim.scale.set(1f, 1f);
         anim.tint.a = 1f;
+        animLights.scale.set(1f, 1f);
+        animLights.tint.a = 1f;
+
         if (enemy.accumTimer > standbyDuration) {
             if (vel.y() >= 0) {
                 vel.set(0, -15f);
             }
             vel.set(0f, vel.y() * 1.0035f);
         }
+
+        posLights.set(pos);
     }
 
     private void flyerBehavior(Entity entity, EnemyTag enemy, float delta) {
         var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
         var anim = Components.get(entity, Animator.class);
+        var posLights = Components.get(enemy.lightOverlay, Position.class);
+        var animLights = Components.get(enemy.lightOverlay, Animator.class);
 
         enemy.accumTimer += delta;
 
@@ -168,13 +179,17 @@ public class EnemySystem extends IteratingSystem {
 
             float scale = 0.3f + (0.7f * appearProgress);
             anim.scale.set(scale, scale);
-
             anim.tint.a = appearProgress;
+
+            animLights.scale.set(scale, scale);
+            animLights.tint.a = appearProgress;
             return;
         }
 
         anim.scale.set(1f, 1f);
         anim.tint.a = 1f;
+        animLights.scale.set(1f, 1f);
+        animLights.tint.a = 1f;
 
         float bobSpeed = MathUtils.sin(enemy.accumTimer * 2f) * 15f;
         float driftSpeed = MathUtils.sin(enemy.accumTimer * 1.5f) * 10f;
@@ -187,12 +202,16 @@ public class EnemySystem extends IteratingSystem {
             getEngine().addEntity(Factory.bullet(entity));
         }
         enemy.fireTimer += delta;
+
+        posLights.set(pos);
     }
 
     private void splitterBehavior(Entity entity, EnemyTag enemy, float delta) {
         var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
         var anim = Components.get(entity, Animator.class);
+        var posLights = Components.get(enemy.lightOverlay, Position.class);
+        var animLights = Components.get(enemy.lightOverlay, Animator.class);
 
         enemy.accumTimer += delta;
 
@@ -205,14 +224,18 @@ public class EnemySystem extends IteratingSystem {
 
             float scale = 0.3f + (0.7f * appearProgress);
             anim.scale.set(scale, scale);
-
             anim.tint.a = appearProgress;
+
+            animLights.scale.set(1f, 1f);
+            animLights.tint.a = 1f;
             return;
         }
 
         anim.rotation += delta * 360f;
         float driftSpeed = MathUtils.sin(enemy.accumTimer * 1.5f) * 20f;
         vel.set(driftSpeed, -10f);
+
+        posLights.set(pos);
     }
 
     private void updateBoss(Entity entity, float dt) {

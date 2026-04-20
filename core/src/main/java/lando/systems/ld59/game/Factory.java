@@ -18,6 +18,7 @@ import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.components.renderable.Image;
+import lando.systems.ld59.game.components.renderable.Outline;
 import lando.systems.ld59.particles.ParticleEffectParams;
 import lando.systems.ld59.utils.Callbacks;
 import lando.systems.ld59.utils.accessors.ColorAccessor;
@@ -181,6 +182,7 @@ public class Factory {
         entity.add(animator);
         entity.add(collider);
         entity.add(position);
+        entity.add(new Outline(energyColorType.getColor(), 1f));
         entity.add(new Velocity(velX, velY));
         entity.add(new Health(ENEMY_MAX_HEALTH));
         entity.add(new EnergyColor(energyColorType));

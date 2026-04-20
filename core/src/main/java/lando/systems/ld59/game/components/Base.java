@@ -54,7 +54,7 @@ public class Base implements Component {
 
         city.add(new Position(pos.x, pos.y + 25));
         city.add(cityAnim);
-        city.add(new Outline(Color.LIME, Color.CLEAR_WHITE, 2));
+        city.add(new Outline(Color.LIME, 2));
         city.add(new Health(CITY_BASE_MAX_HEALTH));
         city.add(groundCollider);
         city.add(new GroundPart(entity));

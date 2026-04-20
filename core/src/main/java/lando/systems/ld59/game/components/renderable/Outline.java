@@ -7,17 +7,27 @@ public class Outline implements Component {
 
     public static final Outline CLEAR = new Outline();
 
+    private static final float DEFAULT_THICKNESS = 0.5f;
+
     private Color fillColor;
     private Color outlineColor;
     private float outlineThickness;
 
     public Outline(){
-        this(Color.CLEAR, Color.CLEAR, .5f);
+        this(Color.CLEAR, Color.CLEAR_WHITE, DEFAULT_THICKNESS);
     }
 
-    public Outline(Color outlineColor, Color fillColor, float outlineThickness) {
-        this.outlineColor = new Color(outlineColor);
-        this.fillColor = new Color(fillColor);
+    public Outline(Color outlineColor) {
+        this(outlineColor, DEFAULT_THICKNESS);
+    }
+
+    public Outline(Color outlineColor, float outlineThickness) {
+        this(outlineColor, Color.CLEAR_WHITE, outlineThickness);
+    }
+
+    public Outline(Color outline, Color fill, float outlineThickness) {
+        this.outlineColor = new Color(outline);
+        this.fillColor = new Color(fill);
         this.outlineThickness = outlineThickness;
     }
 
