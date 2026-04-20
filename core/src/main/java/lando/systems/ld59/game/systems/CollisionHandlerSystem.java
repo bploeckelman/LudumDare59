@@ -15,6 +15,7 @@ import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.game.signals.CollisionEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
 import lando.systems.ld59.particles.effects.EmojiPopEffect;
+import lando.systems.ld59.particles.effects.ShieldDamageEffect;
 import lando.systems.ld59.particles.effects.SmokeEffect;
 import lando.systems.ld59.utils.Util;
 import lando.systems.ld59.game.Stats;
@@ -188,10 +189,15 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 //                    0, Config.window_width,
 //                    -1, 1,
 //                    pos.x);
+                var params = new SmokeEffect.Params(particlePos);
+                var emitter = Factory.emitter(EmitterType.SMOKE, params);
+                getEngine().addEntity(emitter);
                 AudioEvent.playSound(SoundType.CLANG, .0625f, panValue);
                 Stats.instance().damageTaken += bulletDamage.damage * damageMultiplier;
             } else if (Components.has(other, CityShield.class)) {
-
+                var params = new ShieldDamageEffect.Params(particlePos);
+                var emitter = Factory.emitter(EmitterType.SHIELD_DAMAGE, params);
+                getEngine().addEntity(emitter);
                 AudioEvent.playSound(SoundType.BOOM);
                 //bullet collided with city shield
             }
@@ -204,6 +210,9 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 var cityGroundPart = Components.get(city, GroundPart.class);
                 Components.get(cityGroundPart.baseEntity, Base.class).handleHit();
                 Stats.instance().damageTaken += bulletDamage.damage * damageMultiplier;
+                var params = new SmokeEffect.Params(particlePos);
+                var emitter = Factory.emitter(EmitterType.SMOKE, params);
+                getEngine().addEntity(emitter);
             }
         } else if (turret != null && enemy != null) {
 //            AudioEvent.playSound(SoundType.BOOM);
@@ -211,6 +220,9 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             Components.get(enemy, Health.class).getHit(enemy, 1000f); // kill the enemy
             Components.get(turret, Health.class).getHit(turret, ENEMY_RAMMING_DAMAGE); // do damage to the turret
             Stats.instance().damageTaken += ENEMY_RAMMING_DAMAGE;
+            var params = new SmokeEffect.Params(Components.get(enemy, Position.class));
+            var emitter = Factory.emitter(EmitterType.SMOKE, params);
+            getEngine().addEntity(emitter);
 
         } else if (shield != null) {   // shield vs non bullets
 //            Util.log(TAG, "Shield hit: " + Util.entityString(shield));

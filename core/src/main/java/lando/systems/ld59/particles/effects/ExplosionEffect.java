@@ -15,10 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-/**
- * A fiery explosion burst: particles shoot outward fast, gravity pulls them down,
- * and they shift from bright orange-yellow to dark red before fading out.
- */
 public class ExplosionEffect implements ParticleEffect {
 
     public static class Params implements ParticleEffectParams {

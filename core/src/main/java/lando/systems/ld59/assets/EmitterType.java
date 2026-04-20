@@ -17,6 +17,7 @@ public enum EmitterType implements AssetType<ParticleEffect> {
     , SHIP_EXPLODE(ShipExplodeEffect.class)
     , SMOKE(SmokeEffect.class)
     , SPARKLE(SparkleEffect.class)
+    , SHIELD_DAMAGE(ShieldDamageEffect.class)
     ;
 
     private static final String TAG = EmitterType.class.getSimpleName();

@@ -1,8 +1,7 @@
 package lando.systems.ld59.particles.effects;
 
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
-import lando.systems.ld59.assets.anims.AnimEmoji;
+import lando.systems.ld59.assets.anims.AnimEffect;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.components.Position;
 import lando.systems.ld59.particles.ParticleData;
@@ -14,22 +13,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class EmojiPopEffect implements ParticleEffect {
+public class ShieldDamageEffect implements ParticleEffect {
 
     public static class Params implements ParticleEffectParams {
         public Position target;
-        public AnimEmoji emoji;
-        public int count;
         public boolean once;
 
-        public Params(Position target, AnimEmoji emoji) {
-            this(target, emoji, 1);
-        }
-
-        public Params(Position target, AnimEmoji emoji, int count) {
+        public Params(Position target) {
             this.target = target;
-            this.emoji = emoji;
-            this.count = count;
             this.once = false;
         }
 
@@ -41,28 +32,21 @@ public class EmojiPopEffect implements ParticleEffect {
 
     @Override
     public List<ParticleData> spawn(ParticleEffectParams parameters) {
-        var params = (EmojiPopEffect.Params) parameters;
+        var params = (ShieldDamageEffect.Params) parameters;
         if (params.once) return Collections.emptyList();
         else params.once = true;
 
         var pool = Systems.particles.pool;
-        return IntStream.range(0, params.count).boxed()
+        return IntStream.range(0, 8).boxed()
             .map(i -> {
-                float angle = MathUtils.random(60f, 120f);
-                float speed = MathUtils.random(10f, 25f);
-                float startSize = MathUtils.random(32f, 48f);
-                float ttl = 3f;
-
+                var ttl = MathUtils.random(0.3f, 0.6f);
                 return ParticleData.initializer(pool.obtain())
-                    .animation(params.emoji.get())
-                    .interpolation(Interpolation.bounceOut)
+                    .keyframe(AnimEffect.FLARE.get().getKeyFrame(0f))
                     .startPos(params.target.x, params.target.y)
-                    .velocityDirection(angle, speed)
-                    .acceleration(0f, 150f)
-                    .startSize(startSize)
-                    .endSize(0.5f)
-                    .startAlpha(1f)
-                    .endAlpha(0.5f)
+                    .startSize(140f, 40f)
+                    .endSize(0f, 40f)
+                    .startColor(0f, 1f, 1f, 1f)
+                    .endColor(0f, 1f, 1f, 1f)
                     .timeToLive(ttl)
                     .init();
             })

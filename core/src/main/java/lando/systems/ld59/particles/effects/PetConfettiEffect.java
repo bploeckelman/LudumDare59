@@ -14,10 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-/**
- * A festive confetti burst: colorful pieces shoot upward, tumble with spin,
- * then fall back down under gravity. Each piece has a random vivid color.
- */
 public class PetConfettiEffect implements ParticleEffect {
 
     public static class Params implements ParticleEffectParams {
