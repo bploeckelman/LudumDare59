@@ -31,6 +31,8 @@ public enum FontType implements AssetType<Font> {
     , SOURCE_CODE_PRO            ("source-code-pro-regular.otf")
     , SOURCE_CODE_PRO_OUTLINED   ("source-code-pro-regular.otf", ParamBuilder.withSize(20).border(2, Color.DARK_GRAY).build())
     , HEMI_HEAD   ("hemihead.otf", 32)
+    , HEMI_HEAD_CREDITS   ("hemihead.otf", 24)
+    , HEMI_HEAD_SMALL   ("hemihead.otf", 20)
     ;
 
     private static final String TAG = FontType.class.getSimpleName();

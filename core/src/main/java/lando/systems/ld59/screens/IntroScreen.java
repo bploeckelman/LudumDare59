@@ -140,13 +140,12 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
     protected void initializeUI() {
         page1 =
             "{COLOR=white}" +
-                //"A 0123456789-01234567890-1234567890-1234567890-0123456789-B" +
                 "The year is 2027, and things have changed.\n\n" +
 //                "In this far-flung future, things are a little... different.\n\n" +
                 "Long story short, Earth has been rendered mostly uninhabitable." +
                 " (let's just say concerns about AI's water consumption weren't entirely overblown).\n\n" +
                 "Civilization now resides entirely within a {COLOR=teal}bubble{COLOR=white} on the surface of the rocky husk that was once teeming with life. \n\n" +
-                "As if that wasn't embarrassing enough, an {COLOR=green}invading alien army{COLOR=white} with absolutely zero chill " +
+                "As if that wasn't embarrassing enough, an {GRADIENT=green;grey}invading alien army{ENDGRADIENT}{COLOR=white} with absolutely zero chill " +
                 "has decided to make their emotional immaturity our problem.\n\n" +
                 "They're trying to burst our bubble with their bullshit, and we will not stand for it."
 
@@ -155,8 +154,8 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
         page2 = "Because of some enthusiastic recent cuts to government spending however, " +
             "our only line of defense is a series of turrets. \n\n" +
             "Each turret can be plugged into one of three different firing patterns (shapes) and "  +
-            "one of three different types of plasma (colors).\n\n" +
-            "When a turret is receiving a complete {COLOR=blue}signal{COLOR=white} of both a plasma type and firing pattern," +
+            "one of three different types of plasma {GRADIENT=magenta;green;blue}(colors){ENDGRADIENT}.\n\n" +
+            "When a turret is receiving a complete {GRADIENT=navy;grey}signal{ENDGRADIENT}{COLOR=white} of both a plasma type and firing pattern," +
             " it's time for those alien bastards to pay!";
 
         page3 = "But these damn dirty extraterrestrials are crafty.\n\n" +
