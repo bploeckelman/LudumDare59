@@ -86,6 +86,13 @@ public class Transition {
             next.transitioning = false;
             current.transitioning = false;
 
+            // NOTE: might theoretically break something if we did this on all screens,
+            //  but should at least dispose title screen so we don't retain title textures in mem
+            if (current instanceof TitleScreen) {
+                current.dispose();
+            }
+
+            current.dispose();
             current = next;
             next = null;
 
