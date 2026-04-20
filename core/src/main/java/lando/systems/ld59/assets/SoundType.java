@@ -28,7 +28,7 @@ public enum SoundType implements AssetType<Sound> {
     ,BOOM("boom.wav", .6f)
     ,EXPLOSION1("explosion1.wav", 0.8f)
     ,EXPLOSION2("explosion1.wav", 2.0f)
-    ,EXPLOSION3("explosion1.wav", 2.60f)
+    ,EXPLOSION3("explosion1.wav", 4.00f)
     ,SHIELD_DOWN("shielddown1.wav", 1.0f)
 
     ,SINE_C1("sine_c1.wav", (float) Math.pow(2,(12./12.)))

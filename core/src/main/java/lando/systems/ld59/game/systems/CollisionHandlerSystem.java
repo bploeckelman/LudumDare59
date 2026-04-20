@@ -198,10 +198,10 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             var other = shield == overlap.entityA() ? overlap.entityB() : overlap.entityA();
             Components.get(other, Health.class).getHit(other, 1000f);
             Components.get(shield, Health.class).getHit(shield, ENEMY_RAMMING_DAMAGE);
-            AudioEvent.playSound(SoundType.EXPLOSION1, 0.25f);
+            AudioEvent.playSound(SoundType.EXPLOSION2, 0.125f);
         } else if (city != null) {
             // something not a bullet hit the city
-            AudioEvent.playSound(SoundType.EXPLOSION1, 0.25f);
+            AudioEvent.playSound(SoundType.EXPLOSION2, 0.125f);
             Components.get(city, Health.class).getHit(city, ENEMY_RAMMING_DAMAGE);
             var other = city == overlap.entityA() ? overlap.entityB() : overlap.entityA();
             Components.get(other, Health.class).getHit(other, 1000f);

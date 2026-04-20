@@ -6,11 +6,13 @@ import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.utils.Array;
+import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.BaseButton;
 import lando.systems.ld59.game.components.Connection;
 import lando.systems.ld59.game.components.Turret;
+import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.game.signals.ConnectionEvent;
 import lando.systems.ld59.game.signals.EntityEvent;
 import lando.systems.ld59.game.signals.SignalEvent;
@@ -92,6 +94,7 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
             if (pendingConnection == null) {
                 var entity = Factory.createEntity();
                 var pConn = Connection.createPending(entity, baseButton);
+                AudioEvent.playSound(SoundType.PLUG1);
                 entity.add(pConn);
                 getEngine().addEntity(entity);
 

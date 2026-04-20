@@ -5,10 +5,12 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Main;
+import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
+import lando.systems.ld59.game.signals.AudioEvent;
 
 public class EnemySystem extends IteratingSystem {
 
@@ -68,6 +70,7 @@ public class EnemySystem extends IteratingSystem {
                     getEngine().addEntity(split);
                 }
             }
+            AudioEvent.playSound(SoundType.EXPLOSION3, .25f);
         }
     }
 
