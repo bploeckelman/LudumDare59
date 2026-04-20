@@ -17,6 +17,7 @@ import lando.systems.ld59.game.signals.SignalEvent;
 import lando.systems.ld59.particles.effects.EmojiPopEffect;
 import lando.systems.ld59.particles.effects.SmokeEffect;
 import lando.systems.ld59.utils.Util;
+import lando.systems.ld59.game.Stats;
 
 import static lando.systems.ld59.game.Constants.ENEMY_RAMMING_DAMAGE;
 import static lando.systems.ld59.game.Constants.MATCHING_COLOR_DAMAGE_MULTIPLIER;
@@ -117,18 +118,24 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 
                 var enemyHealth = Components.get(other, Health.class);
                 if (enemyHealth.currentHealth <= bulletDamage.damage * damageMultiplier) {
+                    // this collision is going to kill the enemy
+                    Stats.instance().enemiesKilled++;
                     EmojiPopEffect.Params emojiParams;
                     if (bulletColor == null) {
                         emojiParams = new EmojiPopEffect.Params(particlePos, AnimEmoji.NEUTRAL);
+                        Stats.instance().neutralKills++;
                     }
                     else if (bulletColor.type == entityColor.type) {
                         emojiParams = new EmojiPopEffect.Params(particlePos, lando.systems.ld59.assets.anims.AnimEmoji.HAPPY);
+                        Stats.instance().goodKills++;
                     }
                     else {
                         emojiParams = new EmojiPopEffect.Params(particlePos, AnimEmoji.SAD);
+                        Stats.instance().badKills++;
                     }
                     var emojiEmitter = Factory.emitter(EmitterType.EMOJI_POP, emojiParams);
                     getEngine().addEntity(emojiEmitter);
+                    Util.log("Kill Stats: " + Stats.instance().enemiesKilled + " total enemies killed (" + Stats.instance().badKills + " bad, " + Stats.instance().neutralKills + " neutral, " + Stats.instance().goodKills + " good)");
                 }
 
                 AudioEvent.playSound(SoundType.BLIP_HIT, 1.5f);
@@ -182,7 +189,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 //                    -1, 1,
 //                    pos.x);
                 AudioEvent.playSound(SoundType.CLANG, .0625f, panValue);
-
+                Stats.instance().damageTaken += bulletDamage.damage * damageMultiplier;
             } else if (Components.has(other, CityShield.class)) {
 
                 AudioEvent.playSound(SoundType.BOOM);
@@ -196,12 +203,14 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 // Trigger a hit animation on the base ground
                 var cityGroundPart = Components.get(city, GroundPart.class);
                 Components.get(cityGroundPart.baseEntity, Base.class).handleHit();
+                Stats.instance().damageTaken += bulletDamage.damage * damageMultiplier;
             }
         } else if (turret != null && enemy != null) {
 //            AudioEvent.playSound(SoundType.BOOM);
             // turret kamikazed
             Components.get(enemy, Health.class).getHit(enemy, 1000f); // kill the enemy
             Components.get(turret, Health.class).getHit(turret, ENEMY_RAMMING_DAMAGE); // do damage to the turret
+            Stats.instance().damageTaken += ENEMY_RAMMING_DAMAGE;
 
         } else if (shield != null) {   // shield vs non bullets
 //            Util.log(TAG, "Shield hit: " + Util.entityString(shield));
@@ -216,6 +225,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             Components.get(city, Health.class).getHit(city, ENEMY_RAMMING_DAMAGE);
             var other = city == overlap.entityA() ? overlap.entityB() : overlap.entityA();
             Components.get(other, Health.class).getHit(other, 1000f);
+            Stats.instance().damageTaken += ENEMY_RAMMING_DAMAGE;
 
             // Trigger a hit animation on the base ground
             var cityGroundPart = Components.get(city, GroundPart.class);

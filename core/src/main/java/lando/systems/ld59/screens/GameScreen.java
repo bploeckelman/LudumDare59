@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.badlogic.ashley.core.Family;
+import com.kotcrab.vis.ui.widget.VisTable;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
@@ -18,6 +19,7 @@ import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.assets.anims.AnimMisc;
 import lando.systems.ld59.game.Systems;
+import lando.systems.ld59.game.Stats;
 import lando.systems.ld59.game.components.EnemyTag;
 import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.game.scenes.Scene;
@@ -33,9 +35,15 @@ public class GameScreen extends BaseScreen {
     private final SceneGame scene;
     private final SettingsUI settingsUI = new SettingsUI();
 
+    private VisTable liveEnemyCountTable;
     private VisLabel redEnemyCountLabel;
     private VisLabel greenEnemyCountLabel;
     private VisLabel blueEnemyCountLabel;
+
+    private VisTable killCountTable;
+    private VisLabel goodKillsLabel;
+    private VisLabel neutralKillsLabel;
+    private VisLabel badKillsLabel;
 
     public GameScreen() {
         this.scene = new SceneGame(this, 5);
@@ -103,6 +111,14 @@ public class GameScreen extends BaseScreen {
         redEnemyCountLabel.setText("Red: " + redCount);
         greenEnemyCountLabel.setText("Green: " + greenCount);
         blueEnemyCountLabel.setText("Blue: " + blueCount);
+
+        var stats = Stats.instance();
+        goodKillsLabel.setText("Good: " + stats.goodKills);
+        neutralKillsLabel.setText("Neutral: " + stats.neutralKills);
+        badKillsLabel.setText("Bad: " + stats.badKills);
+        var killTableX = windowCamera.viewportWidth - killCountTable.getWidth() - 10f;
+        var killTableY = 10f + killCountTable.getHeight();
+        killCountTable.setPosition(killTableX, killTableY);
     }
 
     @Override
@@ -138,6 +154,8 @@ public class GameScreen extends BaseScreen {
         }
 
         // Add enemy count labels
+        liveEnemyCountTable = new VisTable();
+
         redEnemyCountLabel = new VisLabel("Red: 0");
         redEnemyCountLabel.setColor(EnergyColor.RED);
         greenEnemyCountLabel = new VisLabel("Green: 0");
@@ -147,15 +165,15 @@ public class GameScreen extends BaseScreen {
 
         var margin = 10f;
         var labelStartX = margin;
-        var labelY = windowCamera.viewportHeight - margin - 20f;
+        var labelY = windowCamera.viewportHeight - margin;
 
-        redEnemyCountLabel.setPosition(labelStartX, labelY);
-        greenEnemyCountLabel.setPosition(labelStartX + 90f, labelY);
-        blueEnemyCountLabel.setPosition(labelStartX + 200f, labelY);
+        liveEnemyCountTable.setPosition(labelStartX, labelY);
 
-        uiStage.addActor(redEnemyCountLabel);
-        uiStage.addActor(greenEnemyCountLabel);
-        uiStage.addActor(blueEnemyCountLabel);
+        liveEnemyCountTable.add(redEnemyCountLabel).pad(5f);
+        liveEnemyCountTable.add(greenEnemyCountLabel).pad(5f);
+        liveEnemyCountTable.add(blueEnemyCountLabel).pad(5f);
+        liveEnemyCountTable.top().left();
+        uiStage.addActor(liveEnemyCountTable);
 
         var buttonSize  = 50f;
         var buttonPosY  = windowCamera.viewportHeight - margin - buttonSize;
@@ -216,5 +234,27 @@ public class GameScreen extends BaseScreen {
         uiStage.addActor(cityTestButton);
         uiStage.addActor(turretTestButton);
         uiStage.addActor(springTestButton);
+
+        // Add kill count table in bottom right
+        killCountTable = new VisTable();
+
+        goodKillsLabel = new VisLabel("Good: 0");
+        goodKillsLabel.setColor(Color.GREEN);
+        neutralKillsLabel = new VisLabel("Neutral: 0");
+        neutralKillsLabel.setColor(Color.YELLOW);
+        badKillsLabel = new VisLabel("Bad: 0");
+        badKillsLabel.setColor(Color.RED);
+
+        killCountTable.add(goodKillsLabel).pad(5f);
+        killCountTable.add(neutralKillsLabel).pad(5f);
+        killCountTable.add(badKillsLabel).pad(5f);
+        killCountTable.top().left();
+        killCountTable.pack();
+
+        var killTableX = windowCamera.viewportWidth - killCountTable.getWidth() - margin;
+        var killTableY = 0;
+        killCountTable.setPosition(killTableX, killTableY);
+
+        uiStage.addActor(killCountTable);
     }
 }
