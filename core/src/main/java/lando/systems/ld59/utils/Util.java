@@ -59,6 +59,22 @@ public class Util {
     // Path related
     // ------------------------------------------------------------------------
 
+    public static Array<Vector2> generateStraightPath(Vector2 start, Vector2 end) {
+        var points = new Array<Vector2>();
+        float segmentLength = 20f; // arbitrary, but determines 'density' of points... e.g. 200px rope gets ~10 points, 400px rope gets ~20
+        float totalDist = start.dst(end);
+        int segments = Math.max(1, MathUtils.round(totalDist / segmentLength));
+
+        for (int i = 0; i <= segments; i++) {
+            float t = (float) i / segments;
+            points.add(new Vector2(
+                    MathUtils.lerp(start.x, end.x, t),
+                    MathUtils.lerp(start.y, end.y, t)
+            ));
+        }
+        return points;
+    }
+
     /**
      * Generates points along a line between start to end, with internal points randomly displaced perpendicularly from
      * the line for variation.

@@ -107,6 +107,7 @@ public class GameScreen extends BaseScreen {
         var settingsPos = FramePool.vec2(windowCamera.viewportWidth - margin - buttonSize, buttonPosY);
         var cityPos     = FramePool.vec2(settingsPos.x - margin - buttonSize, buttonPosY);
         var turretPos   = FramePool.vec2(cityPos.x - margin - buttonSize, buttonPosY);
+        var springPos   = FramePool.vec2(turretPos.x - margin - buttonSize, buttonPosY);
 
         var gearRegion = AnimMisc.GEAR.get().getKeyFrame(0f);
         var gearDrawable = new TextureRegionDrawable(gearRegion);
@@ -144,8 +145,21 @@ public class GameScreen extends BaseScreen {
             }
         });
 
+        var springRegion = AnimMisc.SPRING.get().getKeyFrame(0f);
+        var springDrawable = new TextureRegionDrawable(springRegion);
+        var springTestButton = new VisImageButton(springDrawable, "Spring Connection Test");
+        springTestButton.setSize(buttonSize, buttonSize);
+        springTestButton.setPosition(springPos.x, springPos.y);
+        springTestButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                scene.springConnectionTest();
+            }
+        });
+
         uiStage.addActor(settingsButton);
         uiStage.addActor(cityTestButton);
         uiStage.addActor(turretTestButton);
+        uiStage.addActor(springTestButton);
     }
 }

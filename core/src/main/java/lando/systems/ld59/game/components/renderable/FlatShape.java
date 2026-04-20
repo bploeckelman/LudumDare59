@@ -27,7 +27,7 @@ public class FlatShape extends Renderable implements Component {
 
     public static FlatShape path(float depth, Array<Vector2> points, Color color, float width) {
         var data = new PathData();
-        data.points.addAll(points);
+        data.points = points; // NOTE: setting reference on purpose rather than copying, so updates to SpringPath will apply
         data.width = width;
         return new FlatShape(depth, data, color);
     }

@@ -1,6 +1,7 @@
 package lando.systems.ld59.game.scenes;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.Config;
@@ -14,7 +15,8 @@ import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.screens.GameScreen;
 import lando.systems.ld59.utils.FramePool;
 
-import java.util.ArrayList;import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SceneGame extends Scene<GameScreen> implements InputProcessor {
 
@@ -76,6 +78,19 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
             var animator = Components.get(turret.cannon, Animator.class);
             var animType = (AnimBaseTurret) animator.type;
             animator.play(animType.nextBarrel());
+        }
+    }
+
+    private static final Family CONNECTIONS = Family.one(Connection.class).get();
+    public void springConnectionTest() {
+        var entities = engine().getEntitiesFor(CONNECTIONS);
+        for (int i = 0; i < entities.size(); i++) {
+            var entity = entities.get(i);
+            var connection = Components.get(entity, Connection.class);
+            var ropePath = connection.ropePath;
+            if (ropePath != null) {
+                ropePath.jostle();
+            }
         }
     }
 

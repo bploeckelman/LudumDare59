@@ -27,6 +27,10 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
         var connection = Components.get(entity, Connection.class);
         if (connection.isPending() && connection.hasBothEndpoints()) {
             connection.complete();
+        } else if (connection.isConnected()) {
+            if (connection.ropePath != null) {
+                connection.ropePath.update(deltaTime);
+            }
         }
     }
 
@@ -57,14 +61,6 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
                 var entity = Factory.createEntity();
                 entity.add(Connection.createPending(entity, turret));
                 getEngine().addEntity(entity);
-
-                // remove the connection in the turret
-//                var conn = getConnectionEntityWithTurret(turret);
-//                if (conn != null) {
-//                    var connection = Components.get(conn, Connection.class);
-//                    connection.removeConnection();
-//                    EntityEvent.remove(conn);
-//                }
             }
             // ...otherwise update the existing pending connection...
             else {

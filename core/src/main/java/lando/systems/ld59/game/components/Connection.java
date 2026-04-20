@@ -9,6 +9,7 @@ import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.renderable.FlatShape;
 import lando.systems.ld59.game.signals.EntityEvent;
 import lando.systems.ld59.utils.FramePool;
+import lando.systems.ld59.utils.RopePath;
 import lando.systems.ld59.utils.Util;
 
 public class Connection implements Component {
@@ -18,6 +19,8 @@ public class Connection implements Component {
     public enum State { PENDING, CONNECTED }
 
     public final Entity entity;
+
+    public RopePath ropePath;
 
     private State state;
     private Turret turret;
@@ -61,13 +64,16 @@ public class Connection implements Component {
 
             var start = FramePool.vec2(buttonPos.x, buttonPos.y);
             var end = FramePool.vec2(turretPos.x, turretPos.y);
-            var rawPoints = Util.generateDisplacedPath(start, end);
-            var smoothedPoints = Util.smoothPath(rawPoints);
+            var points = Util.generateStraightPath(start, end);
 
             var lineWidth = 10f;
             var cannonColor = turret.getCannonColor();
             var pathColor = FramePool.color(cannonColor.r, cannonColor.g, cannonColor.b, 0.9f);
-            flatShape = FlatShape.path(BaseButton.ANIM_DEPTH - 1, smoothedPoints, pathColor, lineWidth);
+
+            // NOTE: FlatShape takes RopePath points by ref so it should stay up to date as RopePath updates run
+            ropePath = new RopePath(points);
+            // TODO: replace this FlatShape.path with a shader based electricity thing, and wire up jostling based on screen shake triggering events
+            flatShape = FlatShape.path(BaseButton.ANIM_DEPTH - 1, ropePath.positions, pathColor, lineWidth);
             entity.add(flatShape);
         }
     }
