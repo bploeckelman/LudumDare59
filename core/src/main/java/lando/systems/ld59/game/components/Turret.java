@@ -105,27 +105,36 @@ public class Turret implements Component {
 
     public void shoot() {
         if (swappingCannonBarrel) return;
+        var turretPattern = cannon.getComponent(TurretPattern.class);
 
+        if (turretPattern.type == TurretPattern.Type.FAN) {
+            for (int i = 0; i < 3; i++) {
+                createBullet(-20 + i * 20);
+            }
+        } else {
+            createBullet(0);
+        }
+
+    }
+
+    private void createBullet(float rotationOffset) {
         float width = 20f;
 
         var bullet = Factory.createEntity();
         var cannonPos = cannon.getComponent(Position.class);
         var energyColor = cannon.getComponent(EnergyColor.class);
         var turretPattern = cannon.getComponent(TurretPattern.class);
-//        if (energyColor == null) {
-//            // no energy, no bullet
-//            return;
-//        }
+
 
         var pos = new Position(cannonPos.x + 100, cannonPos.y );
         var tempVec = FramePool.vec2(60, 0).rotateDeg(cannonRotation.floatValue());
         pos.add((int) tempVec.x, (int)tempVec.y);
 
         var speed = turretPattern.bulletSpeed();
-        var totalRotation = cannonRotation.floatValue();
+        var totalRotation = cannonRotation.floatValue() + rotationOffset;
         var vel = new Velocity(
-                MathUtils.cosDeg(totalRotation) * speed,
-                MathUtils.sinDeg(totalRotation) * speed);
+            MathUtils.cosDeg(totalRotation) * speed,
+            MathUtils.sinDeg(totalRotation) * speed);
 
         var baseAnim = new Animator(AnimMisc.PROJECTILE);
         baseAnim.depth = 100;
@@ -149,8 +158,6 @@ public class Turret implements Component {
         if (energyColor != null) {
             bullet.add(energyColor);
         }
-//        AudioEvent.playSound(SoundType.LASER, .25f);
-
         engine.addEntity(bullet);
     }
 
