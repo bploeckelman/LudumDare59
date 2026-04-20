@@ -25,6 +25,7 @@ public class BaseButton implements Component {
 
     public final Entity entity;
     public final Type type;
+    public final Position pos;
 
     public float stateDuration;
     public float shimmerTimer;
@@ -35,13 +36,14 @@ public class BaseButton implements Component {
     private State state;
     private boolean isAnimating;
 
-    public BaseButton(BaseButton.Type type, Entity entity) {
+    public BaseButton(BaseButton.Type type, Entity entity, Position pos) {
         this.type = type;
         this.entity = entity;
         this.state = State.IDLE;
         this.stateDuration = 0f;
         this.shimmerTimer = MathUtils.random(5f);
         this.isAnimating = false;
+        this.pos = pos;
         setAnimations();
     }
 

@@ -224,7 +224,7 @@ public class Factory {
 
         var position = new Position(x, y);
         var animator = new Animator(animOrigin);
-        var baseButton = new BaseButton(type, entity);
+        var baseButton = new BaseButton(type, entity, position);
         // NOTE(Brian): Bounds is not Position relative like Collider, Animator
         var bounds = new Bounds(x - size / 2f, y - size / 2f, size, size);
 

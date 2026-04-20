@@ -205,6 +205,26 @@ public class RopePath {
         pinPoint(positions.size - 2);
     }
 
+    public void setPointPosition(int index, float x, float y) {
+        if (index < 0 || index >= positions.size) return;
+
+        var pos = positions.get(index);
+        var old = oldPositions.get(index);
+
+        // Move both current and old so there's no velocity spike
+        pos.set(x, y);
+        old.set(x, y);
+    }
+
+    /**
+     * Get a reference to a point if you want to read it.
+     * Don't modify this directly unless you call setPointPosition after.
+     */
+    public Vector2 getPoint(int index) {
+        if (index < 0 || index >= positions.size) return null;
+        return positions.get(index);
+    }
+
     /**
      * Returns the current length of the rope by summing distances between adjacent points.
      * This changes as the rope stretches and simulates.

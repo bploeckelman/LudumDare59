@@ -87,6 +87,21 @@ public class Util {
         return points;
     }
 
+    public static Array<Vector2> generateStraightPath(Vector2 start, Vector2 end, int segments) {
+        if (segments < 3) {
+            throw new IllegalArgumentException("segments must be at least 3");
+        }
+        var points = new Array<Vector2>();
+        for (int i = 0; i <= segments; i++) {
+            float t = (float) i / segments;
+            points.add(new Vector2(
+                MathUtils.lerp(start.x, end.x, t),
+                MathUtils.lerp(start.y, end.y, t)
+            ));
+        }
+        return points;
+    }
+
     /**
      * Generates points along a line between start to end, with internal points randomly displaced perpendicularly from
      * the line for variation.

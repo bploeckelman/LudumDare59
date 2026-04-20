@@ -5,14 +5,18 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.BaseButton;
 import lando.systems.ld59.game.components.Connection;
+import lando.systems.ld59.game.components.SceneContainer;
 import lando.systems.ld59.game.components.Turret;
 import lando.systems.ld59.game.signals.*;
+import lando.systems.ld59.utils.FramePool;
 
 public class ConnectionSystem extends IteratingSystem implements Listener<SignalEvent> {
 
@@ -34,7 +38,21 @@ public class ConnectionSystem extends IteratingSystem implements Listener<Signal
         }
 
         if (connection.isPending()) {
-            // lets dangle it
+            OrthographicCamera camera = null;
+            var scenes = getEngine().getEntitiesFor(Family.one(SceneContainer.class).get());
+            for (Entity sceneEntity : scenes) {
+                var scene = Components.get(sceneEntity, SceneContainer.class);
+                camera = scene.scene.screen.worldCamera;
+            }
+
+            if (camera != null) {
+                var touchPoint = FramePool.vec3(Gdx.input.getX(), Gdx.input.getY(), 0);
+                camera.unproject(touchPoint);
+                connection.setPendingPoint(touchPoint, deltaTime);
+            }
+
+
+
         }
     }
 

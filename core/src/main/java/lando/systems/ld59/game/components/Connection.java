@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld59.AnimDepths;import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.game.Components;
@@ -24,32 +25,46 @@ public class Connection implements Component {
 
     public final Entity entity;
 
+    private Vector2 pendingPoint;
+    public RopePath tempPath;
     public RopePath ropePath;
 
     private State state;
     private Turret turret;
     private BaseButton baseButton;
-    private FlatShape flatShape;
     private CableShaderRenderable cableShaderRenderable;
 
     public static Connection createPending(Entity entity, Turret turret) {
-        return new Connection(entity, State.PENDING, turret, null);
+        return new Connection(entity, State.PENDING, turret, null, turret.pos);
     }
 
     public static Connection createPending(Entity entity, BaseButton baseButton) {
-        return new Connection(entity, State.PENDING, null, baseButton);
+        return new Connection(entity, State.PENDING, null, baseButton, baseButton.pos);
     }
 
-    private Connection(Entity entity, State state, Turret turret, BaseButton baseButton) {
+    private Connection(Entity entity, State state, Turret turret, BaseButton baseButton, Position startPos) {
         this.entity = entity;
         this.state = state;
         this.turret = turret;
         this.baseButton = baseButton;
-        this.flatShape = null;
         cableShaderRenderable = null;
+
+
+
+        var start = FramePool.vec2(startPos.x, startPos.y);
+        var end = FramePool.vec2(startPos.x + 10f, startPos.y + 10f);
+        var points = Util.generateStraightPath(start, end, 40);
+        pendingPoint = new Vector2(end);
+        points.add(pendingPoint);
+
+        tempPath = new RopePath(points);
+        cableShaderRenderable = new CableShaderRenderable(this, tempPath);
+        entity.add(cableShaderRenderable);
+
     }
 
     public void complete() {
+        entity.remove(CableShaderRenderable.class);
         var endPenUltimateLocation = turret.colorPortPenUltimateLocation;
         var endLocation = turret.colorPortLocation;
         if (baseButton.isEnergy()) {
@@ -69,27 +84,18 @@ public class Connection implements Component {
             Util.log(TAG, "Connected: pattern '" + turretPattern.type + "' to turret");
         }
 
-        // Create a 'path' FlatShape renderable for this connection if there isn't already one created
-        if (flatShape == null) {
-            var buttonPos = Components.get(baseButton.entity, Position.class);
+        var buttonPos = Components.get(baseButton.entity, Position.class);
 
-            var start = FramePool.vec2(buttonPos.x, buttonPos.y);
-            var points = Util.generateStraightPath(start, endPenUltimateLocation);
-            points.add(endLocation);
+        var start = FramePool.vec2(buttonPos.x, buttonPos.y);
+        var points = tempPath.positions;
+        points.add(endLocation);
 
-            var lineWidth = 10f;
-            var cannonColor = turret.getCannonColor();
-            var pathColor = FramePool.color(cannonColor.r, cannonColor.g, cannonColor.b, 0.9f);
+        // NOTE: FlatShape takes RopePath points by ref so it should stay up to date as RopePath updates run
+        ropePath = new RopePath(points);
 
-            // NOTE: FlatShape takes RopePath points by ref so it should stay up to date as RopePath updates run
-            ropePath = new RopePath(points);
-            // TODO: replace this FlatShape.path with a shader based electricity thing, and wire up jostling based on screen shake triggering events
-            flatShape = FlatShape.path(AnimDepths.CABLES, ropePath.positions, pathColor, lineWidth);
-//            entity.add(flatShape);
+        cableShaderRenderable = new CableShaderRenderable(this, ropePath);
+        entity.add(cableShaderRenderable);
 
-            cableShaderRenderable = new CableShaderRenderable(this, ropePath);
-            entity.add(cableShaderRenderable);
-        }
     }
 
     public void jostle() {
@@ -118,6 +124,15 @@ public class Connection implements Component {
         return Color.GRAY;
     }
 
+    public void setPendingPoint(Vector3 point, float dt) {
+        pendingPoint.set(point.x, point.y);
+        Util.log(TAG, "Pending point: " + pendingPoint.x + ", " + pendingPoint.y);
+
+        tempPath.setPointPosition(tempPath.positions.size - 1, point.x, point.y);
+        tempPath.update(dt);
+
+    }
+
     public void removeConnection() {
         if (baseButton != null && turret != null) {
             if (baseButton.isEnergy()) {
@@ -125,7 +140,6 @@ public class Connection implements Component {
             } else if (baseButton.isPattern()) {
                 turret.connectPattern(null);
             }
-            flatShape = null;
             cableShaderRenderable = null;
             turret = null;
             baseButton = null;
