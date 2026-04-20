@@ -11,9 +11,13 @@ public enum SoundType implements AssetType<Sound> {
     SHOT("shot.wav", 1.0f)
     ,EXPLODE_SMALL("explode_small.ogg")
     ,BLIP("blip1.ogg")
+    ,BLIP_HIT("blip_hit.wav", 1f)
+    ,SHATTER("shatter2.wav", 0.2f)
+    ,CRACK1("crack1.wav", 0.2f)
+    ,CRACK2("crack2.wav", 0.2f)
     ,THUD("thud.wav")
     ,LASER("laser1.wav", 1f)
-    ,CLANG("clang.wav", 1f)
+    ,CLANG("clang.wav", 1.5f)
     ,SINE_C1("sine_c1.wav", (float) Math.pow(2,(0./12.)))
     ,SINE_D("sine_c1.wav", (float) Math.pow(2,(2./12.)))
     ,SINE_E("sine_c1.wav", (float) Math.pow(2,(4./12.)))
@@ -84,6 +88,7 @@ public enum SoundType implements AssetType<Sound> {
 
     public static int[] cMaj = {0, 2, 4};
     public static int[] dMin = {1, 3, 5};
+    public static int[] aMin = {0, 2, 5};
     public static int[] fMaj = {0, 3, 5};
     public static int[] gMaj = {1, 4, 6};
     public enum NoteType  {

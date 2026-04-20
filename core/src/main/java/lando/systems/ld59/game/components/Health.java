@@ -44,7 +44,6 @@ public class Health implements Component {
         boolean useFancySounds = energyColor != null;
         if(useFancySounds){
             switch (energyColor.type) {
-
                 case BLUE:
                     float squareVolume = .5f;
 //                    AudioEvent.playSound(SoundType.getRandomSquareSound(), squareVolume);

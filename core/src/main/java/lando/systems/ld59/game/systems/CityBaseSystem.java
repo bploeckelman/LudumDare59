@@ -4,11 +4,15 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import lando.systems.ld59.Main;
+import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
+import lando.systems.ld59.game.signals.AudioEvent;
 
 public class CityBaseSystem extends IteratingSystem {
 
@@ -69,9 +73,15 @@ public class CityBaseSystem extends IteratingSystem {
         var cityAnimator = Components.get(city, Animator.class);
         var cityAnimBase = (AnimBaseCity) cityAnimator.type;
         var cityAnim = cityAnimBase.getFromPercent(cityHealthPercent);
-
+//
+//        if(Gdx.input.isButtonJustPressed(Input.Keys.T)) {
+//            AudioEvent.playSound(SoundType.SHATTER, 0.5f);
+//        }
         var oldCityAnime = (AnimBaseCity) cityAnimator.type;
         if (oldCityAnime != cityAnim) {
+            if(cityAnim == AnimBaseCity.GLASS_BREAK ) {
+                AudioEvent.playSound(SoundType.SHATTER, 0.5f);
+            }
             cityAnimator.start(cityAnim);
         }
 

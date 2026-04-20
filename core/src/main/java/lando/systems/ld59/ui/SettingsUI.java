@@ -57,7 +57,7 @@ public class SettingsUI extends VisWindow {
             public void changed(ChangeEvent event, Actor actor) {
                 Util.log("soundSlider changed: " + soundSlider.getValue());
                 AudioSystem.setSoundVolume(soundSlider.getValue());
-                AudioEvent.playSound(SoundType.SHOT);
+                AudioEvent.playSound(SoundType.SAW_A);
             }
         });
         add(soundSlider).width(panelWidth / 2f).row();

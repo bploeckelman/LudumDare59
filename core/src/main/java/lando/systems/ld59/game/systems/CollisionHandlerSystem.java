@@ -79,6 +79,16 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
         if (bullet != null) {
             var other = bullet == overlap.entityA() ? overlap.entityB() : overlap.entityA();
 
+            float panValue = MathUtils.map(
+                0, Config.window_width,
+                -1, 1,
+                Components.get(bullet, Position.class).x);
+
+            float volumeValue = MathUtils.map(
+                0, Config.window_height,
+                0f, 1f,
+                Components.get(bullet, Position.class).y);
+
             if (Components.has(other, Projectile.class)) {
                 // both bullets
                 var pos = Components.get(bullet, Position.class);
@@ -87,10 +97,10 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);
                 getEngine().addEntity(emitter);
 
-                float panValue = MathUtils.map(
-                    0, Config.window_width,
-                    -1, 1,
-                    pos.x);
+//                float panValue = MathUtils.map(
+//                    0, Config.window_width,
+//                    -1, 1,
+//                    pos.x);
                 AudioEvent.playSound(SoundType.THUD, .25f, panValue);
             }
 
@@ -120,20 +130,59 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);
                 getEngine().addEntity(emitter);
 
-                float panValue = MathUtils.map(
-                    0, Config.window_width,
-                    -1, 1,
-                    pos.x);
 
-                AudioEvent.playSound(SoundType.EXPLODE_SMALL, .5f, panValue);
+                float squareVolume = 0.65f;
+                float sawVolume = 0.8f;
+                float sineVolume = 1f;
+
+//                var energyColor = Components.get(other, EnergyColor.class);
+                var energyColor = Components.get(bullet, EnergyColor.class);
+                boolean useFancySounds = energyColor != null;
+                if(useFancySounds) {
+                    switch (energyColor.type) {
+                        case BLUE:
+                            AudioEvent.playSound(
+                                SoundType.getRandomSound(SoundType.cMaj, SoundType.NoteType.SQUARE),
+                                squareVolume,
+                                panValue
+                            );
+                            break;
+                        case GREEN:
+                            AudioEvent.playSound(
+                                SoundType.getRandomSound(SoundType.fMaj, SoundType.NoteType.SAW),
+                                sawVolume,
+                                panValue
+                            );
+                            break;
+                        case RED:
+                            AudioEvent.playSound(
+                                SoundType.getRandomSound(SoundType.gMaj, SoundType.NoteType.SINE),
+                                sineVolume,
+                                panValue
+                            );
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    AudioEvent.playSound(
+                        SoundType.BLIP_HIT,
+                        volumeValue,
+                        panValue
+                    );
+                }
+
+
             } else if (Components.has(other, TurretPart.class)) {
-                var pos = Components.get(bullet, Position.class);
-                float panValue = MathUtils.map(
-                    0, Config.window_width,
-                    -1, 1,
-                    pos.x);
-                AudioEvent.playSound(SoundType.CLANG, .5f, panValue);
                 //bullet collided with turret part
+//                var pos = Components.get(bullet, Position.class);
+//                float panValue = MathUtils.map(
+//                    0, Config.window_width,
+//                    -1, 1,
+//                    pos.x);
+                AudioEvent.playSound(SoundType.CLANG, .0625f, panValue);
+
             } else if (Components.has(other, CityShield.class)) {
                 //bullet collided with city shield
             }
