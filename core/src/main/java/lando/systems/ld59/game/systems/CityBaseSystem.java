@@ -79,6 +79,23 @@ public class CityBaseSystem extends IteratingSystem {
 //        }
         var oldCityAnime = (AnimBaseCity) cityAnimator.type;
         if (oldCityAnime != cityAnim) {
+            switch (cityAnim) {
+                case GLASS_BREAK:
+                    AudioEvent.playSound(SoundType.SHATTER, 0.5f);
+                    break;
+                case CRACK_1:
+                    AudioEvent.playSound(SoundType.CRACK1, 0.5f);
+                    break;
+                case CRACK_2:
+                    AudioEvent.playSound(SoundType.CRACK2, 0.5f);
+                    break;
+                case CRACK_3:
+                    AudioEvent.playSound(SoundType.CRACK1, 0.5f);
+                    break;
+                case CRACK_4:
+                    AudioEvent.playSound(SoundType.CRACK2, 0.5f);
+                    break;
+            }
             if(cityAnim == AnimBaseCity.GLASS_BREAK ) {
                 AudioEvent.playSound(SoundType.SHATTER, 0.5f);
             }

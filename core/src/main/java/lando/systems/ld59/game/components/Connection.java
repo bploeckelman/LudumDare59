@@ -5,8 +5,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import lando.systems.ld59.assets.SoundType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.renderable.FlatShape;
+import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.game.signals.EntityEvent;
 import lando.systems.ld59.utils.FramePool;
 import lando.systems.ld59.utils.RopePath;
@@ -28,6 +30,7 @@ public class Connection implements Component {
     private FlatShape flatShape;
 
     public static Connection createPending(Entity entity, Turret turret) {
+
         return new Connection(entity, State.PENDING, turret, null);
     }
 
@@ -74,6 +77,7 @@ public class Connection implements Component {
             ropePath = new RopePath(points);
             // TODO: replace this FlatShape.path with a shader based electricity thing, and wire up jostling based on screen shake triggering events
             flatShape = FlatShape.path(BaseButton.ANIM_DEPTH - 1, ropePath.positions, pathColor, lineWidth);
+            AudioEvent.playSound(SoundType.PLUG1);
             entity.add(flatShape);
         }
     }
@@ -101,6 +105,7 @@ public class Connection implements Component {
             flatShape = null;
             turret = null;
             baseButton = null;
+            AudioEvent.playSound(SoundType.PLUG2);
             EntityEvent.remove(entity);
         }
 

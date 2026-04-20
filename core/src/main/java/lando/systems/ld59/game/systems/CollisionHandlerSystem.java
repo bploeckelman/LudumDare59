@@ -102,7 +102,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 //                    0, Config.window_width,
 //                    -1, 1,
 //                    pos.x);
-                AudioEvent.playSound(SoundType.THUD, .25f, panValue);
+                AudioEvent.playSound(SoundType.THUD, .5f, panValue);
             }
 
             var health = Components.get(other, Health.class);
@@ -168,7 +168,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 else {
                     AudioEvent.playSound(
                         SoundType.BLIP_HIT,
-                        volumeValue,
+                        volumeValue * 1.5f,
                         panValue
                     );
                 }
@@ -184,6 +184,8 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 AudioEvent.playSound(SoundType.CLANG, .0625f, panValue);
 
             } else if (Components.has(other, CityShield.class)) {
+
+                AudioEvent.playSound(SoundType.BOOM);
                 //bullet collided with city shield
             }
             health.getHit(other, bulletDamage.damage * damageMultiplier);
@@ -191,6 +193,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             bulletHealth.getHit(bullet, 2f);
 
         } else if (turret != null && enemy != null) {
+//            AudioEvent.playSound(SoundType.BOOM);
             // turret kamikazed
             Components.get(enemy, Health.class).getHit(enemy, 1000f); // kill the enemy
             Components.get(turret, Health.class).getHit(turret, ENEMY_RAMMING_DAMAGE); // do damage to the turret
@@ -199,8 +202,10 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
             var other = shield == overlap.entityA() ? overlap.entityB() : overlap.entityA();
             Components.get(other, Health.class).getHit(other, 1000f);
             Components.get(shield, Health.class).getHit(shield, ENEMY_RAMMING_DAMAGE);
+            AudioEvent.playSound(SoundType.EXPLOSION1, 0.25f);
         } else if (city != null) {
             // something not a bullet hit the city
+            AudioEvent.playSound(SoundType.EXPLOSION1, 0.25f);
             Components.get(city, Health.class).getHit(city, ENEMY_RAMMING_DAMAGE);
             var other = city == overlap.entityA() ? overlap.entityB() : overlap.entityA();
             Components.get(other, Health.class).getHit(other, 1000f);

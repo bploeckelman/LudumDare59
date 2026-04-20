@@ -48,6 +48,8 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
 
         // Tick the engine for one frame first to get everything initialized
         engine.update(0f);
+        AudioEvent.stopAllMusic();
+        AudioEvent.playMusic(MusicType.INTRO_MUSIC);
     }
 
     @Override

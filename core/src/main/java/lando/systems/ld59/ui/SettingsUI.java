@@ -39,7 +39,7 @@ public class SettingsUI extends VisWindow {
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Util.log("musicSlider changed: " + musicSlider.getValue());
+//                Util.log("musicSlider changed: " + musicSlider.getValue());
                 AudioSystem.setMusicVolume(musicSlider.getValue());
             }
         });
@@ -55,7 +55,7 @@ public class SettingsUI extends VisWindow {
         soundSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Util.log("soundSlider changed: " + soundSlider.getValue());
+//                Util.log("soundSlider changed: " + soundSlider.getValue());
                 AudioSystem.setSoundVolume(soundSlider.getValue());
                 AudioEvent.playSound(SoundType.SAW_A);
             }
