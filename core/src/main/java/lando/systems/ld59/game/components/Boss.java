@@ -12,10 +12,12 @@ import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.collision.CollisionMask;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.utils.FramePool;
+import lando.systems.ld59.utils.Util;
 
 public class Boss implements Component {
     public static int GEMS = 6;
     public Array<Entity> gems = new Array<>();
+    public Entity finalGem;
     public float rotation;
     public Position bossPos;
 
@@ -23,6 +25,8 @@ public class Boss implements Component {
 
     public Position bossTarget = new Position();
     public Entity boss;
+
+    public float accum;
 
     public float atLocationTimer = 10f;
 
@@ -70,6 +74,7 @@ public class Boss implements Component {
     }
 
     public void update(float delta) {
+        accum += delta;
         // update Gem positions
         if (bossPos == null) return;
         for (int i = 0; i < gems.size; i++) {
@@ -92,6 +97,23 @@ public class Boss implements Component {
             if (health.isDead()) {
                 gem.remove(Collider.class);
                 gemAnim.tint.a = .25f;
+            }
+        }
+
+        if (finalGem != null) {
+            var pos = finalGem.getComponent(Position.class);
+            pos.x = bossPos.x;
+            pos.y = bossPos.y;
+            var gemAnim = finalGem.getComponent(Animator.class);
+            gemAnim.rotation = rotation;
+            gemAnim.rotationOrigin.set(gemAnim.size.x/2f, gemAnim.size.y/2f);
+
+            var gemHealth = finalGem.getComponent(Health.class);
+            gemHealth.update(delta);
+            if (gemHealth.lastHit < .1f) {
+                gemAnim.tint.set(.8f, .4f, .4f, 1f);
+            } else {
+                Util.hsvToRgb(accum * .2f, .4f, 1f, gemAnim.tint);
             }
         }
         var moveSpeed = 100f;

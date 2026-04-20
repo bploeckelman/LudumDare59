@@ -5,11 +5,13 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld59.assets.SoundType;
+import lando.systems.ld59.assets.anims.AnimEnemy;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.signals.AudioEvent;
+import lando.systems.ld59.utils.Util;
 
 public class EnemySystem extends IteratingSystem {
 
@@ -199,7 +201,23 @@ public class EnemySystem extends IteratingSystem {
         boss.rotation = bossAnim.rotation;
         boss.update(dt);
         if (boss.areAllGemsDead()) {
-            entity.add(boss.bossCollider);
+            if (boss.finalGem == null) {
+                // Set up final boss gem
+                var finalGem = getEngine().createEntity();
+                boss.finalGem = finalGem;
+                var gemAnim = new Animator(AnimEnemy.GEM);
+                gemAnim.depth = 120;
+                gemAnim.size.set(60, 60);
+                gemAnim.origin.set(30, 30);
+
+                finalGem.add(gemAnim);
+                finalGem.add(new Health(20));
+                finalGem.add(boss.bossCollider);
+                finalGem.add(new Position(boss.bossPos));
+
+                getEngine().addEntity(finalGem);
+            }
+
         }
     }
 }

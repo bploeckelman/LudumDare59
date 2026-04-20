@@ -38,7 +38,7 @@ public class WaveScheduleSystem extends IteratingSystem {
         setupWaves();
         this.boss = Main.game.engine.createEntity();
         boss.add(new Boss(this.boss));
-        boss.add(new Health(20));
+//        boss.add(new Health(20));
         Main.game.engine.addEntity(boss);
     }
 
