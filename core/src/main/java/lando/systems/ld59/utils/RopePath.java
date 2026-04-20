@@ -11,8 +11,13 @@ import lando.systems.ld59.game.components.SceneContainer;
 public class RopePath {
 
     private static final Vector2 DEFAULT_GRAVITY = new Vector2(0, -1000f);
-    private static final float DEFAULT_DAMPING = 0.98f; // 1 = no damping
+    private static final float DEFAULT_DAMPING = 0.99f; // 1 = no damping
     private static final int CONSTRAINT_ITERATIONS = 10;
+
+    private static final float FIXED_TIMESTEP = 1f / 60f;
+    private static final int MAX_STEPS_PER_FRAME = 5; // prevent spiral of death
+
+    private float accumulator = 0f;
 
     public final Array<Vector2> positions = new Array<>();
     public final Vector2 gravity = new Vector2(DEFAULT_GRAVITY);
@@ -37,7 +42,6 @@ public class RopePath {
         pinned = new boolean[initialPositions.size];
         pinPoint(0);
         pinPoint(initialPositions.size - 1);
-        pinPoint(initialPositions.size - 2);
     }
 
     public void jostle() {
@@ -84,7 +88,20 @@ public class RopePath {
     }
 
     public void update(float deltaTime) {
-        // Verlet integration
+        // Clamp delta to avoid huge jumps if the game freezes
+        deltaTime = Math.min(deltaTime, 0.25f);
+        accumulator += deltaTime;
+
+        int steps = 0;
+        while (accumulator >= FIXED_TIMESTEP && steps < MAX_STEPS_PER_FRAME) {
+            step(FIXED_TIMESTEP);
+            accumulator -= FIXED_TIMESTEP;
+            steps++;
+        }
+    }
+
+    private void step(float dt) {
+        // Verlet integration — now dt is always 1/60
         for (int i = 0; i < positions.size; i++) {
             if (pinned[i]) continue;
 
@@ -96,11 +113,11 @@ public class RopePath {
 
             old.set(pos);
 
-            pos.x += vx + gravity.x * deltaTime * deltaTime;
-            pos.y += vy + gravity.y * deltaTime * deltaTime;
+            pos.x += vx + gravity.x * dt * dt;
+            pos.y += vy + gravity.y * dt * dt;
         }
 
-        // Satisfy distance constraints
+        // Satisfy distance constraints — also runs at fixed rate now
         for (int iter = 0; iter < CONSTRAINT_ITERATIONS; iter++) {
             for (int i = 0; i < positions.size - 1; i++) {
                 var p1 = positions.get(i);
@@ -113,7 +130,7 @@ public class RopePath {
 
                 if (dist < 0.0001f) continue;
 
-                float constraintStiffness = 0.2f; // 1.0 = rigid, 0.1 = very stretchy
+                float constraintStiffness = 0.5f;
                 float diff = (dist - restDist) / dist;
                 float offsetX = dx * 0.5f * diff * constraintStiffness;
                 float offsetY = dy * 0.5f * diff * constraintStiffness;
@@ -128,6 +145,12 @@ public class RopePath {
                 }
             }
         }
+    }
+
+    public void pinEnds() {
+        pinPoint(0);
+        pinPoint(positions.size - 1);
+        pinPoint(positions.size - 2);
     }
 
     /**
