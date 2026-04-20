@@ -152,18 +152,18 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
 
             ;
 
-        page2 = "Because of some enthusiastic recent cuts to government spending however, " +
+        page2 = "However, because of some rather... enthusiastic... cuts to government spending recently, " +
             "our only line of defense is a series of turrets. \n\n" +
             "Each turret can be plugged into one of three different firing patterns (shapes) and "  +
             "one of three {COLOR=green;}different {COLOR=magenta;}types {COLOR=white;}of {COLOR=blue;}plasma{COLOR=white;} (colors).\n\n" +
-            "When a turret is receiving a complete {GRADIENT=grey;navy}signal{ENDGRADIENT}{COLOR=white} of both a plasma type and firing pattern," +
+            "When a turret is receiving a complete {GRADIENT=grey;navy}signal{ENDGRADIENT}{COLOR=white} (meaning both a {GRADIENT=grey;navy;}plasma type{ENDGRADIENT} and{GRADIENT=grey;navy;} firing pattern{ENDGRADIENT} are connected)," +
             " it's time for those alien bastards to pay!";
 
         page3 = "But these damn dirty extraterrestrials are crafty.\n\n" +
-            "Different aliens are susceptible to some plasma types (color), and resistant to others.\n\n" +
-            "With no plasma color chosen, the turrets will still fire, but their bullets will be limp and flaccid.\n\n" +
+            "Different aliens are susceptible to some plasma types (colors), and resistant to others.\n\n" +
+            "With no plasma color chosen, the turrets will still fire, but their bullets will be {COLOR=grey}pale, limp, and flaccid{COLOR=white;}.\n\n" +
             "With the right plasma types chosen and a strategic firing pattern, the aliens will have no choice but to " +
-            "kneel before you and cower as your girthy turrets spray ropey, colorful jets of freedom.";
+            "kneel before you and cower as your girthy turrets spray ropey, {RAINBOW}colorful{ENDRAINBOW} jets of {WAVE}freedom.{ENDWAVE}";
 
 //        if (Flag.DEBUG_RENDER.isEnabled()) {
 //            var screenName = new VisLabel(getClass().getSimpleName());
