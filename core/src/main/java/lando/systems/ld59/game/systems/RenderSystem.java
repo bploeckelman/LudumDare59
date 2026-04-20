@@ -11,8 +11,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import lando.systems.ld59.Main;
-import lando.systems.ld59.assets.ImageType;import lando.systems.ld59.assets.ShaderType;
+import com.badlogic.gdx.utils.Array;
+import lando.systems.ld59.AnimDepths;import lando.systems.ld59.Main;
+import lando.systems.ld59.assets.ImageType;
+import lando.systems.ld59.assets.ShaderType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.Health;
 import lando.systems.ld59.game.components.Position;
@@ -36,6 +38,8 @@ public class RenderSystem extends SortedIteratingSystem {
     };
 
     private float accum = 0;
+    private Array<Entity> beforeCablesEntities = new Array<>();
+    private Array<Entity> afterCablesEntities = new Array<>();
 
     public RenderSystem() {
         super(RENDERABLES, comparator);
@@ -52,7 +56,19 @@ public class RenderSystem extends SortedIteratingSystem {
     }
 
     public void draw(SpriteBatch batch, OrthographicCamera camera) {
+        beforeCablesEntities.clear();
+        afterCablesEntities.clear();
+
         for (var entity : getEntities()) {
+            var r = Renderable.getRenderable(entity);
+            if (r.depth < AnimDepths.CABLES) {
+                beforeCablesEntities.add(entity);
+            } else {
+                afterCablesEntities.add(entity);
+            }
+        }
+
+        for (var entity : beforeCablesEntities) {
             var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
 
             // Draw simple renderables, apply outline component if exists, otherwise normal rendering
@@ -66,8 +82,27 @@ public class RenderSystem extends SortedIteratingSystem {
             );
         }
 
-        drawShieldShader(batch);
+        batch.end();
         drawCableShader(camera);
+        batch.begin();
+
+        for (var entity : afterCablesEntities) {
+            var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
+
+            // Draw simple renderables, apply outline component if exists, otherwise normal rendering
+            Components.optional(entity, Outline.class).ifPresentOrElse(
+                outline -> renderWithOutline(batch, entity, outline),
+                () -> {
+                    Components.optional(entity, Image.class).ifPresent(img -> img.render(batch, pos));
+                    Components.optional(entity, Animator.class).ifPresent(anim -> anim.render(batch, pos));
+                    Components.optional(entity, FlatShape.class).ifPresent(shape -> shape.render(batch, pos));
+                }
+            );
+        }
+
+        drawShieldShader(batch);
+
+
     }
 
     public void drawCableShader(OrthographicCamera camera) {
