@@ -89,7 +89,7 @@ public class TurretSystem extends IteratingSystem {
                 maxDegreesPerSecond = 100f;
 
                 var cannonPos = FramePool.pos(Components.get(turret.cannon, Position.class));
-                cannonPos.add(96, 0);
+
                 var closestPos = nearestEnemy(cannonPos);
                 if (closestPos == null) {
                     targetRotation = turret.rotation;
