@@ -131,7 +131,6 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 var emitter = Factory.emitter(EmitterType.SMOKE, params);
                 getEngine().addEntity(emitter);
 
-
                 float squareVolume = 0.65f;
                 float sawVolume = 0.8f;
                 float sineVolume = 1f;
