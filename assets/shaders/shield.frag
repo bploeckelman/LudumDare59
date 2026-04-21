@@ -96,7 +96,7 @@ void main() {
     // add bright white/blue flash
     impactGlow *= step(0.001, texColor.r);
 
-    vec3 impactColor = vec3(0.6, 0.8, 1.0);
+    vec3 impactColor = mix(vec3(1.0, 0.3, 0.1), vec3(0.8, 0.9, 1.0), h);
     finalColor.rgb += impactColor * impactGlow * 2.0;
     finalColor.a = max(finalColor.a, impactGlow * texColor.r); // make sure it shows up
 
