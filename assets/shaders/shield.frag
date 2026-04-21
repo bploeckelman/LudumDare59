@@ -50,8 +50,16 @@ void main() {
     float mainStength = (.8 + (sin(u_time*3.) * .3)) * u_health * noise.g;
     float hexStrength = (.8 + sin(u_time*2.) * .2) * u_health * noise.g;
 
-    vec3 backColor = vec3(.137, .463, .882);
-    vec3 lineColor = vec3(.137, .663, .882);
+    // --- health-based colors ---
+    vec3 healthyBack = vec3(.137,.463,.882); // blue
+    vec3 healthyLine = vec3(.137,.663,.882); // light blue
+    vec3 damagedBack = vec3(.882,.137,.137); // red
+    vec3 damagedLine = vec3(.980,.463,.137); // orange-red
+
+    // u_health: 1.0 = full health, 0.0 = dead
+    float h = clamp(u_health, 0.0, 1.0);
+    vec3 backColor = mix(damagedBack, healthyBack, h);
+    vec3 lineColor = mix(damagedLine, healthyLine, h);
 
     vec4 texColor = getTexture(vec2(0.));
 
