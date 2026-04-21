@@ -1,5 +1,6 @@
 package lando.systems.ld59.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -15,19 +16,15 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.FontType;
 import lando.systems.ld59.assets.anims.AnimPet;
+import lando.systems.ld59.game.Stats;
 
 public class EndStoryScreen extends BaseScreen {
 
     private static final Color BACKGROUND_COLOR = new Color(0f, 0f, .1f, 0f);
     private float accum = 0f;
-    private Image asukaImage;
-    private Image roxieImage;
-    private Image novaImage;
-    private Image cherryImage;
-    private Image oshaImage;
-//    private Font creditFont = FontType.CHEVYRAY_RISE.get();
     private Font creditFont = FontType.HEMI_HEAD_SMALL.get();
     private Font creditHeader = FontType.HEMI_HEAD_CREDITS.get();
+    TypingLabel storyText;
 
     // TODO: in i18n strings...
     //  how to mix formatting placeholders: {0}, {1}, ..., with typing label placeholders like {GRADIENT},
@@ -79,34 +76,31 @@ public class EndStoryScreen extends BaseScreen {
                     "forgotten forever. \n\n" +
                     "Like tears.\n\n" +
                     "In the rain.";
-
-            panelLeft.add(new TypingLabel(assets.strings.get("endstory.body.main"), creditHeader)).row();
+            storyText = new TypingLabel(assets.strings.get("endstory.body.main"), creditHeader);
+            panelLeft.add(storyText).row();
 //            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.code-names"), creditFont)).row();
             panelLeft.row().height(40f);
-//            panelLeft.add(new TypingLabel(assets.strings.get("credits.body.left.pets-heading"), creditHeader)).row();
 
-            var petsTable = new VisTable();
-            var petSprites = new VisTable();
-//            petsTable.add(new TypingLabel(assets.strings.get("credits.body.left.pets-names"), creditFont)).growY();
-//            petsTable.add(new VisLabel()).width(10f);
-//            asukaImage = new Image(AnimPet.ASUKA.get().getKeyFrame(accum));
-//            roxieImage = new Image(AnimPet.ROXIE.get().getKeyFrame(accum));
-//            novaImage = new Image(AnimPet.NOVA.get().getKeyFrame(accum));
-//            cherryImage = new Image(AnimPet.CHERRY.get().getKeyFrame(accum));
-//            oshaImage = new Image(AnimPet.OSHA.get().getKeyFrame(accum));
-//            petSprites.add(asukaImage).size(32f, 32f).row();
-//            petSprites.add(oshaImage).size(32f, 32f).row();
-//            petSprites.add(cherryImage).size(32f, 32f).row();
-//            petSprites.add(roxieImage).size(38f, 32f).row();
-//            petSprites.add(novaImage).size(38f, 32f);
-//            petsTable.add(petSprites);
-//            panelLeft.add(petsTable).row();
+
+            // Get stats
+            var stats = Stats.instance();
+            int minutes = (int) (stats.timeElapsed / 60);
+            int seconds = (int) (stats.timeElapsed % 60);
 
             panelRight.add(new TypingLabel(assets.strings.get("endstory.body.right.art-heading"), creditHeader)).row();
-//            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.art-names"), creditFont)).row();
-            panelRight.row().height(50f);
-//            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.audio-heading"), creditHeader)).row();
-//            panelRight.add(new TypingLabel(assets.strings.get("credits.body.right.audio-names"), creditFont)).row();
+            panelRight.row().height(10f);
+
+            panelRight.add(new TypingLabel("Enemies Killed: " + stats.enemiesKilled, creditFont)).row();
+            panelRight.add(new TypingLabel("Red Aliens: " + stats.badKills, creditFont)).row();
+            panelRight.add(new TypingLabel("Blue Aliens: " + stats.goodKills, creditFont)).row();
+            panelRight.add(new TypingLabel("Green Aliens: " + stats.neutralKills, creditFont)).row();
+            panelRight.row().height(10f);
+            panelRight.add(new TypingLabel("Time Survived: " + minutes + "minutes " + seconds + "seconds", creditFont)).row();
+            panelRight.add(new TypingLabel("Damage Dealt: " + stats.damageDealt, creditFont)).row();
+            panelRight.add(new TypingLabel("Damage Taken: " + stats.damageTaken, creditFont)).row();
+            panelRight.row().height(10f);
+            panelRight.add(new TypingLabel("Cities Lost: " + stats.cityLost, creditFont)).row();
+            panelRight.row().height(20f);
 
             add(panelLeft).width(500f).growY().pad(10);
             add(panelRight).width(500f).growY().pad(10);
@@ -158,24 +152,14 @@ public class EndStoryScreen extends BaseScreen {
     public void update(float delta) {
         super.update(delta);
         accum += delta;
-
-        // Update animated pet sprites
-        if (asukaImage != null) {
-            asukaImage.setDrawable(new Image(AnimPet.ASUKA.get().getKeyFrame(accum)).getDrawable());
-        }
-        if (roxieImage != null) {
-            roxieImage.setDrawable(new Image(AnimPet.ROXIE.get().getKeyFrame(accum)).getDrawable());
-        }
-        if (novaImage != null) {
-            novaImage.setDrawable(new Image(AnimPet.NOVA.get().getKeyFrame(accum)).getDrawable());
-        }
-        if (cherryImage != null) {
-            cherryImage.setDrawable(new Image(AnimPet.CHERRY.get().getKeyFrame(accum)).getDrawable());
-        }
-        if (oshaImage != null) {
-            oshaImage.setDrawable(new Image(AnimPet.OSHA.get().getKeyFrame(accum)).getDrawable());
-        }
         uiStage.act(delta);
+        if (Gdx.input.isTouched() && storyText.hasEnded()) {
+            if (transitioning) return;
+            game.setScreen(new CreditsScreen());
+            transitioning = true;
+        } else {
+            storyText.skipToTheEnd();
+        }
     }
 
     @Override

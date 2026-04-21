@@ -211,7 +211,7 @@ public class EnemySystem extends IteratingSystem {
         float marginY = 50f;
         float minX = marginX;
         float maxX = Config.window_width - marginX;
-        float minY = Config.window_height / 2f + 50f;
+        float minY = Config.window_height / 2 + 50f;
         float maxY = Config.window_height - marginY;
 
         if (pos.x <= minX && enemy.driftDirection.x < 0) {
@@ -339,7 +339,6 @@ public class EnemySystem extends IteratingSystem {
 
         if (boss.isGameOver()) {
             // TODO: maybe we need other stuff, some sort of tween timeline before we just cut?
-//            Main.game.setScreen(new EndingScreen());
             Main.game.setScreen(new EndStoryScreen());
         }
     }
