@@ -21,8 +21,6 @@ import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.components.Health;
 import lando.systems.ld59.game.components.Position;
 import lando.systems.ld59.game.components.SceneContainer;import lando.systems.ld59.game.components.renderable.*;
-import lando.systems.ld59.game.scenes.Scene;
-import lando.systems.ld59.game.signals.ConnectionEvent;
 import lando.systems.ld59.game.signals.ScreenShakeEvent;import lando.systems.ld59.game.signals.SignalEvent;
 import lando.systems.ld59.utils.FramePool;
 import lando.systems.ld59.utils.Util;
@@ -154,6 +152,8 @@ public class RenderSystem extends SortedIteratingSystem implements Listener<Sign
             shader.setUniformf("u_health", health.currentHealth / health.maxHealth);
             shieldShader.noiseTexture.bind(1);
             shader.setUniformi("u_noise", 1);
+            shader.setUniformi("u_numImpacts", shieldShader.activeImpacts.size);
+            shader.setUniform3fv("u_impacts", shieldShader.impacts, 0, ShieldShaderRenderable.MAX_IMPACTS * 3);
             shieldShader.texture.bind(0);
 
             batch.draw(shieldShader.texture, rect.x, rect.y, rect.width, rect.height);

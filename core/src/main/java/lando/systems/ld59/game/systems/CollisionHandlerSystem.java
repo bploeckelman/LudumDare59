@@ -12,10 +12,7 @@ import lando.systems.ld59.assets.anims.AnimEmoji;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.components.*;
-import lando.systems.ld59.game.signals.AudioEvent;
-import lando.systems.ld59.game.signals.CollisionEvent;
-import lando.systems.ld59.game.signals.ScreenShakeEvent;
-import lando.systems.ld59.game.signals.SignalEvent;
+import lando.systems.ld59.game.signals.*;
 import lando.systems.ld59.particles.effects.EmojiPopEffect;
 import lando.systems.ld59.particles.effects.ShieldDamageEffect;
 import lando.systems.ld59.particles.effects.SmokeEffect;
@@ -198,6 +195,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
                 AudioEvent.playSound(SoundType.CLANG, .0625f, panValue);
                 Stats.instance().damageTaken += bulletDamage.damage * damageMultiplier;
             } else if (Components.has(other, CityShield.class)) {
+                ShieldHitEvent.hit(pos.x, pos.y);
                 ScreenShakeEvent.shake(ShakeAmounts.SHIELD_HIT);
                 var params = new ShieldDamageEffect.Params(particlePos);
                 var emitter = Factory.emitter(EmitterType.SHIELD_DAMAGE, params);
@@ -234,6 +232,8 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Sig
 //            Util.log(TAG, "Shield hit: " + Util.entityString(shield));
             ScreenShakeEvent.shake(ShakeAmounts.SHIELD_HIT);
             var other = shield == overlap.entityA() ? overlap.entityB() : overlap.entityA();
+            var pos = Components.get(other, Position.class);
+            ShieldHitEvent.hit(pos.x, pos.y);
             Components.get(other, Health.class).getHit(other, 1000f);
             Components.get(shield, Health.class).getHit(shield, ENEMY_RAMMING_DAMAGE);
             AudioEvent.playSound(SoundType.EXPLOSION2, 0.125f);

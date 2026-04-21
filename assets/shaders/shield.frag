@@ -7,6 +7,12 @@ uniform sampler2D u_noise;
 uniform float u_time;
 uniform float u_health;
 
+// --- new uniforms for impacts ---
+#define MAX_IMPACTS 8
+uniform int u_numImpacts; // how many are active this frame
+uniform vec3 u_impacts[MAX_IMPACTS]; //.xy = uv pos,.z = age in seconds
+
+
 varying vec4 v_color;
 varying vec2 v_texCoord;
 
@@ -52,6 +58,41 @@ void main() {
     vec3 shieldColor = mix(backColor, lineColor * hexStrength, texColor.g * .5);
     vec4 finalColor = vec4(texColor.r * shieldColor, texColor.b * mainStength);
 //    gl_FragColor = vec4(edge(texColor));
+
+    // --- add impact highlights ---
+    float impactGlow = 0.0;
+    for (int i = 0; i < MAX_IMPACTS; i++) {
+        if (i >= u_numImpacts) continue;
+
+        vec2 impactPos = u_impacts[i].xy;
+        float age = u_impacts[i].z;
+
+        // skip old impacts
+        if (age <= 0.0 || age > 1.0) continue;
+
+        float dist = distance(v_texCoord, impactPos);
+
+        // expanding ring: radius grows with age, fade out
+        float ringRadius = age * 0.1; // 0.4 = max ring size in UV space
+        float ringWidth = 0.01;
+
+        float d = abs(dist - ringRadius);
+        float ring = 1.0 - smoothstep(0.0, ringWidth, d);
+
+        // fade over 1 second
+        float fade = 1.0 - smoothstep(0.0, 1.0, age);
+
+        impactGlow += ring * fade;
+    }
+
+    // add bright white/blue flash
+    impactGlow *= step(0.001, texColor.r);
+
+    vec3 impactColor = vec3(0.6, 0.8, 1.0);
+    finalColor.rgb += impactColor * impactGlow * 2.0;
+    finalColor.a = max(finalColor.a, impactGlow * texColor.r); // make sure it shows up
+
+
     finalColor = mix(finalColor, vec4(backColor, 1.), edge(texColor));
     gl_FragColor = finalColor * v_color;
 }
