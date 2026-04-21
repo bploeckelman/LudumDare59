@@ -76,6 +76,7 @@ public class CityBaseSystem extends IteratingSystem {
                 baseAnim.start(AnimBaseTurret.BASE_IDLE);
                 turret.base.add(turret.baseCollider);
                 turret.cannon.add(turret.cannonCollider);
+                turret.repairTimer = 0;
                 turretHealth.currentHealth = turretHealth.maxHealth;
             }
             Stats.instance().cityLost++;
