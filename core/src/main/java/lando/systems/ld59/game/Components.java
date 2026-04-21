@@ -53,7 +53,8 @@ public class Components {
         entry(GroundPart.class,     ComponentMapper.getFor(GroundPart.class)),
 
         // Map Objects --------------------------------------------------------
-        entry(EnemySpawner.class, ComponentMapper.getFor(EnemySpawner.class))
+        entry(EnemySpawner.class, ComponentMapper.getFor(EnemySpawner.class)),
+        entry(BackgroundAnimSpawner.class, ComponentMapper.getFor(BackgroundAnimSpawner.class))
     );
 
     private Components() { /* don't allow instantiation */ }

@@ -5,17 +5,20 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import lando.systems.ld59.Config;
 import lando.systems.ld59.ShakeAmounts;
 import lando.systems.ld59.assets.ImageType;
 import lando.systems.ld59.assets.anims.AnimBaseButton;
 import lando.systems.ld59.assets.anims.AnimBaseCity;
 import lando.systems.ld59.assets.anims.AnimBaseTurret;
+import lando.systems.ld59.assets.anims.AnimMisc;
 import lando.systems.ld59.assets.EmitterType;
 import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Factory;
 import lando.systems.ld59.game.Systems;
 import lando.systems.ld59.game.components.*;
+import lando.systems.ld59.game.components.renderable.Image;
 import lando.systems.ld59.game.signals.ScreenShakeEvent;
 import lando.systems.ld59.particles.effects.PetConfettiEffect;
 import lando.systems.ld59.particles.effects.ExplosionEffect;
@@ -23,6 +26,7 @@ import lando.systems.ld59.particles.effects.SparkleEffect;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.screens.GameScreen;
 import lando.systems.ld59.utils.FramePool;
+import lando.systems.ld59.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,11 @@ public class SceneGame extends Scene<GameScreen> implements InputProcessor {
         engine().addEntity(sceneContainer);
 
         createView(Config.framebuffer_width, Config.framebuffer_height);
+
+        // Create background anim spawner entity
+        var bgAnimSpawner = Factory.createEntity();
+        bgAnimSpawner.add(new BackgroundAnimSpawner());
+        engine().addEntity(bgAnimSpawner);
 
         var worldCamWidth = screen.worldCamera.viewportWidth;
         var worldCamHeight = screen.worldCamera.viewportHeight;
