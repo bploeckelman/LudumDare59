@@ -1,13 +1,10 @@
 package lando.systems.ld59.game.components.renderable;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import lando.systems.ld59.assets.ImageType;
 import lando.systems.ld59.assets.ShaderType;
 import lando.systems.ld59.game.components.Connection;
 import lando.systems.ld59.utils.FramePool;
@@ -24,8 +21,11 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
 
     public static final float THICKNESS = 6;
 
+    public boolean isTitleScreen = false;
+
     public RopePath path;
     public Array<Vector2> points;
+
     private Mesh mesh;
     private float[] vertices;
     private int verticesIndex;
@@ -34,13 +34,17 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
     public Connection connection;
     public boolean flowing;
 
-
     public CableShaderRenderable(Connection connection, RopePath path) {
+        this(false, null, connection, path);
+    }
+
+    public CableShaderRenderable(boolean isTitleScreen, Color color, Connection connection, RopePath path) {
+        this.isTitleScreen = isTitleScreen;
         this.connection = connection;
-        points = path.positions;
+        this.points = path.positions;
         this.path = path;
         this.shaderProgram = ShaderType.CABLE.get();
-        color = new Color(Color.WHITE);
+        this.color = new Color(isTitleScreen ? color : Color.WHITE);
 
         this.mesh = new Mesh(false, MAX_NUM_VERTICES, 0,
             new VertexAttribute(VertexAttributes.Usage.Position,           NUM_COMPONENTS_POSITION, "a_position"),
@@ -50,19 +54,21 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
 
         this.verticesIndex = 0;
         this.vertices = new float[MAX_NUM_VERTICES * NUM_COMPONENTS_PER_VERTEX];
-
     }
 
     public void render() {
-
-        this.color.set(connection.getColor());
-        var turrent = connection.getTurret();
-        if (turrent != null) {
-            flowing = turrent.hasPattern();
-            if (turrent.repairTimer > 0) {
-                flowing = false;
-                color.mul(.6f);
-                color.a = 1f;
+        if (isTitleScreen) {
+            flowing = true;
+        } else {
+            color.set(connection.getColor());
+            var turrent = connection.getTurret();
+            if (turrent != null) {
+                flowing = turrent.hasPattern();
+                if (turrent.repairTimer > 0) {
+                    flowing = false;
+                    color.mul(.6f);
+                    color.a = 1f;
+                }
             }
         }
 
@@ -76,7 +82,6 @@ public class CableShaderRenderable extends ShaderRenderable implements Component
         mesh.render(shaderProgram, GL20.GL_TRIANGLE_STRIP, 0, vertexCount);
 
         verticesIndex = 0;
-
     }
 
     public void populateVertexArray() {

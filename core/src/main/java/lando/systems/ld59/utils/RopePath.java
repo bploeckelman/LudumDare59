@@ -1,14 +1,10 @@
 package lando.systems.ld59.utils;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld59.Config;
-import lando.systems.ld59.Main;
-import lando.systems.ld59.game.components.SceneContainer;
 import lando.systems.ld59.utils.screenshake.SimplexNoise;
 
 public class RopePath {
@@ -17,7 +13,6 @@ public class RopePath {
     private static final float DEFAULT_DAMPING = 0.99f; // 1 = no damping
     private static final int CONSTRAINT_ITERATIONS = 4;
     private static final float CONSTRAINT_STIFFNESS = 0.3f;
-
 
     private static final float FIXED_TIMESTEP = 1f / 60f;
     private static final int MAX_STEPS_PER_FRAME = 5; // prevent spiral of death
@@ -43,7 +38,14 @@ public class RopePath {
     }
 
     public RopePath(Array<Vector2> initialPositions) {
-        addCircleCollider(Config.window_width/2, 75, 100);
+        this(false, initialPositions);
+    }
+
+    public RopePath(boolean isTitleScreen, Array<Vector2> initialPositions) {
+        if (!isTitleScreen) {
+            addCircleCollider(Config.window_width / 2, 75, 100);
+        }
+
         for (int i = 0; i < initialPositions.size; i++) {
             var pos = initialPositions.get(i);
             positions.add(new Vector2(pos));
@@ -245,124 +247,4 @@ public class RopePath {
         }
         return length;
     }
-
-
-
-
-    // original --------------------------------------------------------------------------------------------------------
-
-//    private static final Vector2 DEFAULT_GRAVITY = new Vector2(0, -10f);
-//    private static final float DEFAULT_STIFFNESS = 5f; // stiffness: higher = faster settling, strong resistance to displacement
-//    private static final float DEFAULT_DAMPING = 0.1f; // damping: 0-1, higher = less jiggling, faster settling
-//    private static final float DEFAULT_MASS = 1f; // mass: per point, lower mass = faster response to forces
-//
-//    public final Array<Vector2> positions = new Array<>();
-//
-//    public final Vector2 gravity = DEFAULT_GRAVITY;
-//    public float stiffness = DEFAULT_STIFFNESS;
-//    public float damping = DEFAULT_DAMPING;
-//    public float mass = DEFAULT_MASS;
-//
-//    private final Array<Float> restDistances = new Array<>();
-//    private final Array<Vector2> velocities = new Array<>();
-//
-//    private boolean[] pinned;
-//
-//    public RopePath(Array<Vector2> initialPositions) {
-//        for (int i = 0; i < initialPositions.size - 1; i++) {
-//            var pos = initialPositions.get(i);
-//            var nextPos = initialPositions.get(i + 1);
-//
-//            positions.add(new Vector2(pos));
-//            velocities.add(new Vector2());
-//
-//            // Store 'at rest' distances between adjacent pairs
-//            float distance = pos.dst(nextPos);
-//            restDistances.add(distance);
-//        }
-//
-//        // Make sure the last point is added too (can't add above because that loop gets pairs of points, current + next)
-//        var lastIdx = initialPositions.size - 1;
-//        var last = initialPositions.get(lastIdx);
-//        positions.add(new Vector2(last));
-//        velocities.add(new Vector2());
-//
-//        // Pin the start and end points bey default
-//        this.pinned = new boolean[initialPositions.size];
-//        pinPoint(0);
-//        pinPoint(lastIdx);
-//    }
-//
-//    public void jostle() {
-//        var range = 10f;
-//        var defaultImpulseX = MathUtils.random(-range, range);
-//        var defaultImpulseY = MathUtils.random(-range, range);
-//        jostle(defaultImpulseX, defaultImpulseY);
-//    }
-//
-//    public void jostle(float impulseX, float impulseY) {
-//        var pointIndex = MathUtils.random(0, positions.size - 1);
-//        jostle(pointIndex, impulseX, impulseY);
-//    }
-//
-//    public void jostle(int pointIndex, float impulseX, float impulseY) {
-//        if (pointIndex >= 0 && pointIndex < positions.size && !pinned[pointIndex]) {
-//            velocities.get(pointIndex).add(impulseX, impulseY);
-//        }
-//    }
-//
-//    public void pinPoint(int index) {
-//        if (index >= 0 && index < pinned.length) {
-//            pinned[index] = true;
-//        }
-//    }
-//
-//    public void unpinPoint(int index) {
-//        if (index >= 0 && index < pinned.length) {
-//            pinned[index] = false;
-//        }
-//    }
-//
-//    public void update(float deltaTime) {
-//        Array<Vector2> forces = new Array<>();
-//        for (int i = 0; i < positions.size; i++) {
-//            forces.add(new Vector2(gravity).scl(mass));
-//        }
-//
-//        // Spring forces between adjacent points
-//        for (int i = 0; i < positions.size - 1; i++) {
-//            var p1 = positions.get(i);
-//            var p2 = positions.get(i + 1);
-//
-//            var delta = FramePool.vec2(p2).sub(p1);
-//            float currentDist = delta.len();
-//            float restDist = restDistances.get(i);
-//
-//            if (currentDist > 0.001f) {
-//                delta.nor();
-//
-//                // Hooke's law: F = -k(x - x0)
-//                float displacement = currentDist - restDist;
-//                float forceMagnitude = -stiffness * displacement;
-//
-//                // Pull p1 and p2 closer together based on distance
-//                var springForce = FramePool.vec2(delta).scl(forceMagnitude);
-//                forces.get(i).sub(springForce);
-//                forces.get(i + 1).add(springForce);
-//            }
-//        }
-//
-//        // Integrate physics
-//        for (int i = 0; i < positions.size; i++) {
-//            if (pinned[i]) continue;
-//
-//            var v = velocities.get(i);
-//            var p = positions.get(i);
-//            var f = forces.get(i);
-//
-//            v.scl(1f - damping * deltaTime);
-//            v.add(f.x * deltaTime / mass, f.y * deltaTime / mass);
-//            p.add(v.x * deltaTime, v.y * deltaTime);
-//        }
-//    }
 }
