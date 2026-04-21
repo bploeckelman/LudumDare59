@@ -27,9 +27,9 @@ public class CreditsScreen extends BaseScreen {
     private Image novaImage;
     private Image cherryImage;
     private Image oshaImage;
-//    private Font creditFont = FontType.CHEVYRAY_RISE.get();
+    //private Font creditFont = FontType.CHEVYRAY_RISE.get();
     private Font creditHeader = FontType.HEMI_HEAD.get();
-    private Font creditFont = FontType.HEMI_HEAD.get();
+    private Font creditFont = FontType.HEMI_HEAD_CREDITS.get();
 
     // TODO: in i18n strings...
     //  how to mix formatting placeholders: {0}, {1}, ..., with typing label placeholders like {GRADIENT},
