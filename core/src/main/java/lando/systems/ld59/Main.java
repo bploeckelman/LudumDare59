@@ -3,6 +3,7 @@ package lando.systems.ld59;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,8 +17,10 @@ import com.kotcrab.vis.ui.VisUI;
 import lando.systems.ld59.assets.Assets;
 import lando.systems.ld59.assets.EffectType;
 import lando.systems.ld59.assets.SkinType;
+import lando.systems.ld59.game.Components;
 import lando.systems.ld59.game.Systems;
-import lando.systems.ld59.game.components.Position;
+import lando.systems.ld59.game.components.Boss;
+import lando.systems.ld59.game.components.Health;import lando.systems.ld59.game.components.Position;
 import lando.systems.ld59.screens.*;
 import lando.systems.ld59.utils.FramePool;
 import lando.systems.ld59.utils.Time;
@@ -103,9 +106,28 @@ public class Main extends Game {
 
     public void update(float delta) {
 
+        // TODO REMOVE THESE
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
             Flag.DEBUG_RENDER.toggle();
         }
+
+//        // test kill boss
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
+//            var bosses = engine.getEntitiesFor(Family.one(Boss.class).get());
+//            for (var bossE : bosses) {
+//                var boss = Components.get(bossE, Boss.class);
+//                for (var gem : boss.gems) {
+//                    var health = Components.get(gem, Health.class);
+//                    health.currentHealth = 0;
+//                }
+//
+//                var finalGem = boss.finalGem;
+//                if (finalGem != null) {
+//                    var health = Components.get(finalGem, Health.class);
+//                    health.currentHealth = 0;
+//                }
+//            }
+//        }
 
         // update things that must update every tick
         Time.update();

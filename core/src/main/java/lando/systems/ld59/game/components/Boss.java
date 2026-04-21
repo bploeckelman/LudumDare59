@@ -115,17 +115,23 @@ public class Boss implements Component {
             } else {
                 Util.hsvToRgb(accum * .2f, .4f, 1f, gemAnim.tint);
             }
+            if (gemHealth.isDead()) {
+                finalGem.remove(Collider.class);
+                gemAnim.tint.a = .25f;
+            }
         }
-        var moveSpeed = 100f;
-        var vel = Components.get(boss, Velocity.class);
-        var tempVec2 = FramePool.vec2();
-        tempVec2.set(bossTarget.x - bossPos.x, bossTarget.y - bossPos.y).nor();
-        vel.set(tempVec2.x * moveSpeed, tempVec2.y * moveSpeed);
-        if (bossPos.dst(bossTarget) < 10f) {
-            atLocationTimer -= delta;
-            if (atLocationTimer <= 0) {
-                atLocationTimer = MathUtils.random(1f, 5f);
-                bossTarget.x = MathUtils.random(300, Config.window_width - 300);
+        if (!isGameOver()) {
+            var moveSpeed = 100f;
+            var vel = Components.get(boss, Velocity.class);
+            var tempVec2 = FramePool.vec2();
+            tempVec2.set(bossTarget.x - bossPos.x, bossTarget.y - bossPos.y).nor();
+            vel.set(tempVec2.x * moveSpeed, tempVec2.y * moveSpeed);
+            if (bossPos.dst(bossTarget) < 10f) {
+                atLocationTimer -= delta;
+                if (atLocationTimer <= 0) {
+                    atLocationTimer = MathUtils.random(1f, 5f);
+                    bossTarget.x = MathUtils.random(300, Config.window_width - 300);
+                }
             }
         }
     }

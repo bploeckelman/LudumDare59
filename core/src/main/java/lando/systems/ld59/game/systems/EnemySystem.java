@@ -1,5 +1,6 @@
 package lando.systems.ld59.game.systems;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -15,15 +16,21 @@ import lando.systems.ld59.game.components.*;
 import lando.systems.ld59.game.components.renderable.Animator;
 import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.particles.effects.ShipExplodeEffect;
+import lando.systems.ld59.particles.effects.SmokeEffect;
 import lando.systems.ld59.screens.EndStoryScreen;
 import lando.systems.ld59.screens.EndingScreen;
+import lando.systems.ld59.utils.FramePool;
+import lando.systems.ld59.utils.Util;
 
 public class EnemySystem extends IteratingSystem {
+
+    public static final Family enemyFamily = Family.one(EnemyTag.class).get();
 
     private static final String TAG = EnemySystem.class.getSimpleName();
 
     public EnemySystem() {
         super(Family.one(EnemyTag.class, Boss.class).get());
+        transitioning = false;
     }
 
     @Override
@@ -308,14 +315,19 @@ public class EnemySystem extends IteratingSystem {
         posLights.set(pos);
     }
 
+    private float wonDelay = 0;
+    private boolean transitioning = false;
+    private boolean firstRun = true;
     private void updateBoss(Entity entity, float dt) {
         if (!Components.has(entity, Position.class)) {
             return;
         }
         var boss = Components.get(entity, Boss.class);
         var bossAnim = Components.get(entity, Animator.class);
-        bossAnim.rotation += dt * 30f;
-        boss.rotation = bossAnim.rotation;
+        if (!boss.isGameOver()) {
+            bossAnim.rotation += dt * 30f;
+            boss.rotation = bossAnim.rotation;
+        }
         boss.update(dt);
         if (boss.areAllGemsDead()) {
             if (boss.finalGem == null) {
@@ -338,8 +350,44 @@ public class EnemySystem extends IteratingSystem {
         }
 
         if (boss.isGameOver()) {
+            var isWon = getEngine().getEntitiesFor(Family.one(GameWon.class).get());
+            var vel = Components.get(entity, Velocity.class);
+            vel.set(0, 0);
+            var pos = Components.get(entity, Position.class);
+            var tempPos = FramePool.pos(pos);
+            float rotation = MathUtils.random(360f);
+            float dist = MathUtils.random(200f);
+            tempPos.x += dist * MathUtils.cosDeg(rotation);
+            tempPos.y += dist * MathUtils.sinDeg(rotation);
+            var params = new SmokeEffect.Params(tempPos);
+            var emitter = Factory.emitter(EmitterType.SMOKE, params);
+            getEngine().addEntity(emitter);
+
+            if (isWon.size() == 0) { // trigger an is won flag
+                var won = getEngine().createEntity();
+                won.add(new GameWon());
+                getEngine().addEntity(won);
+            }
+
+            Engine engine = Main.game.engine;
+            // kill it all with fire....
+            var enemies = engine.getEntitiesFor(enemyFamily);
+            for (int i = enemies.size() -1; i>= 0; i--) {
+                var isBoss = Components.has(enemies.get(i), Boss.class);
+                if (!isBoss) {
+                    var enemyTag = Components.get(enemies.get(i), EnemyTag.class);
+                    engine.removeEntity(enemyTag.lightOverlay);
+                    engine.removeEntity(enemies.get(i));
+                }
+            }
+            wonDelay += dt;
             // TODO: maybe we need other stuff, some sort of tween timeline before we just cut?
-            Main.game.setScreen(new EndStoryScreen());
+            if (wonDelay > 6f && !transitioning) {
+                transitioning = true;
+                getEngine().removeAllEntities(Family.one(GameWon.class).get());
+                Main.game.setScreen(new EndStoryScreen());
+
+            }
         }
     }
 }
