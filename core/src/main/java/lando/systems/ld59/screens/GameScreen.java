@@ -112,7 +112,7 @@ public class GameScreen extends BaseScreen {
                 return;
             }
         }
-        updateEnemyCounts();
+        //updateEnemyCounts();
         engine.update(delta);
     }
 
@@ -185,41 +185,41 @@ public class GameScreen extends BaseScreen {
             screenName.setPosition(10f, windowCamera.viewportHeight - 10f - screenName.getHeight());
             uiStage.addActor(screenName);
         }
-
-        // Add enemy count labels
-        liveEnemyCountTable = new VisTable();
-
-        redEnemyCountLabel = new VisLabel("Red: 0");
-        redEnemyCountLabel.setColor(EnergyColor.COLOR_RED);
-        greenEnemyCountLabel = new VisLabel("Green: 0");
-        greenEnemyCountLabel.setColor(EnergyColor.COLOR_GREEN);
-        blueEnemyCountLabel = new VisLabel("Blue: 0");
-        blueEnemyCountLabel.setColor(EnergyColor.COLOR_BLUE);
-
-        var margin = 10f;
-        var labelStartX = margin;
-        var labelY = windowCamera.viewportHeight - margin;
-
-        liveEnemyCountTable.setPosition(labelStartX, labelY);
-
-        liveEnemyCountTable.add(redEnemyCountLabel).pad(5f);
-        liveEnemyCountTable.add(greenEnemyCountLabel).pad(5f);
-        liveEnemyCountTable.add(blueEnemyCountLabel).pad(5f);
-        liveEnemyCountTable.top().left();
-        uiStage.addActor(liveEnemyCountTable);
+//
+//        // Add enemy count labels
+//        liveEnemyCountTable = new VisTable();
+//
+//        redEnemyCountLabel = new VisLabel("Red: 0");
+//        redEnemyCountLabel.setColor(EnergyColor.COLOR_RED);
+//        greenEnemyCountLabel = new VisLabel("Green: 0");
+//        greenEnemyCountLabel.setColor(EnergyColor.COLOR_GREEN);
+//        blueEnemyCountLabel = new VisLabel("Blue: 0");
+//        blueEnemyCountLabel.setColor(EnergyColor.COLOR_BLUE);
+//
+//        var margin = 10f;
+//        var labelStartX = margin;
+//        var labelY = windowCamera.viewportHeight - margin;
+//
+//        liveEnemyCountTable.setPosition(labelStartX, labelY);
+//
+//        liveEnemyCountTable.add(redEnemyCountLabel).pad(5f);
+//        liveEnemyCountTable.add(greenEnemyCountLabel).pad(5f);
+//        liveEnemyCountTable.add(blueEnemyCountLabel).pad(5f);
+//        liveEnemyCountTable.top().left();
+//        uiStage.addActor(liveEnemyCountTable);
 
         var buttonSize  = 50f;
-        var numButtons  = 4;
-        var buttonsWidth = (numButtons + 1) * buttonSize + (numButtons - 1) * margin;
-//        var buttonPosX  = windowCamera.viewportWidth - margin - buttonSize; // RIGHT
-        var buttonPosX  = (windowCamera.viewportWidth + buttonsWidth) / 2f - margin; // CENTER
-        var buttonPosY  = windowCamera.viewportHeight - margin - buttonSize; // TOP
+//        var numButtons  = 4;
+//        var buttonsWidth = (numButtons + 1) * buttonSize + (numButtons - 1) * margin;
+////        var buttonPosX  = windowCamera.viewportWidth - margin - buttonSize; // RIGHT
+//        var buttonPosX  = (windowCamera.viewportWidth + buttonsWidth) / 2f - margin; // CENTER
+//        var buttonPosY  = windowCamera.viewportHeight - margin - buttonSize; // TOP
 //        var buttonPosY  = margin; // BOTTOM
-        var settingsPos = FramePool.vec2(buttonPosX, buttonPosY);
-        var cityPos     = FramePool.vec2(settingsPos.x - margin - buttonSize, buttonPosY);
-        var turretPos   = FramePool.vec2(cityPos.x - margin - buttonSize, buttonPosY);
-        var springPos   = FramePool.vec2(turretPos.x - margin - buttonSize, buttonPosY);
-
+        var settingsPos = FramePool.vec2(windowCamera.viewportWidth - buttonSize, windowCamera.viewportHeight - buttonSize);
+//        var cityPos     = FramePool.vec2(settingsPos.x - margin - buttonSize, buttonPosY);
+//        var turretPos   = FramePool.vec2(cityPos.x - margin - buttonSize, buttonPosY);
+//        var springPos   = FramePool.vec2(turretPos.x - margin - buttonSize, buttonPosY);
+//
         var gearRegion = AnimMisc.GEAR.get().getKeyFrame(0f);
         var gearDrawable = new TextureRegionDrawable(gearRegion);
         var settingsButton = new VisImageButton(gearDrawable, "Settings");
@@ -231,69 +231,69 @@ public class GameScreen extends BaseScreen {
                 settingsUI.toggle();
             }
         });
+//
+//        var cityRegion = AnimBaseCity.IDLE.get().getKeyFrame(0f);
+//        var cityDrawable = new TextureRegionDrawable(cityRegion);
+//        var cityTestButton = new VisImageButton(cityDrawable, "City Anim Test");
+//        cityTestButton.setSize(buttonSize, buttonSize);
+//        cityTestButton.setPosition(cityPos.x, cityPos.y);
+//        cityTestButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                scene.cityAnimTest();
+//            }
+//        });
+//
+//        var turretRegion = AnimBaseTurret.BARREL_ICON.get().getKeyFrame(0f);
+//        var turretDrawable = new TextureRegionDrawable(turretRegion);
+//        var turretTestButton = new VisImageButton(turretDrawable, "Turret Barrel Anim Test");
+//        turretTestButton.setSize(buttonSize, buttonSize);
+//        turretTestButton.setPosition(turretPos.x, turretPos.y);
+//        turretTestButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                scene.turretAnimTest();
+//            }
+//        });
 
-        var cityRegion = AnimBaseCity.IDLE.get().getKeyFrame(0f);
-        var cityDrawable = new TextureRegionDrawable(cityRegion);
-        var cityTestButton = new VisImageButton(cityDrawable, "City Anim Test");
-        cityTestButton.setSize(buttonSize, buttonSize);
-        cityTestButton.setPosition(cityPos.x, cityPos.y);
-        cityTestButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                scene.cityAnimTest();
-            }
-        });
-
-        var turretRegion = AnimBaseTurret.BARREL_ICON.get().getKeyFrame(0f);
-        var turretDrawable = new TextureRegionDrawable(turretRegion);
-        var turretTestButton = new VisImageButton(turretDrawable, "Turret Barrel Anim Test");
-        turretTestButton.setSize(buttonSize, buttonSize);
-        turretTestButton.setPosition(turretPos.x, turretPos.y);
-        turretTestButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                scene.turretAnimTest();
-            }
-        });
-
-        var springRegion = AnimMisc.SPRING.get().getKeyFrame(0f);
-        var springDrawable = new TextureRegionDrawable(springRegion);
-        var springTestButton = new VisImageButton(springDrawable, "Spring Connection Test");
-        springTestButton.setSize(buttonSize, buttonSize);
-        springTestButton.setPosition(springPos.x, springPos.y);
-        springTestButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                scene.shakeConnectionsTest();
-            }
-        });
+//        var springRegion = AnimMisc.SPRING.get().getKeyFrame(0f);
+//        var springDrawable = new TextureRegionDrawable(springRegion);
+//        var springTestButton = new VisImageButton(springDrawable, "Spring Connection Test");
+//        springTestButton.setSize(buttonSize, buttonSize);
+//        springTestButton.setPosition(springPos.x, springPos.y);
+//        springTestButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                scene.shakeConnectionsTest();
+//            }
+//        });
 
         uiStage.addActor(settingsButton);
-        uiStage.addActor(cityTestButton);
-        uiStage.addActor(turretTestButton);
-        uiStage.addActor(springTestButton);
-
-        // Add kill count table in bottom right
-        killCountTable = new VisTable();
-
-        goodKillsLabel = new VisLabel("Good: 0");
-        goodKillsLabel.setColor(Color.GREEN);
-        neutralKillsLabel = new VisLabel("Neutral: 0");
-        neutralKillsLabel.setColor(Color.YELLOW);
-        badKillsLabel = new VisLabel("Bad: 0");
-        badKillsLabel.setColor(Color.RED);
-
-        killCountTable.add(goodKillsLabel).pad(5f);
-        killCountTable.add(neutralKillsLabel).pad(5f);
-        killCountTable.add(badKillsLabel).pad(5f);
-        killCountTable.top().left();
-        killCountTable.pack();
-
-        var killTableX = windowCamera.viewportWidth - killCountTable.getWidth() - margin;
-        var killTableY = 0;
-        killCountTable.setPosition(killTableX, killTableY);
-
-
-        uiStage.addActor(killCountTable);
+//        uiStage.addActor(cityTestButton);
+//        uiStage.addActor(turretTestButton);
+//        uiStage.addActor(springTestButton);
+//
+//        // Add kill count table in bottom right
+//        killCountTable = new VisTable();
+//
+//        goodKillsLabel = new VisLabel("Good: 0");
+//        goodKillsLabel.setColor(Color.GREEN);
+//        neutralKillsLabel = new VisLabel("Neutral: 0");
+//        neutralKillsLabel.setColor(Color.YELLOW);
+//        badKillsLabel = new VisLabel("Bad: 0");
+//        badKillsLabel.setColor(Color.RED);
+//
+//        killCountTable.add(goodKillsLabel).pad(5f);
+//        killCountTable.add(neutralKillsLabel).pad(5f);
+//        killCountTable.add(badKillsLabel).pad(5f);
+//        killCountTable.top().left();
+//        killCountTable.pack();
+//
+//        var killTableX = windowCamera.viewportWidth - killCountTable.getWidth() - margin;
+//        var killTableY = 0;
+//        killCountTable.setPosition(killTableX, killTableY);
+//
+//
+//        uiStage.addActor(killCountTable);
     }
 }
