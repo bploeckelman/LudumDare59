@@ -20,12 +20,10 @@ import com.github.tommyettinger.textra.TypingButton;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import lando.systems.ld59.Flag;
-import lando.systems.ld59.assets.EffectType;
-import lando.systems.ld59.assets.FontType;
-import lando.systems.ld59.assets.ImageType;
-import lando.systems.ld59.assets.ShaderType;
+import lando.systems.ld59.assets.*;
 import lando.systems.ld59.game.components.EnergyColor;
 import lando.systems.ld59.game.components.renderable.CableShaderRenderable;
+import lando.systems.ld59.game.signals.AudioEvent;
 import lando.systems.ld59.utils.RopePath;
 import lando.systems.ld59.utils.Util;
 import lando.systems.ld59.utils.accessors.ColorAccessor;
@@ -77,9 +75,11 @@ public class TitleScreen extends BaseScreen {
         final Vector2 position;
         final Color color;
         final String baseFileName;
-        final Array<Texture> textures;
-        final Animation<Texture> animation;
+        final float frameDuration;
+        final Animation.PlayMode playMode;
 
+        Array<Texture> textures;
+        Animation<Texture> animation;
         float stateTime;
 
         Elem(int count, String baseFileName) {
@@ -87,27 +87,38 @@ public class TitleScreen extends BaseScreen {
         }
 
         Elem(int count, String baseFileName, float frameDuration, Animation.PlayMode playMode) {
-            var prefix = "images/title/";
-
             this.count = count;
             this.position = new Vector2(0, 0); // Everything is 0,0 by default, setup tweens in screen ctor for moving stuff
             this.color = new Color(1f, 1f, 1f, 1f);
             this.baseFileName = baseFileName;
             this.textures = new Array<>(count);
-            for (int i = 0; i < count; i++) {
-                var suffix = Stringf.format("_%02d.png", i);
-                var texture = new Texture(prefix + baseFileName + suffix);
-                textures.add(texture);
-            }
-            this.animation = new Animation<>(frameDuration, textures, playMode);
+            this.frameDuration = frameDuration;
+            this.playMode = playMode;
             this.stateTime = 0f;
         }
     }
     // @formatter:on
 
     public TitleScreen() {
+        AudioEvent.playMusic(MusicType.INTRO_MUSIC);
+
         this.pixel = assets.pixelRegion;
         this.background = ImageType.BACKGROUND_TITLE.get();
+
+        // Load / reload Elem textures, animations on creation, can't be loaded in Elem ctor
+        // because they're static and are disposed when transitioning to the next screen
+        var prefix = "images/title/";
+        for (var elem : Elem.values()) {
+            elem.textures = new Array<>(elem.count);
+            for (int i = 0; i < elem.count; i++) {
+                var suffix = Stringf.format("_%02d.png", i);
+                var texture = new Texture(prefix + elem.baseFileName + suffix);
+                elem.textures.add(texture);
+            }
+            elem.animation = new Animation<>(elem.frameDuration, elem.textures, elem.playMode);
+            elem.stateTime = 0f;
+        }
+
         this.underCableElements = List.of(
                   Elem.PLANET
                 , Elem.TURRET_1, Elem.TURRET_2, Elem.TURRET_3
