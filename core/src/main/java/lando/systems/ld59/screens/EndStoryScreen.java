@@ -91,12 +91,11 @@ public class EndStoryScreen extends BaseScreen {
             panelRight.row().height(10f);
 
             panelRight.add(new TypingLabel("Enemies Killed: " + stats.enemiesKilled, creditFont)).row();
-            panelRight.add(new TypingLabel("Red Aliens: " + stats.badKills, creditFont)).row();
-            panelRight.add(new TypingLabel("Blue Aliens: " + stats.goodKills, creditFont)).row();
-            panelRight.add(new TypingLabel("Green Aliens: " + stats.neutralKills, creditFont)).row();
+            panelRight.add(new TypingLabel("Wrong Color Kills: " + stats.badKills, creditFont)).row();
+            panelRight.add(new TypingLabel("Perfect Color Kills: " + stats.goodKills, creditFont)).row();
+            panelRight.add(new TypingLabel("Neutral Color Kills: " + stats.neutralKills, creditFont)).row();
             panelRight.row().height(10f);
             panelRight.add(new TypingLabel("Time Survived: " + minutes + "minutes " + seconds + "seconds", creditFont)).row();
-            panelRight.add(new TypingLabel("Damage Dealt: " + stats.damageDealt, creditFont)).row();
             panelRight.add(new TypingLabel("Damage Taken: " + stats.damageTaken, creditFont)).row();
             panelRight.row().height(10f);
             panelRight.add(new TypingLabel("Cities Lost: " + stats.cityLost, creditFont)).row();
