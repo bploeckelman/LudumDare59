@@ -47,8 +47,8 @@ void main() {
     vec4 noise = texture2D(u_noise, np) + texture2D(u_noise, np2) +texture2D(u_noise, np3) + texture2D(u_noise, np4) ;
     noise /= 4.;
 
-    float mainStength = (.8 + (sin(u_time*3.) * .3)) * u_health * noise.g;
-    float hexStrength = (.8 + sin(u_time*2.) * .2) * u_health * noise.g;
+    float mainStength = (.8 + (sin(u_time*3.) *.3)) * noise.g;
+    float hexStrength = (.8 + sin(u_time*2.) *.2) * noise.g;
 
     // --- health-based colors ---
     vec3 healthyBack = vec3(.137,.463,.882); // blue
@@ -63,9 +63,16 @@ void main() {
 
     vec4 texColor = getTexture(vec2(0.));
 
-    vec3 shieldColor = mix(backColor, lineColor * hexStrength, texColor.g * .5);
-    vec4 finalColor = vec4(texColor.r * shieldColor, texColor.b * mainStength);
-//    gl_FragColor = vec4(edge(texColor));
+    // boost hex pulse, reduce fill pulse
+    float hexPulse = hexStrength * (1.0 + texColor.g * 2.0); // 3x stronger on hex
+    float fillPulse = mainStength * (1.0 - texColor.g * 0.5); // 50% weaker on fill
+
+    vec3 baseColor = mix(backColor, lineColor, texColor.g); // hex = lineColor, fill = backColor
+    vec3 pulsedColor = baseColor * (1.0 + hexPulse); // pulse mostly hits the hex
+
+    float healthAlpha = 0.3 + 0.7 * h;
+    vec4 finalColor = vec4(texColor.r * pulsedColor, texColor.b * fillPulse * healthAlpha);
+    //    gl_FragColor = vec4(edge(texColor));
 
     // --- add impact highlights ---
     float impactGlow = 0.0;
@@ -95,6 +102,10 @@ void main() {
 
     // add bright white/blue flash
     impactGlow *= step(0.001, texColor.r);
+
+    // THIS IS THE CHANGE: weight by green channel
+    float hexWeight = 0.80 + texColor.g * 0.2; // hex=1.0, fill=0.15
+    impactGlow *= hexWeight;
 
     vec3 impactColor = mix(vec3(1.0, 0.3, 0.1), vec3(0.4, 0.4, 1.0), h);
     finalColor.rgb += impactColor * impactGlow * 2.0;
