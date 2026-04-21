@@ -50,10 +50,22 @@ public class Connection implements Component {
         cableShaderRenderable = null;
 
 
-
         var start = FramePool.vec2(startPos.x, startPos.y);
+
+        if (baseButton != null) {
+            start = baseButton.portPenUltimateLocation;
+        }
+
         var end = FramePool.vec2(startPos.x + 10f, startPos.y + 10f);
+
+
+
         var points = Util.generateStraightPath(start, end, 40);
+        if (baseButton != null) {
+            points.insert(0, baseButton.portPenUltimateLocation);
+            points.insert(0, baseButton.portLocation);
+
+        }
         pendingPoint = new Vector2(end);
         points.add(pendingPoint);
 

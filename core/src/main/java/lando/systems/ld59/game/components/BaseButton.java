@@ -3,6 +3,7 @@ package lando.systems.ld59.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld59.assets.AnimType;
 import lando.systems.ld59.assets.anims.AnimBaseButton;
 import lando.systems.ld59.game.Components;
@@ -35,6 +36,8 @@ public class BaseButton implements Component {
     private AnimType animActive;
     private State state;
     private boolean isAnimating;
+    public Vector2 portPenUltimateLocation;
+    public Vector2 portLocation;
 
     public BaseButton(BaseButton.Type type, Entity entity, Position pos) {
         this.type = type;
@@ -45,6 +48,16 @@ public class BaseButton implements Component {
         this.isAnimating = false;
         this.pos = pos;
         setAnimations();
+
+        Vector2 portOffset = new Vector2(68, 0);
+        if (isPattern()){
+            portOffset.x *= -1;
+        }
+
+        portPenUltimateLocation = new Vector2(pos.x + portOffset.x, pos.y + portOffset.y);
+        portOffset.x *= 1.001f;
+        portLocation = new Vector2(pos.x + portOffset.x, pos.y + portOffset.y);
+
     }
 
     public boolean isEnergy()  { return type == Type.BLUE || type == Type.GREEN || type == Type.RED; }

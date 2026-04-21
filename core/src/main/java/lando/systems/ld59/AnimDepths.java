@@ -10,7 +10,7 @@ public class AnimDepths {
     public static final float TURRETS = ROOT_BASE + 20;
 
     public static final float BUTTONS = ROOT_BUTTONS;
-    public static final float CABLES  = ROOT_BUTTONS - 10;
+    public static final float CABLES  = ROOT_BUTTONS + 10;
 
     public static final float CITY    = CABLES + 10;
 
