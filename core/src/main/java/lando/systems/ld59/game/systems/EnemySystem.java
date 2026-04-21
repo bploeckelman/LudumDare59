@@ -381,7 +381,6 @@ public class EnemySystem extends IteratingSystem {
                 }
             }
             wonDelay += dt;
-            // TODO: maybe we need other stuff, some sort of tween timeline before we just cut?
             if (wonDelay > 6f && !transitioning) {
                 transitioning = true;
                 getEngine().removeAllEntities(Family.one(GameWon.class).get());

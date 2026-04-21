@@ -39,8 +39,6 @@ public class GameScreen extends BaseScreen {
     private final SettingsUI settingsUI = new SettingsUI();
     public final CityDeathModal cityDeathModal = new CityDeathModal();
 
-    private VisLabel fpsLabel;
-
     private VisTable liveEnemyCountTable;
     private VisLabel redEnemyCountLabel;
     private VisLabel greenEnemyCountLabel;
@@ -72,7 +70,6 @@ public class GameScreen extends BaseScreen {
     @Override
     public void update(float delta) {
         super.update(delta);
-        fpsLabel.setText(Stringf.format("FPS: %.0f", Gdx.graphics.getFramesPerSecond()));
 
         if (cityDeathModal.isVisible) {
             frameCount++;
@@ -88,7 +85,7 @@ public class GameScreen extends BaseScreen {
         var TEMP_CLICK_TO_TRANSITION = Gdx.input.justTouched()
                 && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
                 ||  Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
-        if (!transitioning && TEMP_CLICK_TO_TRANSITION){
+        if (!transitioning && TEMP_CLICK_TO_TRANSITION && Flag.isEnabled(Flag.GLOBAL)){
             transitioning = true;
             game.setScreen(new EndStoryScreen(), EffectType.DREAMY);
         }
@@ -296,10 +293,7 @@ public class GameScreen extends BaseScreen {
         var killTableY = 0;
         killCountTable.setPosition(killTableX, killTableY);
 
-        fpsLabel = new VisLabel("");
-        fpsLabel.setPosition(10, 10);
 
         uiStage.addActor(killCountTable);
-        uiStage.addActor(fpsLabel);
     }
 }
