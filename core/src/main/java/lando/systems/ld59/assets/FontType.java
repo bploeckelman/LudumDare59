@@ -2,20 +2,16 @@ package lando.systems.ld59.assets;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.github.tommyettinger.digital.Stringf;
 import com.github.tommyettinger.textra.Font;
-import lando.systems.ld59.utils.loaders.FontAssetLoader;
 
 import java.util.EnumMap;
+import java.util.HashSet;
 
 import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public enum FontType implements AssetType<Font> {
-//      ATKINSON_HYPERLEGIBLE_NEXT ("atkinson-hyperlegible-next-regular.ttf")
       ATKINSON_HYPERLEGIBLE      ("atkinson-hyperlegible-regular.ttf")
     , CHEVYRAY_RISE              ("chevyray-rise.ttf")
     , COUSINE                    ("cousine-regular.ttf")
@@ -30,12 +26,11 @@ public enum FontType implements AssetType<Font> {
     , ROUNDABOUT_LARGE           ("chevyray-roundabout.ttf", 32)
     , SOURCE_CODE_PRO            ("source-code-pro-regular.otf")
     , SOURCE_CODE_PRO_OUTLINED   ("source-code-pro-regular.otf", ParamBuilder.withSize(20).border(2, Color.DARK_GRAY).build())
-    , HEMI_HEAD   ("hemihead.otf", 32)
-    , HEMI_HEAD_CREDITS   ("hemihead.otf", 24)
-    , HEMI_HEAD_SMALL   ("hemihead.otf", 20)
+    , HEMI_HEAD                  ("hemihead.otf", 32)
+    , HEMI_HEAD_CREDITS          ("hemihead.otf", 24)
+    , HEMI_HEAD_SMALL            ("hemihead.otf", 20)
     ;
 
-    private static final String TAG = FontType.class.getSimpleName();
     private static final EnumMap<FontType, Font> container = AssetType.createContainer(FontType.class);
 
     public static final int DEFAULT_SIZE = 24;
@@ -56,7 +51,6 @@ public enum FontType implements AssetType<Font> {
     FontType(String fontFilePath, FreeTypeFontParameter params) {
         this.fontFilePath = "fonts/" + fontFilePath;
         this.params = params;
-        // NOTE: these styles are created in SkinType.init() for each FontType
         this.labelStyleName = "label-" + name().toLowerCase();
         this.textraLabelStyleName = "textra-label-" + name().toLowerCase();
     }
@@ -67,65 +61,48 @@ public enum FontType implements AssetType<Font> {
     }
 
     /**
-     * Produces a unique AssetManager key for this font variant.
-     * <ul>
-     *   <li>Format: {@code "fonts/{fontFileName}__{enumName}.[o|t]tf"}</li>
-     *   <li>Example: {@code ROUNDABOUT_MEDIUM -> "fonts/chevyray-roundabout__ROUNDABOUT_MEDIUM.ttf"}</li>
-     * </ul>
+     * Queue each unique font file for async loading through AssetManager.
+     * Uses real file paths as keys so TeaVM's file handle resolver can find them.
      */
-    public String uniqueKey() {
-        var index = fontFilePath.indexOf(".ttf");
-        if (index == -1) {
-            index = fontFilePath.lastIndexOf(".otf");
-        }
-        var delimiter = "__";
-        return Stringf.format("%s%s%s%s",
-            fontFilePath.substring(0, index),
-            delimiter,
-            name(),  // use enum constant name as unique identifier
-            fontFilePath.substring(index));
-    }
-
-    /**
-     * Get the loader parameters for this font variant
-     */
-    public FontAssetLoader.Param loaderParams() {
-        return new FontAssetLoader.Param(fontFilePath, params);
-    }
-
     public static void loadEnum(Class<?> enumClass, Assets assets) {
         var mgr = assets.mgr;
         var resolver = mgr.getFileHandleResolver();
-
-        var fontLoader = new FreetypeFontLoader(resolver);
-        var fontGenLoader = new FreeTypeFontGeneratorLoader(resolver);
-        var textraFontLoader = new FontAssetLoader(resolver, assets.disposables);
-        mgr.setLoader(FreeTypeFontGenerator.class, fontGenLoader);
-
-        mgr.setLoader(BitmapFont.class, ".ttf", fontLoader);
-        mgr.setLoader(BitmapFont.class, ".otf", fontLoader);
-        mgr.setLoader(Font.class, ".ttf", textraFontLoader);
-        mgr.setLoader(Font.class, ".otf", textraFontLoader);
+        mgr.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
 
         var values = (FontType[]) enumClass.getEnumConstants();
         for (var type : values) {
-            var key = type.uniqueKey();
-            var params = type.loaderParams();
-            mgr.load(key, Font.class, params);
+            if (!mgr.isLoaded(type.fontFilePath, FreeTypeFontGenerator.class)) {
+                mgr.load(type.fontFilePath, FreeTypeFontGenerator.class);
+            }
         }
     }
 
+    /**
+     * Generate font variants from loaded generators, then release the generators.
+     */
     public static void initEnum(Class<?> enumClass, Assets assets) {
         var mgr = assets.mgr;
         var values = (FontType[]) enumClass.getEnumConstants();
+
         for (var type : values) {
-            var key = type.uniqueKey();
-            var font = mgr.get(key, Font.class);
+            var generator = mgr.get(type.fontFilePath, FreeTypeFontGenerator.class);
+            var bmpFont = generator.generateFont(type.params);
+            assets.disposables.add(bmpFont);
+
+            var font = new Font(bmpFont);
             container.put(type, font);
+            assets.disposables.add(font);
+        }
+
+        // Unload each generator exactly once
+        var uniquePaths = new HashSet<String>();
+        for (var type : values) {
+            uniquePaths.add(type.fontFilePath);
+        }
+        for (var path : uniquePaths) {
+            mgr.unload(path);
         }
     }
-
-    // Helper to create parameter builder
 
     /**
      * Builder for FreeTypeFontParameter (convenience wrapper)
@@ -140,7 +117,6 @@ public enum FontType implements AssetType<Font> {
         private ParamBuilder(int size) {
             this.params = new FreeTypeFontParameter();
             params.size = size;
-            // Set sensible defaults
             params.color = Color.WHITE.cpy();
             params.borderWidth = 0;
             params.borderColor = Color.WHITE.cpy();

@@ -14,7 +14,7 @@ public class AssetTypeRegistry {
     private final Map<Class<? extends AssetType<?>>, BiConsumer<Class<?>, Assets>> loaders = new LinkedHashMap<>();
 
     public AssetTypeRegistry() {
-        register(AnimBaseGround.class,       AnimType::initEnum);
+        register(AnimBaseGround.class, AnimType::initEnum);
         register(AnimBaseButton.class, AnimType::initEnum);
         register(AnimBaseCity.class,   AnimType::initEnum);
         register(AnimBaseTurret.class, AnimType::initEnum);
@@ -56,22 +56,14 @@ public class AssetTypeRegistry {
     }
 
     public void initAll(Assets assets) {
-        var entries = initializers.entrySet();
-        for (var entry : entries) {
-            var key = entry.getKey();
-            var value = entry.getValue();
-            value.accept(key, assets);
-//            entry.getValue().accept(entry.getKey(), assets);
+        for (var entry : initializers.entrySet()) {
+            entry.getValue().accept(entry.getKey(), assets);
         }
     }
 
     public void loadAll(Assets assets) {
-        var entries = loaders.entrySet();
-        for (var entry : entries) {
-            var key = entry.getKey();
-            var value = entry.getValue();
-            value.accept(key, assets);
-//            entry.getValue().accept(entry.getKey(), assets);
+        for (var entry : loaders.entrySet()) {
+            entry.getValue().accept(entry.getKey(), assets);
         }
     }
 }

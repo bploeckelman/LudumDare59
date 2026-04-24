@@ -16,8 +16,6 @@ import lando.systems.ld59.Config;
 import lando.systems.ld59.Flag;
 import lando.systems.ld59.assets.EffectType;
 import lando.systems.ld59.assets.MusicType;
-import lando.systems.ld59.assets.anims.AnimBaseCity;
-import lando.systems.ld59.assets.anims.AnimBaseTurret;
 import lando.systems.ld59.assets.anims.AnimMisc;
 import lando.systems.ld59.game.Stats;
 import lando.systems.ld59.game.Systems;
@@ -38,6 +36,8 @@ public class GameScreen extends BaseScreen {
     private final SceneGame scene;
     private final SettingsUI settingsUI = new SettingsUI();
     public final CityDeathModal cityDeathModal = new CityDeathModal();
+
+    private VisLabel fpsLabel;
 
     private VisTable liveEnemyCountTable;
     private VisLabel redEnemyCountLabel;
@@ -70,6 +70,11 @@ public class GameScreen extends BaseScreen {
     @Override
     public void update(float delta) {
         super.update(delta);
+
+        fpsLabel.setVisible(Flag.DRAW_FPS.isEnabled());
+        if (fpsLabel.isVisible()) {
+            fpsLabel.setText(Stringf.format("FPS: %d", Gdx.graphics.getFramesPerSecond()));
+        }
 
         if (cityDeathModal.isVisible) {
             frameCount++;
@@ -295,5 +300,10 @@ public class GameScreen extends BaseScreen {
 //
 //
 //        uiStage.addActor(killCountTable);
+
+        fpsLabel = new VisLabel("FPS:");
+        fpsLabel.setVisible(Flag.DRAW_FPS.isEnabled());
+        fpsLabel.setPosition(10, 10);
+        uiStage.addActor(fpsLabel);
     }
 }

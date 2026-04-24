@@ -10,12 +10,13 @@ import lando.systems.ld59.utils.Util;
  */
 public enum Flag {
     //@formatter:off
-      GLOBAL        (false)
+      GLOBAL        (true)
     , LOG_GENERAL   (true)
     , LOG_DEBUG     (true)
     , LOG_WARN      (true)
     , LOG_INPUT     (false)
     , LOG_EVENT     (false)
+    , DRAW_FPS      (true)
     , DEBUG_RENDER  (false)
     , DEBUG_UI      (false)
     , DEBUG_SCENES  (false)
