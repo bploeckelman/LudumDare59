@@ -56,14 +56,22 @@ public class AssetTypeRegistry {
     }
 
     public void initAll(Assets assets) {
-        for (var entry : initializers.entrySet()) {
-            entry.getValue().accept(entry.getKey(), assets);
+        var entries = initializers.entrySet();
+        for (var entry : entries) {
+            var key = entry.getKey();
+            var value = entry.getValue();
+            value.accept(key, assets);
+//            entry.getValue().accept(entry.getKey(), assets);
         }
     }
 
     public void loadAll(Assets assets) {
-        for (var entry : loaders.entrySet()) {
-            entry.getValue().accept(entry.getKey(), assets);
+        var entries = loaders.entrySet();
+        for (var entry : entries) {
+            var key = entry.getKey();
+            var value = entry.getValue();
+            value.accept(key, assets);
+//            entry.getValue().accept(entry.getKey(), assets);
         }
     }
 }

@@ -2,6 +2,7 @@ package lando.systems.ld59.teavm;
 
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplicationConfiguration;
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplication;
+import lando.systems.ld59.Config;
 import lando.systems.ld59.Main;
 
 /**
@@ -11,11 +12,14 @@ public class TeaVMLauncher {
     public static void main(String[] args) {
         WebApplicationConfiguration config = new WebApplicationConfiguration("canvas");
         //// If width and height are each greater than 0, then the app will use a fixed size.
-        //config.width = 640;
-        //config.height = 480;
+        config.width = Config.window_width;
+        config.height = Config.window_height;
         //// If width and height are both 0, then the app will use all available space.
-        config.width = 0;
-        config.height = 0;
+//        config.width = 0;
+//        config.height = 0
+
+        config.useGL30 = true;
+        config.preloadListener = assetLoader -> assetLoader.loadScript("freetype.js");
         new WebApplication(new Main(), config);
     }
 }

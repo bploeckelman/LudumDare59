@@ -15,8 +15,8 @@ import java.util.EnumMap;
 import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public enum FontType implements AssetType<Font> {
-      ATKINSON_HYPERLEGIBLE_NEXT ("atkinson-hyperlegible-next-regular.ttf")
-    , ATKINSON_HYPERLEGIBLE      ("atkinson-hyperlegible-regular.ttf")
+//      ATKINSON_HYPERLEGIBLE_NEXT ("atkinson-hyperlegible-next-regular.ttf")
+      ATKINSON_HYPERLEGIBLE      ("atkinson-hyperlegible-regular.ttf")
     , CHEVYRAY_RISE              ("chevyray-rise.ttf")
     , COUSINE                    ("cousine-regular.ttf")
     , DROID_SANS_MONO            ("droid-sans-mono.ttf")
@@ -69,8 +69,8 @@ public enum FontType implements AssetType<Font> {
     /**
      * Produces a unique AssetManager key for this font variant.
      * <ul>
-     *   <li>Format: {@code "fonts/{fontFileName}#{enumName}.[o|t]tf"}</li>
-     *   <li>Example: {@code ROUNDABOUT_MEDIUM -> "fonts/chevyray-roundabout#ROUNDABOUT_MEDIUM.ttf"}</li>
+     *   <li>Format: {@code "fonts/{fontFileName}__{enumName}.[o|t]tf"}</li>
+     *   <li>Example: {@code ROUNDABOUT_MEDIUM -> "fonts/chevyray-roundabout__ROUNDABOUT_MEDIUM.ttf"}</li>
      * </ul>
      */
     public String uniqueKey() {
@@ -78,8 +78,10 @@ public enum FontType implements AssetType<Font> {
         if (index == -1) {
             index = fontFilePath.lastIndexOf(".otf");
         }
-        return Stringf.format("%s#%s%s",
+        var delimiter = "__";
+        return Stringf.format("%s%s%s%s",
             fontFilePath.substring(0, index),
+            delimiter,
             name(),  // use enum constant name as unique identifier
             fontFilePath.substring(index));
     }

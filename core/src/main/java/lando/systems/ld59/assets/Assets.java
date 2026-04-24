@@ -90,6 +90,11 @@ public class Assets implements Disposable {
 
     public float updateLoading() {
         if (loaded) return 1;
+        // NOTE: TeaVM getting hung up here in AssetLoadingTask:78 > AssetLoadImpl fileExists()
+        // "fonts/atkinson-hyperlegible-next-regular#ATKINSON_HYPERLEGIBLE_NEXT.ttf"
+        // I do see "/fonts/atkinson-hyperlegible-regular.ttf/" in the internal files map...
+        // ?wonder if the problem is related to how I'm loading font variants from the same font file?
+        // (since it appears to just be stuck on the font variant listed above...)
         if (!mgr.update()) {
             return mgr.getProgress();
         }
